@@ -168,16 +168,16 @@ function tree(leftRoot, rightRoot, outerHeight) {
             .selectAll("g")
             .data(function(d) { return d.nodes; })
             .enter().append("g")
-            .attr("class", function(d) { return d.type; });
+            .attr("class", function(d) { console.log(d.x); return d.type; })
+            .on("click",nodeClick);
 
-    node.append("rect").on("click",nodeClick);
+    node.append("rect");
 
     node.append("text")
             .attr("dy", ".35em")
             .text(function(d) { return d.name; })
             .each(function(d) { d.width = Math.max(32, this.getComputedTextLength() + 12); })
-            .attr("x", function(d) { return d.flipped ? 6 - d.width : 6; })
-            .on("click",nodeClick);
+            .attr("x", function(d) { return d.flipped ? 6 - d.width : 6; });
 
     node.filter(function(d) { return "join" in d; }).insert("path", "text")
             .attr("class", "join");
@@ -191,7 +191,7 @@ function tree(leftRoot, rightRoot, outerHeight) {
     }
 
     function nodeClick(d,i) {
-        alert("d:"+d.name +"\ni:"+i);
+        alert(d3.select(this).attr("transform"));
     }
 
     return svg;
@@ -237,6 +237,146 @@ function reset(svg) {
 }
 
 
+function selectAllAnimation(startRoot, startHeight, endRoot, endHeight) {
+    var end = tree(endRoot, endHeight).remove(),
+            event = d3.dispatch("start", "middle", "end", "reset"),
+            height = +end.attr("height"),
+            start = tree(startRoot, startHeight).attr("height", height),
+            svg = start.node(),
+            offset = (endHeight - startHeight) / 2,
+            transform = "translate(" + margin.left + "," + offset + ")";
+
+    var play = start.append("g")
+            .attr("class", "play");
+
+    play.append("circle")
+            .attr("r", 45)
+            .attr("transform", "translate(" + (margin.left + width / 2) + "," + height / 2 + ")");
+
+    play.append("path")
+            .attr("d", "M-22,-30l60,30l-60,30z")
+            .attr("transform", "translate(" + (margin.left + width / 2) + "," + height / 2 + ")scale(.7)");
+
+    play.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .on("mousedown", function() {
+                play.classed("mousedown", true);
+                d3.select(window).on("mouseup", function() { play.classed("mousedown", false); });
+            })
+            .on("click", function() {
+                resetAll();
+                animation();
+            });
+
+    end = d3.select(svg.appendChild(end.node().firstChild));
+    start = d3.select(svg.firstChild).attr("transform", transform);
+    start.selectAll(".array").each(function() { this.parentNode.appendChild(this); }); // mask elements
+
+    var startNodes = start.datum().nodes,
+            startElements = startNodes.filter(function(d) { return d.type === "element"; }),
+            endNodes = end.datum().nodes,
+            endGroups = endNodes.filter(function(d) { return d.type === "array"; });
+
+    resetAll();
+
+    return event;
+
+    function resetAll() {
+        start.style("display", null).call(reset);
+        end.style("display", "none").call(reset);
+        play.style("display", null);
+        event.reset();
+    }
+
+    function animation() {
+        start.call(fadeIn, 150);
+        end.style("display", "none");
+        play.style("display", "none");
+        setTimeout(transition1, 1250);
+        event.start();
+    }
+
+    function transition1() {
+        var t = start.transition()
+                .duration(1000 + (startElements.length - 1) * 50)
+                .each("end", transition2);
+
+        t.selectAll(".selection,.array,.link,.element,.key")
+                .duration(0)
+                .style("stroke-opacity", 0)
+                .style("fill-opacity", 0);
+
+//        t.selectAll(".element")
+//                .duration(500)
+//                .delay(function(d, i) { return 500 + i * 50; })
+//                .attr("transform", function(d, i) { return "translate(" + (d.depth - 1) * step + "," + (endGroups[i].x - offset) + ")"; })
+//                .attr("class", "array")
+//                .select("rect")
+//                .attr("width", function(d, i) { return endGroups[i].width; });
+
+        event.middle();
+    }
+
+    function transition2() {
+        end.style("display", null)
+                .selectAll(".element,.to-element")
+                .style("display", "none");
+
+        end.selectAll(".selection,.to-array,.array")
+                .call(fadeIn);
+
+        end.transition()
+                .duration(500)
+                .each("end", transition3);
+
+        event.end();
+    }
+
+    function transition3() {
+        start.style("display", "none");
+
+        end.selectAll(".element")
+                .style("display", null)
+                .attr("transform", function(d) { return "translate(" + d.parent.depth * step + "," + d.parent.x + ")"; })
+                .transition()
+                .duration(500)
+                .delay(function(d, i) { return i * 50; })
+                .attr("transform", function(d) { return "translate(" + d.depth * step + "," + d.x + ")"; });
+
+        end.selectAll(".to-element")
+                .style("display", null)
+                .attr("d", d3.svg.diagonal()
+                        .source(function(d) { return {y: d.source.depth * step + d.source.width, x: d.source.x}; })
+                        .target(function(d, i) { return {y: d.source.depth * step + d.source.width, x: d.source.x}; })
+                        .projection(function(d) { return [d.y, d.x]; }))
+                .transition()
+                .duration(500)
+                .delay(function(d, i) { return i * 50; })
+                .attr("d", d3.svg.diagonal()
+                        .source(function(d) { return {y: d.source.depth * step + d.source.width, x: d.source.x}; })
+                        .target(function(d, i) { return {y: d.target.depth * step, x: d.target.x}; })
+                        .projection(function(d) { return [d.y, d.x]; }));
+
+//        end.transition()
+//                .duration(2000)
+//                .each("end", resetAll);
+    }
+}
+
+
+function fadeIn(selection, delay) {
+    selection
+            .style("display", null)
+            .style("stroke-opacity", 0)
+            .style("fill-opacity", 0)
+            .transition()
+            .duration(delay || 0)
+            .style("stroke-opacity", 1)
+            .style("fill-opacity", 1);
+}
+
+
 </script>
 
 
@@ -260,8 +400,23 @@ function reset(svg) {
                                 }]
                             }]
                         }]
+                    },{
+                    type: "element",
+                    name: "Stage1",
+                    children: [{
+                        type: "element",
+                        name: "Stage2",
+                        children: [{
+                            type: "element",
+                            name: "Stage3",
+                            children: [{
+                                type: "key",
+                                name: "End"
+                            }]
+                        }]
                     }]
                 }]
+                }],
             },
             24 * 5
     );
@@ -292,5 +447,50 @@ function reset(svg) {
             ]},
             24 * 5
     );
+
+</script>
+
+<script>
+
+    selectAllAnimation(
+            {
+                type: "selection", name: "Start节点", children: [{
+                type: "array", name: "Build节点", children: [{
+                    type: "element",
+                    name: "Stage1",
+                    children: [{
+                        type: "element",
+                        name: "Stage2",
+                        children: [{
+                            type: "element",
+                            name: "Stage3",
+                            children: [{
+                                type: "key",
+                                name: "End"
+                            }]
+                        }]
+                    }]
+                }]
+            }],
+            },
+            24 * 4,
+            {type: "selection", name: "Stage", children: [
+                {type: "array", name: "Actions", children: [
+                    {type: "element", name: "Action1"},
+                    {type: "element", name: "Action2"},
+                    {type: "element", name: "Action3"},
+                    {type: "element", name: "Action4"}
+                ]}
+            ]},
+            24 * 16
+    ).on("start", function() {
+        d3.select("#select-all-1-1").style("background", "#ff0");
+    }).on("middle", function() {
+        d3.select("#select-all-1-1").style("background", null);
+    }).on("end", function() {
+        d3.select("#select-all-1-2").style("background", "#ff0");
+    }).on("reset", function() {
+        d3.selectAll("#select-all-1-1,#select-all-1-2").style("background", null);
+    });
 
 </script>
