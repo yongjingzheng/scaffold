@@ -3,7 +3,7 @@ $(function(){
 });
 
 
-var pipeline = {
+var tempPipeline = {
     stages:[
         {
             id:"Stage1",
@@ -92,15 +92,28 @@ var pipeline = {
     ]
 }
 
+var CurrentX = 0;
+// ($("main").height()-50)/2
+
+var CurrentY = 0;
+    //($("main").height()-50)/2
+
+// var StartX = ($("main").height()-50)/2
+
 
 $(document).ready(function(){
-    // alert($("main").width());
-    // alert($("main").height());
+
     $("#div-d3-main-svg").height($("main").height()-50);
+
+
+
     var width = $("#div-d3-main-svg").width(),
         height = $("#div-d3-main-svg").height();
 
-    var data = d3.range(20).map(function() { return [Math.random() * width, Math.random() * height]; });
+    CurrentX = 50;
+    CurrentY = height/2;
+
+    var data = d3.range(3).map(function() { return [$("#div-d3-main-svg").width()-50, Math.random() * height]; });
 
     var color = d3.scale.category10();
 
@@ -118,7 +131,7 @@ $(document).ready(function(){
     var g = svg.append("g")
         .call(zoom);
 
-    g.append("rect")
+    var MainRect = g.append("rect")
         .attr("width", width)
         .attr("height", height)
         .on("click", clicked);
@@ -126,17 +139,60 @@ $(document).ready(function(){
     var view = g.append("g")
         .attr("class", "view");
 
-    view.selectAll("circle")
-        .data(data)
-        .enter().append("circle")
-        .attr("transform", function(d) { return "translate(" + d + ")"; })
-        .attr("r", 32)
-        .style("fill", function(d, i) { return color(i); })
-        .on("click", clickeCircle);
 
+    var StartView = g.append("g")
+        .attr("class", "view");
+
+    // StartView.append("circle")
+    //     .attr("transform", "translate("+CurrentX+","+CurrentY+")")
+    //     .attr("r", 20)
+    //     .style("fill", "blue")
+    //     .on("click", clickeCircle);
+
+    //Draw Start Point
+    CurrentX = 0;
+    view.append("image")
+        .attr("xlink:href", "./svg/start.svg")
+        .attr("width", "80")
+        .attr("height", "60")
+        .attr("transform", "translate("+CurrentX+","+CurrentY+")")
+        .attr("class","pipeline-start");
+
+    CurrentX = 100;
+    view.append("image")
+        .attr("xlink:href", "./svg/stage.svg")
+        .attr("width", "80")
+        .attr("height", "60")
+        .attr("transform", "translate("+CurrentX+","+CurrentY+")")
+        .attr("class","pipeline-stage");
+
+    //Draw Add Stage Point
+    CurrentX = 200;
+    view.append("image")
+        .attr("xlink:href", "./svg/addStage.svg")
+        .attr("width", "80")
+        .attr("height", "60")
+        .attr("transform", "translate("+CurrentX+","+CurrentY+")")
+        .attr("class","pipeline-add-stage");
+
+    //Draw End Point
+    CurrentX = 300;
+    view.append("image")
+        .attr("xlink:href", "./svg/end.svg")
+        .attr("width", "80")
+        .attr("height", "60")
+        .attr("transform", "translate("+CurrentX+","+CurrentY+")")
+        .attr("class","pipeline-end");
+
+    // remove all
+    // view.selectAll(".pipeline-start").remove();
+    // view.selectAll(".pipeline-stage").remove();
+    // view.selectAll(".pipeline-add-stage").remove();
+    // view.selectAll(".pipeline-end").remove();
 
     function zoomed() {
         view.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+        StartView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
     }
 
     function clicked(d, i) {
@@ -150,11 +206,9 @@ $(document).ready(function(){
         if (d3.event.defaultPrevented) return; // dragged
 
         d3.select(this).transition()
-            // .style("fill", "black")
             .attr("r", 64)
             .transition()
             .attr("r", 32);
-            // .style("fill", color(i));
     }
 
     function nozoom() {
