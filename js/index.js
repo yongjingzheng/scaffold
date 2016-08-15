@@ -1,96 +1,8 @@
+// var uuid = require('node-uuid');
+
 $(function () {
 
 });
-
-
-var tempPipeline = {
-    stages: [
-        {
-            id: "Stage1",
-            name: "Stage1-Git",
-            actions: [
-                {
-                    id: "Stage1-Action1",
-                    name: "Stage1-Action1-Name",
-                    scripts: "alert(Stage1-Action1)"
-                },
-                {
-                    id: "Stage1-Action2",
-                    name: "Stage1-Action2-Name",
-                    scripts: "alert(Stage1-Action2)"
-                },
-                {
-                    id: "Stage1-Action3",
-                    name: "Stage1-Action3-Name",
-                    scripts: "alert(Stage1-Action3)"
-                }
-            ]
-        },
-        {
-            id: "Stage2",
-            name: "Stage2-CheckCode",
-            actions: [
-                {
-                    id: "Stage2-Action1",
-                    name: "Stage2-Action1-Name",
-                    scripts: "alert(Stage2-Action1)"
-                },
-                {
-                    id: "Stage2-Action2",
-                    name: "Stage2-Action2-Name",
-                    scripts: "alert(Stage2-Action2)"
-                },
-                {
-                    id: "Stage2-Action3",
-                    name: "Stage2-Action3-Name",
-                    scripts: "alert(Stage2-Action3)"
-                }
-            ]
-        },
-        {
-            id: "Stage3",
-            name: "Stage3-Build",
-            actions: [
-                {
-                    id: "Stage3-Action1",
-                    name: "Stage3-Action1-Name",
-                    scripts: "alert(Stage3-Action1)"
-                },
-                {
-                    id: "Stage3-Action2",
-                    name: "Stage3-Action2-Name",
-                    scripts: "alert(Stage3-Action2)"
-                },
-                {
-                    id: "Stage3-Action3",
-                    name: "Stage3-Action3-Name",
-                    scripts: "alert(Stage3-Action3)"
-                }
-            ]
-        },
-        {
-            id: "Stage4",
-            name: "Stage4-Build",
-            actions: [
-                {
-                    id: "Stage4-Action1",
-                    name: "Stage4-Action1-Name",
-                    scripts: "alert(Stage4-Action1)"
-                },
-                {
-                    id: "Stage4-Action2",
-                    name: "Stage4-Action2-Name",
-                    scripts: "alert(Stage4-Action2)"
-                },
-                {
-                    id: "Stage3-Action3",
-                    name: "Stage3-Action3-Name",
-                    scripts: "alert(Stage3-Action3)"
-                }
-            ]
-        }
-    ]
-}
 
 var PIPELINE_START = "pipeline-start";
 var PIPELINE_END = "pipeline-end";
@@ -98,13 +10,38 @@ var PIPELINE_ADD_STAGE = "pipeline-add-stage";
 var PIPELINE_ADD_ACTION = "pipeline-add-action";
 
 var PIPELINE_STAGE = "pipeline-stage";
-
+var PIPELINE_ACTION = "pipeline-action";
 
 var pipelineView = null;
+var actionsView = null;
+var actionView = [];
+var buttonView = null;
+
+
+var PipelineNodeSpaceSize = 150;
+var pipelineNodeStartX = 0;
+var pipelineNodeStartY = 0;
+var svgWidth = 0;
+var svgHeight = 0;
+var svgMainRect = null;
+
+
+var svgStageWidth = 80;
+var svgStageHeight = 60;
+
+var svgActionWidth = 60;
+var svgActionHeight = 40;
+
+var svgButtonWidth = 30;
+var svgButtonHeight = 30;
+
+
+var svg = null;
+var g = null;
 
 var pipelineData = [
     {
-        id: "pipeline-start",
+        id: "pipeline-start" + "-" + uuid.v1(),
         type: PIPELINE_START,
         drawX: 0,
         drawY: 0,
@@ -112,10 +49,31 @@ var pipelineData = [
         height: 0,
         translateX: 0,
         translateY: 0
-
+    }, {
+        id: PIPELINE_STAGE + "-" + uuid.v1(),
+        type: PIPELINE_STAGE,
+        class: PIPELINE_STAGE,
+        drawX: 0,
+        drawY: 0,
+        width: 0,
+        height: 0,
+        translateX: 0,
+        translateY: 0,
+        actions:[]
+    }, {
+        id: PIPELINE_STAGE + "-" + uuid.v1(),
+        type: PIPELINE_STAGE,
+        class: PIPELINE_STAGE,
+        drawX: 0,
+        drawY: 0,
+        width: 0,
+        height: 0,
+        translateX: 0,
+        translateY: 0,
+        actions: []
     },
     {
-        id: "pipeline-add-stage",
+        id: "pipeline-add-stage" + "-" + uuid.v1(),
         type: PIPELINE_ADD_STAGE,
         drawX: 0,
         drawY: 0,
@@ -125,7 +83,7 @@ var pipelineData = [
         translateY: 0
     },
     {
-        id: "pipeline-end",
+        id: "pipeline-end" + "-" + uuid.v1(),
         type: PIPELINE_END,
         drawX: 0,
         drawY: 0,
@@ -136,348 +94,399 @@ var pipelineData = [
     }
 ]
 
-var PipelineNodespaceSize = 150;
-var pipelineNodeStartX = 0;
-var pipelineNodeStartY = 0;
-var svgWidth = 0;
-var svgHeight = 0;
 
+$(document).ready(function () {
 
-function initPipeline() {
-
-    for (var i = 0; i < pipelineData.length; i++) {
-        if (pipelineData[i].type == PIPELINE_START) {
-            console.log(PIPELINE_START);
-            showStartNode(pipelineView, pipelineData[i], i);
-        } else if (pipelineData[i].type == PIPELINE_ADD_STAGE) {
-            console.log(PIPELINE_ADD_STAGE);
-            showAddStageNode(pipelineView, pipelineData[i], i);
-        } else if (pipelineData[i].type == PIPELINE_END) {
-            console.log(PIPELINE_END);
-            showEndNode(pipelineView, pipelineData[i], i);
-        }else if (pipelineData[i].type == PIPELINE_STAGE) {
-            console.log(PIPELINE_STAGE);
-            showStageNode(pipelineView, pipelineData[i], i);
-        }
-    }
-}
-
-function initNodeXY() {
+    $("#div-d3-main-svg").height($("main").height() - 50);
     svgWidth = $("#div-d3-main-svg").width();
     svgHeight = $("#div-d3-main-svg").height();
 
+    var zoom = d3.behavior.zoom()
+        .on("zoom", zoomed);
+
+    svg = d3.select("#div-d3-main-svg")
+        .on("touchstart", nozoom)
+        .on("touchmove", nozoom)
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .style("fill", "white");
+
+    g = svg.append("g")
+        .call(zoom);
+
+    svgMainRect = g.append("rect")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .on("click", clicked);
+
+    pipelineView = g.append("g")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .attr("id", "pipelineView");
+
+    actionsView = g.append("g")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .attr("id", "actionsView");
+
+    buttonView = g.append("g")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .attr("id", "buttonView");
+
+
+    initNodeXY();
+    initPipeline();
+
+    initAction();
+});
+
+function initNodeXY() {
     pipelineNodeStartX = 50;
     pipelineNodeStartY = svgHeight / 2;
 }
 
-
-function showStartNode(drawView, showData, i) {
-    console.log("showStartNode\n" + showData);
-    showData.width = 80;
-    showData.height = 60;
-    showData.translateX = pipelineNodeStartX + (PipelineNodespaceSize * i);
-    showData.translateY = pipelineNodeStartY;
-
-    //Draw Start Point
-    drawView.append("image")
-        .attr("xlink:href", "./svg/start.svg")
-        .attr("id", showData.id)
-        .attr("width", showData.width)
-        .attr("height", showData.height)
-        .attr("transform", "translate(" + showData.translateX + "," + showData.translateY + ")")
-        .attr("class", "pipeline-start")
+function initPipeline() {
+    pipelineView.selectAll("image").remove();
+    pipelineView.selectAll("image")
+        .data(pipelineData)
+        .enter()
+        .append("image")
+        .attr("xlink:href", function (d, i) {
+            // console.log(d.type);
+            if (d.type == PIPELINE_START) {
+                // console.log(PIPELINE_START);
+                return "./svg/start.svg";
+            } else if (d.type == PIPELINE_ADD_STAGE) {
+                // console.log(PIPELINE_ADD_STAGE);
+                return "./svg/addStage.svg";
+            } else if (d.type == PIPELINE_END) {
+                // console.log(PIPELINE_END);
+                return "./svg/end.svg";
+            } else if (d.type == PIPELINE_STAGE) {
+                // console.log(PIPELINE_STAGE);
+                return "./svg/stage.svg";
+            }
+        })
+        .attr("id", function (d, i) {
+            return d.id;
+        })
+        .attr("width", function (d, i) {
+            return svgStageWidth;
+        })
+        .attr("height", function (d, i) {
+            return svgStageHeight;
+        })
+        .attr("transform", function (d, i) {
+            d.width = svgStageWidth;
+            d.height = svgStageHeight;
+            d.translateX = i * PipelineNodeSpaceSize + pipelineNodeStartX;
+            d.translateY = pipelineNodeStartY;
+            return "translate(" + d.translateX + "," + d.translateY + ")";
+        })
+        .attr("class", function (d, i) {
+            // console.log(d);
+            if (d.type == PIPELINE_START) {
+                // console.log(PIPELINE_START);
+                return PIPELINE_START;
+            } else if (d.type == PIPELINE_ADD_STAGE) {
+                // console.log(PIPELINE_ADD_STAGE);
+                return PIPELINE_ADD_STAGE;
+            } else if (d.type == PIPELINE_END) {
+                // console.log(PIPELINE_END);
+                return PIPELINE_END;
+            } else if (d.type == PIPELINE_STAGE) {
+                // console.log(PIPELINE_STAGE);
+                return PIPELINE_STAGE;
+            }
+        })
         .on("mouseover", function (d, i) {
-            d3.select("#" + showData.id)
-                .attr("transform", "translate(" + (showData.translateX - (showData.width / 2)) + "," + (showData.translateY - (showData.height / 2)) + ") scale(2)");
+            d3.select("#" + d.id)
+                .attr("transform",
+                    "translate(" + (d.translateX - (d.width / 2)) + "," + (d.translateY - (d.height / 2)) + ") scale(2)");
         })
         .on("mouseout", function (d, i) {
-            d3.select("#" + showData.id)
-                .attr("transform", "translate(" + (showData.translateX) + "," + (showData.translateY ) + ") scale(1)");
+            d3.select("#" + d.id)
+                .attr("transform",
+                    "translate(" + (d.translateX) + "," + (d.translateY ) + ") scale(1)");
+        })
+        .on("click", function (d, i) {
+            if (d.type == PIPELINE_START) {
+                // console.log(PIPELINE_START);
+            } else if (d.type == PIPELINE_ADD_STAGE) {
+                // console.log(PIPELINE_ADD_STAGE);
+                clickAddStage(this, d, i);
+            } else if (d.type == PIPELINE_END) {
+                // console.log(PIPELINE_END);
+            } else if (d.type == PIPELINE_STAGE) {
+                clickStage(this, d, i);
+                // initAction();
+            }
         });
-
 }
 
-function showAddStageNode(drawView, showData, i) {
-    console.log("showAddStageNode\n" + showData);
+function clickAddStage(d, i) {
+    //add stage data
+    pipelineData.splice(
+        pipelineData.length - 2,
+        0,
+        {
+            id: PIPELINE_ACTION + "-" + uuid.v1(),
+            type: PIPELINE_STAGE,
+            class: PIPELINE_STAGE,
+            drawX: 0,
+            drawY: 0,
+            width: 0,
+            height: 0,
+            translateX: 0,
+            translateY: 0,
+            actions:[]
+        });
 
-    showData.width = 80;
-    showData.height = 60;
-    showData.translateX = pipelineNodeStartX + (PipelineNodespaceSize * i);
-    showData.translateY = pipelineNodeStartY;
+    initPipeline();
+    initAction();
+}
 
-    //Draw Start Point
-    drawView.append("image")
-        .attr("xlink:href", "./svg/addStage.svg")
-        .attr("id", showData.id)
-        .attr("width", showData.width)
-        .attr("height", showData.height)
-        .attr("transform", "translate(" + showData.translateX + "," + showData.translateY + ")")
-        .attr("class", "pipeline-start")
+function initAction() {
+    //Action
+    pipelineView.selectAll("image").each(function (d, i) {
+        if (d.type == PIPELINE_STAGE && d.actions != null && d.actions.length > 0) {
+            var actionViewId = "action" + "-" + d.id;
+            if (actionView[actionViewId] == null) {
+                actionView[actionViewId] = actionsView.append("g")
+                    .attr("width", svgWidth)
+                    .attr("height", svgHeight)
+                    .attr("id", actionViewId);
+            } else {
+                actionView[actionViewId].selectAll("image").remove();
+                actionView[actionViewId].attr("width", svgWidth)
+                    .attr("height", svgHeight)
+                    .attr("id", actionViewId);
+            }
+
+            var actionStartX = d.translateX;
+            var actionStartY = d.translateY;
+
+            actionView[actionViewId].selectAll("image")
+                .data(d.actions).enter()
+                .append("image")
+                .attr("xlink:href", function (ad, ai) {
+                    if (ai % 2 == 0) {
+                        return "./svg/action-bottom.svg";
+                    } else {
+                        return "./svg/action-top.svg";
+                    }
+                })
+                .attr("id", function (ad, ai) {
+                    return ad.id;
+                })
+                .attr("width", function (ad, ai) {
+                    return svgActionWidth;
+                })
+                .attr("height", function (ad, ai) {
+                    return svgActionHeight;
+                })
+                .attr("transform", function (ad, ai) {
+                    ad.width = svgActionWidth;
+                    ad.height = svgActionHeight;
+                    if (ai % 2 == 0) {
+                        ad.translateX = actionStartX;
+                        ad.translateY = actionStartY + PipelineNodeSpaceSize * (ai / 2 + 1);
+                    } else {
+                        ad.translateX = actionStartX;
+                        ad.translateY = actionStartY - PipelineNodeSpaceSize * (ai / 2) - 50;
+                    }
+
+                    console.log("translate(" + ad.translateX + "," + ad.translateY + ")");
+                    return "translate(" + ad.translateX + "," + ad.translateY + ")";
+                })
+                .on("mouseover", function (ad, ai) {
+                    d3.select("#" + ad.id)
+                        .attr("transform",
+                            "translate("
+                            + (ad.translateX - (ad.width / 2)) + ","
+                            + (ad.translateY - (ad.height / 2)) + ") scale(2)");
+                })
+                .on("mouseout", function (ad, i) {
+                    d3.select("#" + ad.id)
+                        .attr("transform",
+                            "translate("
+                            + (ad.translateX) + ","
+                            + (ad.translateY ) + ") scale(1)");
+                })
+                .on("click", function (ad, i) {
+                    console.log(ad);
+                });
+
+            d3.select(actionView[actionViewId]).transition()
+                .transition()
+
+        }
+
+    });
+}
+
+function clickStage(sView, sd, si) {
+
+    buttonView.selectAll("image").remove();
+
+    //show add action button
+    buttonView.append("image")
+        .attr("xlink:href", function (d, i) {
+            return "./svg/actionAdd.svg";
+        })
+        .attr("id", function (d, i) {
+            return "button" + "-" + uuid.v1();
+        })
+        .attr("width", function (d, i) {
+            return svgButtonWidth;
+        })
+        .attr("height", function (d, i) {
+            return svgButtonHeight;
+        })
+        .attr("translateX", function (d, i) {
+            return sd.translateX - (svgButtonWidth*2);
+        })
+        .attr("translateY", function (d, i) {
+            return sd.translateY ;
+        })
+        .attr("transform", function (d, i) {
+            return "translate(" + this.attributes["translateX"].value + "," + this.attributes["translateY"].value + ")";
+        })
+        .on("mouseover", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + this.attributes["translateX"].value  + ","
+                    + this.attributes["translateY"].value + ") scale(2)");
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + this.attributes["translateX"].value + ","
+                    + this.attributes["translateY"].value + ") scale(1)");
+        })
         .on("click", function (d, i) {
-            d3.selectAll("image").remove();
-            //添加stage数据
-            pipelineData.splice(
-                pipelineData.length - 2,
+            sd.actions.splice(
+                sd.actions.length,
                 0,
                 {
-                    id: PIPELINE_STAGE+i,
-                    type: PIPELINE_STAGE,
-                    class:PIPELINE_STAGE,
+                    id: PIPELINE_ACTION + "-" + uuid.v1(),
+                    type: PIPELINE_ACTION,
+                    class: PIPELINE_ACTION,
                     drawX: 0,
                     drawY: 0,
                     width: 0,
                     height: 0,
                     translateX: 0,
                     translateY: 0
-
                 });
-            initPipeline();
-        })
-        .on("mouseover", function (d, i) {
-            d3.select("#" + showData.id)
-                .attr("transform", "translate(" + (showData.translateX - (showData.width / 2)) + "," + (showData.translateY - (showData.height / 2)) + ") scale(2)");
-        })
-        .on("mouseout", function (d, i) {
-            d3.select("#" + showData.id)
-                .attr("transform", "translate(" + (showData.translateX) + "," + (showData.translateY ) + ") scale(1)");
-        });
-}
-
-function showEndNode(drawView, showData, i) {
-    console.log("showEndNode\n" + showData);
-
-    showData.width = 80;
-    showData.height = 60;
-    showData.translateX = pipelineNodeStartX + (PipelineNodespaceSize * i);
-    showData.translateY = pipelineNodeStartY;
-
-    //Draw Start Point
-    drawView.append("image")
-        .attr("xlink:href", "./svg/end.svg")
-        .attr("id", showData.id)
-        .attr("width", showData.width)
-        .attr("height", showData.height)
-        .attr("transform", "translate(" + showData.translateX + "," + showData.translateY + ")")
-        .attr("class", "pipeline-start")
-        .on("mouseover", function (d, i) {
-            d3.select("#" + showData.id)
-                .attr("transform", "translate(" + (showData.translateX - (showData.width / 2)) + "," + (showData.translateY - (showData.height / 2)) + ") scale(2)");
-        })
-        .on("mouseout", function (d, i) {
-            d3.select("#" + showData.id)
-                .attr("transform", "translate(" + (showData.translateX) + "," + (showData.translateY ) + ") scale(1)");
+            buttonView.selectAll("image").remove();
+            initAction();
         });
 
-}
-
-function showStageNode(drawView, showData, i) {
-    console.log("showStageNode\n" + showData);
-
-    showData.id = PIPELINE_STAGE+i;
-    showData.width = 80;
-    showData.height = 60;
-    showData.translateX = pipelineNodeStartX + (PipelineNodespaceSize * i);
-    showData.translateY = pipelineNodeStartY;
-
-    //Draw Start Point
-    drawView.append("image")
-        .attr("xlink:href", "./svg/stage.svg")
-        .attr("id", showData.id)
-        .attr("width", showData.width)
-        .attr("height", showData.height)
-        .attr("translateX", showData.translateX)
-        .attr("translateY", showData.translateY)
-        .attr("transform", "translate(" + showData.translateX + "," + showData.translateY + ")")
-        .attr("class", "pipeline-start")
+    //show del stage button
+    buttonView.append("image")
+        .attr("xlink:href", function (d, i) {
+            return "./svg/stageDel.svg";
+        })
+        .attr("id", function (d, i) {
+            return "button" + "-" + uuid.v1();
+        })
+        .attr("width", function (d, i) {
+            return svgButtonWidth;
+        })
+        .attr("height", function (d, i) {
+            return svgButtonHeight;
+        })
+        .attr("translateX", function (d, i) {
+            return sd.translateX + (svgButtonWidth/2);
+        })
+        .attr("translateY", function (d, i) {
+            return sd.translateY - (svgButtonHeight*2);
+        })
+        .attr("transform", function (d, i) {
+            return "translate("
+                + this.attributes["translateX"].value + ","
+                + this.attributes["translateY"].value + ")";
+        })
         .on("mouseover", function (d, i) {
-
-            console.log("StageID:"+this.attributes["id"].value);
-
-            var currentTranslateX = this.attributes["translateX"].value;
-            var currentTranslateY = this.attributes["translateY"].value;
-            var currentWidth = this.attributes["width"].value;
-            var currentHeight = this.attributes["height"].value;
-            d3.select("#" + this.attributes["id"].value)
+            d3.select(this)
                 .attr("transform",
                     "translate("
-                    + (currentTranslateX - currentWidth / 2)
-                    + ","
-                    + (currentTranslateY - currentHeight / 2)
-                    + ") scale(2)");
+                    + (this.attributes["translateX"].value - svgButtonWidth/2) + ","
+                    + (this.attributes["translateY"].value ) + ") scale(2)");
         })
         .on("mouseout", function (d, i) {
-            var currentTranslateX = this.attributes["translateX"].value;
-            var currentTranslateY = this.attributes["translateY"].value;
-            var currentWidth = this.attributes["width"].value;
-            var currentHeight = this.attributes["height"].value;
-            d3.select("#" + this.attributes["id"].value)
+            d3.select(this)
                 .attr("transform",
                     "translate("
-                    + (currentTranslateX )
-                    + ","
-                    + (currentTranslateY)
-                    + ") scale(1)");
+                    + this.attributes["translateX"].value + ","
+                    + this.attributes["translateY"].value + ") scale(1)");
+        })
+        .on("click", function (d, i) {
+            buttonView.selectAll("image").remove();
+            alert("del stage");
         });
 
+
+    //show close stage pop button
+    buttonView.append("image")
+        .attr("xlink:href", function (d, i) {
+            return "./svg/stageClosePop.svg";
+        })
+        .attr("id", function (d, i) {
+            return "button" + "-" + uuid.v1();
+        })
+        .attr("width", function (d, i) {
+            return svgButtonWidth;
+        })
+        .attr("height", function (d, i) {
+            return svgButtonHeight;
+        })
+        .attr("translateX", function (d, i) {
+            return sd.translateX + (svgButtonWidth*3);
+        })
+        .attr("translateY", function (d, i) {
+            return sd.translateY;
+        })
+        .attr("transform", function (d, i) {
+            return "translate("
+                + this.attributes["translateX"].value + ","
+                + this.attributes["translateY"].value + ")";
+        })
+        .on("mouseover", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + (this.attributes["translateX"].value ) + ","
+                    + (this.attributes["translateY"].value ) + ") scale(2)");
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + this.attributes["translateX"].value + ","
+                    + this.attributes["translateY"].value + ") scale(1)");
+        })
+        .on("click", function (d, i) {
+            buttonView.selectAll("image").remove();
+        });
 }
 
-function showActionNode(showData) {
-
+function zoomed() {
+    pipelineView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+    actionsView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+    buttonView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
 }
 
-
-$(document).ready(function () {
-
-    $("#div-d3-main-svg").height($("main").height() - 50);
-    var width = $("#div-d3-main-svg").width(),
-        height = $("#div-d3-main-svg").height();
-
-    // initNodeXY();
-    // CurrentX = 50;
-    // CurrentY = height/2;
-    // var data = d3.range(3).map(function() { return [$("#div-d3-main-svg").width()-50, Math.random() * height]; });
-    // var color = d3.scale.category10();
-
-    var zoom = d3.behavior.zoom()
-        .on("zoom", zoomed);
-
-    var svg = d3.select("#div-d3-main-svg")
-        .on("touchstart", nozoom)
-        .on("touchmove", nozoom)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .style("fill", "white");
-
-    var g = svg.append("g")
-        .call(zoom);
-
-    var MainRect = g.append("rect")
-        .attr("width", width)
-        .attr("height", height)
-        .on("click", clicked);
-
-    pipelineView = g.append("g")
-        .attr("class", "view");
-
-    var StartView = g.append("g")
-        .attr("class", "view");
-
-    // pipelineView = view;
-
-    initNodeXY();
-    initPipeline();
-
-
-    // StartView.append("circle")
-    //     .attr("transform", "translate("+CurrentX+","+CurrentY+")")
-    //     .attr("r", 20)
-    //     .style("fill", "blue")
-    //     .on("click", clickeCircle);
-
-    // //Draw Start Point
-    // CurrentX = 0;
-    // view.append("image")
-    //     .attr("xlink:href", "./svg/start.svg")
-    //     .attr("width", "80")
-    //     .attr("height", "60")
-    //     .attr("transform", "translate("+CurrentX+","+CurrentY+")")
-    //     .attr("class","pipeline-start");
-    //
-    // CurrentX = 100;
-    // view.append("image")
-    //     .attr("xlink:href", "./svg/stage.svg")
-    //     .attr("width", "80")
-    //     .attr("height", "60")
-    //     .attr("transform", "translate("+CurrentX+","+CurrentY+")")
-    //     .attr("class","pipeline-stage");
-    //
-    // //Draw Add Stage Point
-    // CurrentX = 200;
-    // view.append("image")
-    //     .attr("xlink:href", "./svg/addStage.svg")
-    //     .attr("width", "80")
-    //     .attr("height", "60")
-    //     .attr("transform", "translate("+CurrentX+","+CurrentY+")")
-    //     .attr("class","pipeline-add-stage")
-    //     .attr("id","pipeline-add-stage")
-    //     .on("click", clickAddStage)
-    //     .on("mouseover", addStageMouseOver)
-    //     .on("mouseout", addStageMouseOut);
-    //
-    // //Draw End Point
-    // CurrentX = 300;
-    // view.append("image")
-    //     .attr("xlink:href", "./svg/end.svg")
-    //     .attr("width", "80")
-    //     .attr("height", "60")
-    //     .attr("transform", "translate("+CurrentX+","+CurrentY+")")
-    //     .attr("class","pipeline-end");
-
-    // remove all
-    // view.selectAll(".pipeline-start").remove();
-    // view.selectAll(".pipeline-stage").remove();
-    // view.selectAll(".pipeline-add-stage").remove();
-    // view.selectAll(".pipeline-end").remove();
-
-    function zoomed() {
-        pipelineView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
-        StartView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
-    }
-
-    function clicked(d, i) {
-        if (d3.event.defaultPrevented) return; // zoomed
-        d3.select(this).transition()
-            .transition()
-    }
-
-    function clickAddStage(d, i) {
-        // console.log(this.class);
-        // allPrpos(this);
-        console.log(this.attributes["transform"].value);
-        console.log("clickAddStage");
-    }
-
-    function addStageMouseOver(d, i) {
-        // console.log(this.transform);
-        console.log("addStageMouseOver");
-        d3.select("#pipeline-add-stage")
-            .attr("transform", "translate(" + (200 - 40) + "," + (CurrentY - 30) + ") scale(2)");
-
-    }
-
-    function addStageMouseOut(d, i) {
-        // console.log(this.transform);
-        console.log("addStageMouseOut");
-        d3.select("#pipeline-add-stage")
-            .attr("transform", "translate(" + (200) + "," + (CurrentY) + ") scale(1)");
-    }
-
-    function clickeCircle(d, i) {
-        if (d3.event.defaultPrevented) return; // dragged
-
-        d3.select(this).transition()
-            .attr("r", 64)
-            .transition()
-            .attr("r", 32);
-    }
-
-    function nozoom() {
-        d3.event.preventDefault();
-    }
-
-
-});
-
-function allPrpos(obj) {
-    var props = "";
-    for (var p in obj) {
-        if (typeof(obj[p]) == "function") {
-            console.log("function:" + obj[p]);
-        } else {
-            console.log("prop:" + p + "=" + obj[p]);
-        }
-    }
+function clicked(d, i) {
+    if (d3.event.defaultPrevented) return; // zoomed
+    d3.select(this).transition()
+        .transition()
 }
-
-
+function nozoom() {
+    d3.event.preventDefault();
+}
