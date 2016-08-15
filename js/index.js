@@ -1,5 +1,3 @@
-// var uuid = require('node-uuid');
-
 $(function () {
 
 });
@@ -138,7 +136,6 @@ $(document).ready(function () {
 
     initNodeXY();
     initPipeline();
-
     initAction();
 });
 
@@ -249,21 +246,18 @@ function clickAddStage(d, i) {
 }
 
 function initAction() {
+
+    actionsView.selectAll("image").remove();
+
     //Action
     pipelineView.selectAll("image").each(function (d, i) {
         if (d.type == PIPELINE_STAGE && d.actions != null && d.actions.length > 0) {
             var actionViewId = "action" + "-" + d.id;
-            if (actionView[actionViewId] == null) {
-                actionView[actionViewId] = actionsView.append("g")
-                    .attr("width", svgWidth)
-                    .attr("height", svgHeight)
-                    .attr("id", actionViewId);
-            } else {
-                actionView[actionViewId].selectAll("image").remove();
-                actionView[actionViewId].attr("width", svgWidth)
-                    .attr("height", svgHeight)
-                    .attr("id", actionViewId);
-            }
+
+            actionView[actionViewId] = actionsView.append("g")
+                .attr("width", svgWidth)
+                .attr("height", svgHeight)
+                .attr("id", actionViewId);
 
             var actionStartX = d.translateX;
             var actionStartY = d.translateY;
@@ -298,7 +292,6 @@ function initAction() {
                         ad.translateY = actionStartY - PipelineNodeSpaceSize * (ai / 2) - 50;
                     }
 
-                    console.log("translate(" + ad.translateX + "," + ad.translateY + ")");
                     return "translate(" + ad.translateX + "," + ad.translateY + ")";
                 })
                 .on("mouseover", function (ad, ai) {
@@ -385,6 +378,7 @@ function clickStage(sView, sd, si) {
                 });
             buttonView.selectAll("image").remove();
             initAction();
+            console.log(pipelineData)
         });
 
     //show del stage button
@@ -428,7 +422,12 @@ function clickStage(sView, sd, si) {
         })
         .on("click", function (d, i) {
             buttonView.selectAll("image").remove();
-            alert("del stage");
+            pipelineData.splice(si,1);
+
+            console.log(pipelineData);
+
+            initPipeline();
+            initAction();
         });
 
 
