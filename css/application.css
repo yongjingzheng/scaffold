@@ -8046,7 +8046,7 @@ a {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 204px;
+  width: 4px;
   background-color: #242424;
   color: #aaa; }
   .sidebar .slimScrollBar {
@@ -8054,14 +8054,14 @@ a {
     background-color: #aaa !important; }
 
 .page-controls, .content-wrap, .loader-wrap {
-  left: 204px;
+  left: 4px;
   -webkit-transition: left 0.3s ease-in-out;
   -o-transition: left 0.3s ease-in-out;
   transition: left 0.3s ease-in-out; }
   @media (min-width: 768px) {
     .page-controls, .content-wrap, .loader-wrap {
-      margin-left: 50px;
-      left: 154px; } }
+      margin-left: 4px;
+      left: 0px; } }
   .nav-collapsed .page-controls, .nav-collapsed .content-wrap, .nav-collapsed .loader-wrap {
     left: 0; }
   @media (min-width: 992px) {
@@ -8070,13 +8070,13 @@ a {
       -o-transition: none;
       transition: none;
       left: 0;
-      margin-left: 204px; } }
+      margin-left: 4px; } }
 
 .page-controls {
   -webkit-transition: left 0.3s ease-in-out, right 0.3s ease-in-out;
   -o-transition: left 0.3s ease-in-out, right 0.3s ease-in-out;
   transition: left 0.3s ease-in-out, right 0.3s ease-in-out;
-  right: -204px; }
+  right: -4px; }
   .nav-collapsed .page-controls {
     right: 0; }
   @media (min-width: 992px) {
@@ -8152,7 +8152,7 @@ a {
     color: #fff;
     text-decoration: none; }
   .nav-collapsed .logo {
-    width: 50px; }
+    width: 4px; }
   @media (min-width: 992px) {
     .nav-static .logo {
       width: 100%;
