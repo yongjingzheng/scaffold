@@ -111,7 +111,8 @@ $(document).ready(function () {
         .style("fill", "white");
 
     g = svg.append("g")
-        .call(zoom);
+        .call(zoom)
+        .on("dblclick.zoom", null);
 
     svgMainRect = g.append("rect")
         .attr("width", svgWidth)
@@ -486,6 +487,7 @@ function clicked(d, i) {
     d3.select(this).transition()
         .transition()
 }
+
 function nozoom() {
     d3.event.preventDefault();
 }
