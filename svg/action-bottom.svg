@@ -1,11 +1,21 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 436.346 436.346" style="enable-background:new 0 0 436.346 436.346;" xml:space="preserve">
-<g>
-	<path d="M218.173,284.976c-41.733,0-75.685,33.952-75.685,75.685c0,41.732,33.952,75.685,75.685,75.685
-		s75.685-33.952,75.685-75.685C293.858,318.928,259.906,284.976,218.173,284.976z"/>
-	<polygon points="184.313,256.201 252.032,256.201 252.032,123.052 298.273,123.052 218.173,0 138.072,123.052 184.313,123.052 	"/>
-</g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_flows "http://ns.adobe.com/Flows/1.0/">
+]>
+<svg version="1.1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+	 x="0px" y="0px" width="300px" height="280px" viewBox="-9.907 0.25 300 280" enable-background="new -9.907 0.25 300 280"
+	 xml:space="preserve">
+<defs>
+</defs>
+<path d="M0,140.001C0,217.322,62.682,280,140.001,280C217.323,280,280,217.322,280,140C280,62.678,217.323,0,140,0
+	C62.682,0,0,62.681,0,140.001z M230.241,160.065c0,49.77-40.345,90.114-90.109,90.114c-49.769,0-90.113-40.345-90.113-90.113
+	C50.019,110.3,230.241,110.299,230.241,160.065z M179.911,70.655l-27.492-0.012l-0.012,26.299l-24.395,0.014v-26.29l-27.92-0.026
+	l39.902-39.902L179.911,70.655z M179.911,70.655l-27.492-0.012l-0.012,26.299l-24.395,0.014v-26.29l-27.92-0.026l39.902-39.902
+	L179.911,70.655z"/>
+<path fill="#FFFFFF" d="M230.241,160.065c0,49.77-40.345,90.114-90.109,90.114c-49.769,0-90.113-40.345-90.113-90.113
+	C50.019,110.3,230.241,110.299,230.241,160.065z"/>
+<polygon fill="#FFFFFF" points="179.911,70.655 152.418,70.644 152.407,96.943 128.012,96.957 128.012,70.667 100.092,70.641 
+	139.995,30.738 "/>
 </svg>

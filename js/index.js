@@ -11,14 +11,18 @@ var PIPELINE_STAGE = "pipeline-stage";
 var PIPELINE_ACTION = "pipeline-action";
 
 var pipelineView = null;
+
 var actionsView = null;
 var actionView = [];
+
 var buttonView = null;
-var lineView = null;
+
+var linesView = null;
+var lineView = [];
 
 
 var PipelineNodeSpaceSize = 150;
-var ActionNodeSpaceSize = 50;
+var ActionNodeSpaceSize = 75;
 
 var pipelineNodeStartX = 0;
 var pipelineNodeStartY = 0;
@@ -27,20 +31,17 @@ var svgHeight = 0;
 var svgMainRect = null;
 
 
-var svgStageWidth = 80;
-var svgStageHeight = 60;
+var svgStageWidth = 45;
+var svgStageHeight = 42;
 
-var svgActionWidth = 60;
-var svgActionHeight = 40;
+var svgActionWidth = 30;
+var svgActionHeight = 28;
 
 var svgButtonWidth = 30;
 var svgButtonHeight = 30;
 
 var svg = null;
 var g = null;
-
-
-
 
 var pipelineData = [
     {
@@ -62,7 +63,7 @@ var pipelineData = [
         height: 0,
         translateX: 0,
         translateY: 0,
-        actions:[]
+        actions: []
     }, {
         id: PIPELINE_STAGE + "-" + uuid.v1(),
         type: PIPELINE_STAGE,
@@ -96,7 +97,6 @@ var pipelineData = [
         translateY: 0
     }
 ]
-
 
 $(document).ready(function () {
 
@@ -139,10 +139,10 @@ $(document).ready(function () {
         .attr("height", svgHeight)
         .attr("id", "buttonView");
 
-    lineView= g.append("g")
+    linesView = g.append("g")
         .attr("width", svgWidth)
         .attr("height", svgHeight)
-        .attr("id", "lineView");
+        .attr("id", "linesView");
 
     initNodeXY();
     initPipeline();
@@ -210,30 +210,11 @@ function initPipeline() {
         })
         .on("mouseover", function (d, i) {
             d3.select("#" + d.id)
-                .attr("xlink:href", function (d, i) {
-                    return "./svg/addStage.svg";
-                })
                 .attr("transform",
                     "translate(" + (d.translateX - (d.width / 2)) + "," + (d.translateY - (d.height / 2)) + ") scale(2)");
         })
         .on("mouseout", function (d, i) {
             d3.select("#" + d.id)
-                .attr("xlink:href", function (d, i) {
-                    // console.log(d.type);
-                    if (d.type == PIPELINE_START) {
-                        // console.log(PIPELINE_START);
-                        return "./svg/start.svg";
-                    } else if (d.type == PIPELINE_ADD_STAGE) {
-                        // console.log(PIPELINE_ADD_STAGE);
-                        return "./svg/addStage.svg";
-                    } else if (d.type == PIPELINE_END) {
-                        // console.log(PIPELINE_END);
-                        return "./svg/end.svg";
-                    } else if (d.type == PIPELINE_STAGE) {
-                        // console.log(PIPELINE_STAGE);
-                        return "./svg/stage.svg";
-                    }
-                })
                 .attr("transform",
                     "translate(" + (d.translateX) + "," + (d.translateY ) + ") scale(1)");
         })
@@ -247,7 +228,6 @@ function initPipeline() {
                 // console.log(PIPELINE_END);
             } else if (d.type == PIPELINE_STAGE) {
                 clickStage(this, d, i);
-                // initAction();
             }
         });
 }
@@ -267,7 +247,7 @@ function clickAddStage(d, i) {
             height: 0,
             translateX: 0,
             translateY: 0,
-            actions:[]
+            actions: []
         });
 
     initPipeline();
@@ -276,7 +256,6 @@ function clickAddStage(d, i) {
 
 function initAction() {
 
-    // initLine();
 
     actionsView.selectAll("image").remove();
 
@@ -290,7 +269,7 @@ function initAction() {
                 .attr("height", svgHeight)
                 .attr("id", actionViewId);
 
-            var actionStartX = d.translateX;
+            var actionStartX = d.translateX + 7.5;
             var actionStartY = d.translateY;
 
             actionView[actionViewId].selectAll("image")
@@ -317,11 +296,14 @@ function initAction() {
                     ad.height = svgActionHeight;
                     if (ai % 2 == 0) {
                         ad.translateX = actionStartX;
-                        ad.translateY = actionStartY + ActionNodeSpaceSize * (ai / 2 + 1);
+                        ad.translateY = actionStartY + svgStageHeight-25 + ActionNodeSpaceSize * (ai / 2 + 1);
+                        // console.log("bottom action:" + ad.translateY);
                     } else {
                         ad.translateX = actionStartX;
-                        ad.translateY = actionStartY - ActionNodeSpaceSize * (ai / 2) - 50;
+                        ad.translateY = actionStartY - svgStageHeight+5 - ActionNodeSpaceSize * (ai / 2);
+                        // console.log("top action:" + ad.translateY);
                     }
+                    // console.log("actionStartY :" + actionStartY);
 
                     return "translate(" + ad.translateX + "," + ad.translateY + ")";
                 })
@@ -343,53 +325,107 @@ function initAction() {
                     console.log(ad);
                 });
 
-            d3.select(actionView[actionViewId]).transition()
-                .transition()
+            // d3.select(actionView[actionViewId]).transition()
+            //     .transition()
 
         }
 
     });
+
+    initLine();
 }
 
-function initLine(){
+function initLine() {
 
-    var dataset = [
-        {source:{x:110,y:600},target:{x:220,y:600}},
-        {source:{x:260,y:603},target:{x:365,y:603}},
-        {source:{x:410,y:603},target:{x:530,y:603}},
-        // {source:{x:50,y:600},target:{x:1000,y:600}},
-        // {source:{x:50,y:600},target:{x:1000,y:600}},
-        {source:{x:230,y:660}, target:{x:330,y:600}},
-            {source:{x:230,y:710},target:{x:330,y:600}},
-            {source:{x:231,y:500}, target:{x:330,y:600}},
-            {source:{x:231,y:450}, target:{x:330,y:600}}
-        ];
+    linesView.selectAll("g").remove();
 
     var diagonal = d3.svg.diagonal();
 
-    lineView.selectAll("path")
-        .data(dataset)
-        .enter()
-        .append("path")
-        .attr("d",function(d,i){
-            return diagonal(dataset[i]);
-        })
-        .attr("fill","none")
-        .attr("stroke","black")
-        .attr("stroke-width",3);
+    var pipelineLineViewId = "pipeline-line-view";
+    lineView[pipelineLineViewId] = actionsView.append("g")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .attr("id", pipelineLineViewId);
 
-    // lineView.append("path")
-    //     .attr("d",diagonal(dataset))
-    //     .attr("fill","none")
-    //     .attr("stroke","black")
-    //     .attr("stroke-width",3);
-    //
-    //
-    // lineView.append("path")
-    //     .attr("d",diagonal(dataset1))
-    //     .attr("fill","none")
-    //     .attr("stroke","black")
-    //     .attr("stroke-width",3);
+    pipelineView.selectAll("image").each(function (d, i) {
+
+        //pipeline line
+        if (i != 0){
+            lineView[pipelineLineViewId]
+                .append("path")
+                .attr("d", function () {
+                    return diagonal({
+                        source: {x: d.translateX - 106, y: pipelineNodeStartY + 22.5},
+                        target: {x: d.translateX+2 , y: pipelineNodeStartY + 22.5}
+                    });
+                })
+                .attr("fill", "none")
+                .attr("stroke", "blue")
+                .attr("stroke-width", 3);
+        }
+
+
+        //Action Diagonal
+        if (d.type == PIPELINE_STAGE && d.actions != null && d.actions.length > 0) {
+
+            var actionLineViewId = "action-line" + "-" + d.id;
+            var action2StageLineViewId = "action-2-stage-line" + "-" + d.id;
+
+            lineView[actionLineViewId] = actionsView.append("g")
+                .attr("width", svgWidth)
+                .attr("height", svgHeight)
+                .attr("id", actionLineViewId);
+
+            lineView[actionLineViewId].selectAll("path")
+                .data(d.actions).enter()
+                .append("path")
+                .attr("d", function (ad, ai) {
+                    if(ai % 2 == 0){
+                        return diagonal({
+                            source: {x: ad.translateX + 15, y: ad.translateY + 0},
+                            target: {x: ad.translateX + 110, y: pipelineNodeStartY+21}
+                        });
+                    }else{
+                        return diagonal({
+                            source: {x: ad.translateX + 15, y: ad.translateY + 25},
+                            target: {x: ad.translateX + 110, y: pipelineNodeStartY+21}
+                        });
+                    }
+                })
+                .attr("fill", "none")
+                .attr("stroke", "blue")
+                .attr("stroke-width", 1);
+
+            // Action 2 Stage
+            lineView[action2StageLineViewId] = actionsView.append("g")
+                .attr("width", svgWidth)
+                .attr("height", svgHeight)
+                .attr("id", action2StageLineViewId);
+
+            lineView[action2StageLineViewId].selectAll("path")
+                .data(d.actions).enter()
+                .append("path")
+                .attr("d", function (ad, ai) {
+                    if(ai % 2 == 0){
+                        return diagonal({
+                            source: {x: ad.translateX + 15, y: ad.translateY },
+                            target: {x: ad.translateX + 15, y: ad.translateY - 50 }
+                        });
+                    }else{
+                        return diagonal({
+                            source: {x: ad.translateX + 15, y: ad.translateY + 25},
+                            target: {x: ad.translateX + 15, y: ad.translateY + 75}
+                        });
+                    }
+                })
+                .attr("fill", "none")
+                .attr("stroke", "blue")
+                .attr("stroke-width", 1);
+
+
+        }
+
+    });
 
 }
 
@@ -412,10 +448,10 @@ function clickStage(sView, sd, si) {
             return svgButtonHeight;
         })
         .attr("translateX", function (d, i) {
-            return sd.translateX - (svgButtonWidth*2);
+            return sd.translateX - (svgButtonWidth * 2);
         })
         .attr("translateY", function (d, i) {
-            return sd.translateY ;
+            return sd.translateY;
         })
         .attr("transform", function (d, i) {
             return "translate(" + this.attributes["translateX"].value + "," + this.attributes["translateY"].value + ")";
@@ -424,7 +460,7 @@ function clickStage(sView, sd, si) {
             d3.select(this)
                 .attr("transform",
                     "translate("
-                    + this.attributes["translateX"].value  + ","
+                    + this.attributes["translateX"].value + ","
                     + this.attributes["translateY"].value + ") scale(2)");
         })
         .on("mouseout", function (d, i) {
@@ -451,7 +487,7 @@ function clickStage(sView, sd, si) {
                 });
             buttonView.selectAll("image").remove();
             initAction();
-            console.log(pipelineData)
+            // console.log(pipelineData)
         });
 
     //show del stage button
@@ -469,10 +505,10 @@ function clickStage(sView, sd, si) {
             return svgButtonHeight;
         })
         .attr("translateX", function (d, i) {
-            return sd.translateX + (svgButtonWidth/2);
+            return sd.translateX + (svgButtonWidth / 2);
         })
         .attr("translateY", function (d, i) {
-            return sd.translateY - (svgButtonHeight*2);
+            return sd.translateY - (svgButtonHeight * 2);
         })
         .attr("transform", function (d, i) {
             return "translate("
@@ -483,7 +519,7 @@ function clickStage(sView, sd, si) {
             d3.select(this)
                 .attr("transform",
                     "translate("
-                    + (this.attributes["translateX"].value - svgButtonWidth/2) + ","
+                    + (this.attributes["translateX"].value - svgButtonWidth / 2) + ","
                     + (this.attributes["translateY"].value ) + ") scale(2)");
         })
         .on("mouseout", function (d, i) {
@@ -495,9 +531,9 @@ function clickStage(sView, sd, si) {
         })
         .on("click", function (d, i) {
             buttonView.selectAll("image").remove();
-            pipelineData.splice(si,1);
+            pipelineData.splice(si, 1);
 
-            console.log(pipelineData);
+            // console.log(pipelineData);
 
             initPipeline();
             initAction();
@@ -519,7 +555,7 @@ function clickStage(sView, sd, si) {
             return svgButtonHeight;
         })
         .attr("translateX", function (d, i) {
-            return sd.translateX + (svgButtonWidth*3);
+            return sd.translateX + (svgButtonWidth * 3);
         })
         .attr("translateY", function (d, i) {
             return sd.translateY;
@@ -552,6 +588,7 @@ function zoomed() {
     pipelineView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
     actionsView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
     buttonView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+    linesView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
 }
 
 function clicked(d, i) {
