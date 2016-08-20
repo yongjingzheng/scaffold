@@ -42,84 +42,31 @@
         </div>
     </div>
 </nav>
-
-
-
 <div class="content-wrap">
     <!-- main page content. the place to put widgets in. usually consists of .row > .col-md-* > .widget.  -->
     <main id="content" class="content" role="main">
-        <h1 class="page-title">Dashboard <small><small>展示运行状态</small></small></h1>
+        <h1 class="page-title">
+            <image src="./img/logo.png" width="5%" height="5%"/>
+            ContainerOps
+            <small>
+                <small>pipeline design</small>
+            </small>
+        </h1>
         <div class="row">
             <div id="div-d3-main-svg" class="col-md-12">
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <section class="widget">
                     <header>
                         <h5>
-                            Inputs
                         </h5>
-                        <div class="widget-controls">
-                            <a href="#"><i class="glyphicon glyphicon-cog"></i></a>
-                            <a href="#"><i class="fa fa-refresh"></i></a>
-                            <a href="#" data-widgster="close"><i class="glyphicon glyphicon-remove"></i></a>
-                        </div>
                     </header>
-                    <div class="widget-body">
+                    <div class="widget-body" id="pipeline-info-edit">
                         <form class="form-horizontal" role="form">
                             <fieldset>
-                                <legend><strong>Horizontal</strong> form</legend>
-                                <div class="form-group">
-                                    <label for="normal-field" class="col-sm-3 control-label">Stage ID</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" id="normal-field" class="form-control" placeholder="Stage 提示">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="hint-field" class="col-sm-3 control-label">
-                                        Stage Name
-                                    </label>
-                                    <div class="col-sm-6">
-                                        <input type="text" id="hint-field" class="form-control">
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                </section>
-            </div>
-            <div class="col-md-6">
-                <section class="widget">
-                    <header>
-                        <h5>
-                            Inputs
-                        </h5>
-                        <div class="widget-controls">
-                            <a href="#"><i class="glyphicon glyphicon-cog"></i></a>
-                            <a href="#"><i class="fa fa-refresh"></i></a>
-                            <a href="#" data-widgster="close"><i class="glyphicon glyphicon-remove"></i></a>
-                        </div>
-                    </header>
-                    <div class="widget-body">
-                        <form class="form-horizontal" role="form">
-                            <fieldset>
-                                <legend><strong>Sub</strong>form</legend>
-                                <div class="form-group">
-                                    <label for="normal-field" class="col-sm-3 control-label">
-                                        Stage TimeOut</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" id="normal-field" class="form-control" placeholder="Stage 提示">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="hint-field" class="col-sm-3 control-label">
-                                        Stage Code
-                                    </label>
-                                    <div class="col-sm-6">
-                                        <input type="text" id="hint-field" class="form-control">
-                                    </div>
-                                </div>
+                                <legend><strong>Pipeline</strong> setup</legend>
                             </fieldset>
                         </form>
                     </div>
@@ -127,12 +74,12 @@
             </div>
         </div>
         <!--<div class="row">-->
-            <!--<div class="col-md-4">-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-            <!--</div>-->
+        <!--<div class="col-md-6">-->
+        <!--</div>-->
+        <!--<div class="col-md-6">-->
+        <!--</div>-->
+        <!--<div class="col-md-4">-->
+        <!--</div>-->
         <!--</div>-->
     </main>
 </div>
