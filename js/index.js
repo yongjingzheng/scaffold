@@ -445,7 +445,11 @@ function initLine() {
                 })
                 .attr("fill", "none")
                 .attr("stroke", "black")
-                .attr("stroke-width", 1);
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray","2,2");
+            // line {
+            //     stroke-dasharray: 60;
+            // };
 
 
         }
