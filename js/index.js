@@ -22,7 +22,7 @@ var lineView = [];
 
 var clickNodeData = {};
 
-var PipelineNodeSpaceSize = 150;
+var PipelineNodeSpaceSize = 200;
 var ActionNodeSpaceSize = 75;
 
 var pipelineNodeStartX = 0;
@@ -43,6 +43,16 @@ var svgButtonHeight = 30;
 var svg = null;
 var g = null;
 
+//This is the accessor function we talked about above
+var lineFunction = d3.svg.line()
+    .x(function (d) {
+        return d.x;
+    })
+    .y(function (d) {
+        return d.y;
+    })
+    .interpolate("basis");
+
 var pipelineData = [
     {
         id: "pipeline-start" + "-" + uuid.v1(),
@@ -53,7 +63,7 @@ var pipelineData = [
         height: 0,
         translateX: 0,
         translateY: 0,
-        setupData:{}
+        setupData: {}
     },
     // {
     //     id: PIPELINE_STAGE + "-" + uuid.v1(),
@@ -98,7 +108,7 @@ var pipelineData = [
         height: 0,
         translateX: 0,
         translateY: 0,
-        setupData:{}
+        setupData: {}
     }
 ]
 
@@ -148,6 +158,10 @@ $(document).ready(function () {
         .attr("height", svgHeight)
         .attr("id", "buttonView");
 
+    // linesView = g.append("g")
+    //     .attr("width", svgWidth)
+    //     .attr("height", svgHeight)
+    //     .attr("id", "linesView");
 
     initNodeXY();
     initPipeline();
@@ -265,7 +279,7 @@ function clickAddStage(d, i) {
             translateX: 0,
             translateY: 0,
             actions: [],
-            setupData:{}
+            setupData: {}
         });
 
     initPipeline();
@@ -314,10 +328,10 @@ function initAction() {
                     ad.height = svgActionHeight;
                     if (ai % 2 == 0) {
                         ad.translateX = actionStartX;
-                        ad.translateY = actionStartY + svgStageHeight-25 + ActionNodeSpaceSize * (ai / 2 + 1);
+                        ad.translateY = actionStartY + svgStageHeight - 25 + ActionNodeSpaceSize * (ai / 2 + 1);
                     } else {
                         ad.translateX = actionStartX;
-                        ad.translateY = actionStartY - svgStageHeight+5 - ActionNodeSpaceSize * (ai / 2);
+                        ad.translateY = actionStartY - svgStageHeight + 5 - ActionNodeSpaceSize * (ai / 2);
                     }
 
                     return "translate(" + ad.translateX + "," + ad.translateY + ")";
@@ -349,7 +363,7 @@ function initAction() {
                     }
                 })
                 .on("click", function (ad, ai) {
-                    clickAction(this,ad,ai);
+                    clickAction(this, ad, ai);
                 });
         }
 
@@ -365,6 +379,7 @@ function initLine() {
     var diagonal = d3.svg.diagonal();
 
     var pipelineLineViewId = "pipeline-line-view";
+
     lineView[pipelineLineViewId] = linesView.append("g")
         .attr("width", svgWidth)
         .attr("height", svgHeight)
@@ -373,18 +388,18 @@ function initLine() {
     pipelineView.selectAll("image").each(function (d, i) {
 
         //pipeline line
-        if (i != 0){
+        if (i != 0) {
             lineView[pipelineLineViewId]
                 .append("path")
                 .attr("d", function () {
                     return diagonal({
-                        source: {x: d.translateX - 106, y: pipelineNodeStartY + 22.5},
-                        target: {x: d.translateX+2 , y: pipelineNodeStartY + 22.5}
+                        source: {x: d.translateX - PipelineNodeSpaceSize, y: pipelineNodeStartY + 22.5},
+                        target: {x: d.translateX + 2, y: pipelineNodeStartY + 22.5}
                     });
                 })
                 .attr("fill", "none")
                 .attr("stroke", "black")
-                .attr("stroke-width", 3);
+                .attr("stroke-width", 5);
         }
 
 
@@ -399,27 +414,103 @@ function initLine() {
                 .attr("height", svgHeight)
                 .attr("id", actionLineViewId);
 
-            console.log(d.actions);
-
+            //Action line right
             lineView[actionLineViewId].selectAll("path")
                 .data(d.actions).enter()
                 .append("path")
                 .attr("d", function (ad, ai) {
-                    if(ai % 2 == 0){
-                        return diagonal({
-                            source: {x: ad.translateX + 15, y: ad.translateY + 0},
-                            target: {x: ad.translateX + 110, y: pipelineNodeStartY+21}
-                        });
-                    }else{
-                        return diagonal({
-                            source: {x: ad.translateX + 15, y: ad.translateY + 25},
-                            target: {x: ad.translateX + 110, y: pipelineNodeStartY+21}
-                        });
+                    if (ai % 2 == 0) {
+
+                        lineView[actionLineViewId]
+                            .append("path")
+                            .attr("d", function (ld, li) {
+                                var leftLineData = [
+                                    {"x": ad.translateX + 5, "y": ad.translateY + 12},
+                                    {"x": ad.translateX - 30, "y": ad.translateY + 12},
+                                    {"x": ad.translateX - 50, "y": ad.translateY + 12},
+                                    {"x": ad.translateX - 50, "y": pipelineNodeStartY + 50},
+                                    {"x": ad.translateX - 50, "y": pipelineNodeStartY + 23},
+                                    {"x": ad.translateX - 70, "y": pipelineNodeStartY + 23}
+                                ];
+
+                                return lineFunction(leftLineData)
+
+                            })
+                            .attr("fill", "none")
+                            .attr("stroke", "black")
+                            .attr("stroke-width", 2);
+                        var rightLineData = [
+                            {"x": ad.translateX + 25, "y": ad.translateY + 12},
+                            {"x": ad.translateX + 60, "y": ad.translateY + 12},
+                            {"x": ad.translateX + 80, "y": ad.translateY + 12},
+                            {"x": ad.translateX + 80, "y": pipelineNodeStartY + 50},
+                            {"x": ad.translateX + 80, "y": pipelineNodeStartY + 23},
+                            {"x": ad.translateX + 100, "y": pipelineNodeStartY + 23}
+                        ];
+                        return lineFunction(rightLineData);
+
+                    } else {
+                        lineView[actionLineViewId]
+                            .append("path")
+                            .attr("d", function (ld, li) {
+                                // return diagonal({
+                                //     source: {x: ad.translateX + 15, y: ad.translateY + 25},
+                                //     target: {x: ad.translateX - 80, y: pipelineNodeStartY + 21}
+                                // });
+                                var leftLineData = [
+                                    {"x": ad.translateX + 5, "y": ad.translateY + 12},
+                                    {"x": ad.translateX - 30, "y": ad.translateY + 12},
+                                    {"x": ad.translateX - 50, "y": ad.translateY + 12},
+                                    {"x": ad.translateX - 50, "y": pipelineNodeStartY },
+                                    {"x": ad.translateX - 50, "y": pipelineNodeStartY + 22},
+                                    {"x": ad.translateX - 70, "y": pipelineNodeStartY + 22}
+                                ];
+                                return lineFunction(leftLineData);
+                            })
+                            .attr("fill", "none")
+                            .attr("stroke", "black")
+                            .attr("stroke-width", 2);
+
+                        var rightLineData = [
+                            {"x": ad.translateX + 25, "y": ad.translateY + 12},
+                            {"x": ad.translateX + 60, "y": ad.translateY + 12},
+                            {"x": ad.translateX + 80, "y": ad.translateY + 12},
+                            {"x": ad.translateX + 80, "y": pipelineNodeStartY },
+                            {"x": ad.translateX + 80, "y": pipelineNodeStartY + 22},
+                            {"x": ad.translateX + 100, "y": pipelineNodeStartY + 22}
+                        ];
+                        return lineFunction(rightLineData);
+                        // return diagonal({
+                        //     source: {x: ad.translateX + 15, y: ad.translateY + 25},
+                        //     target: {x: ad.translateX + 110, y: pipelineNodeStartY + 21}
+                        // });
                     }
                 })
                 .attr("fill", "none")
                 .attr("stroke", "black")
-                .attr("stroke-width", 1);
+                .attr("stroke-width", 2);
+
+            // //Action line left
+            // lineView[actionLineViewId].selectAll("path")
+            //     .data(d.actions).enter()
+            //     .append("path")
+            //     .attr("d", function (ad, ai) {
+            //         if (ai % 2 == 0) {
+            //             return diagonal({
+            //                 source: {x: ad.translateX + 15, y: ad.translateY + 0},
+            //                 target: {x: ad.translateX - 110, y: pipelineNodeStartY + 21}
+            //             });
+            //         } else {
+            //             return diagonal({
+            //                 source: {x: ad.translateX + 15, y: ad.translateY + 25},
+            //                 target: {x: ad.translateX - 110, y: pipelineNodeStartY + 21}
+            //             });
+            //         }
+            //     })
+            //     .attr("fill", "none")
+            //     .attr("stroke", "green")
+            //     .attr("stroke-width", 1);
+
 
             // Action 2 Stage
             lineView[action2StageLineViewId] = linesView.append("g")
@@ -431,12 +522,38 @@ function initLine() {
                 .data(d.actions).enter()
                 .append("path")
                 .attr("d", function (ad, ai) {
-                    if(ai % 2 == 0){
+                    if (ai % 2 == 0) {
+                        lineView[action2StageLineViewId]
+                            .append("path")
+                            .attr("d", function (fd, fi) {
+                                return diagonal({
+                                    source: {x: ad.translateX + 15, y: ad.translateY + 25},
+                                    target: {x: ad.translateX + 15, y: ad.translateY + 40}
+                                });
+                            })
+                            .attr("fill", "none")
+                            .attr("stroke", "black")
+                            .attr("stroke-width", 1)
+                            .attr("stroke-dasharray", "2,2");
+
                         return diagonal({
-                            source: {x: ad.translateX + 15, y: ad.translateY },
-                            target: {x: ad.translateX + 15, y: ad.translateY - 50 }
+                            source: {x: ad.translateX + 15, y: ad.translateY},
+                            target: {x: ad.translateX + 15, y: ad.translateY - 50}
                         });
-                    }else{
+                    } else {
+                        lineView[action2StageLineViewId]
+                            .append("path")
+                            .attr("d", function (fd, fi) {
+                                return diagonal({
+                                    source: {x: ad.translateX + 15, y: ad.translateY + 0},
+                                    target: {x: ad.translateX + 15, y: ad.translateY - 15}
+                                });
+                            })
+                            .attr("fill", "none")
+                            .attr("stroke", "black")
+                            .attr("stroke-width", 1)
+                            .attr("stroke-dasharray", "2,2");
+
                         return diagonal({
                             source: {x: ad.translateX + 15, y: ad.translateY + 25},
                             target: {x: ad.translateX + 15, y: ad.translateY + 75}
@@ -446,12 +563,7 @@ function initLine() {
                 .attr("fill", "none")
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
-                .attr("stroke-dasharray","2,2");
-            // line {
-            //     stroke-dasharray: 60;
-            // };
-
-
+                .attr("stroke-dasharray", "2,2");
         }
 
     });
@@ -463,18 +575,18 @@ function clickStage(sView, sd, si) {
     clickNodeData = sd;
 
     //show stage form
-    $.ajax( {
+    $.ajax({
         url: "./stageEdit.html",
         type: "GET",
-        cache:false,
-        success: function(data){
+        cache: false,
+        success: function (data) {
             $("#pipeline-info-edit").html($(data));
 
-            $.each(clickNodeData.setupData,function(name,value){
-                $("#"+name).attr("value",value);
+            $.each(clickNodeData.setupData, function (name, value) {
+                $("#" + name).attr("value", value);
             });
 
-            $("#uuid").attr("value",sd.id);
+            $("#uuid").attr("value", sd.id);
         }
     });
 
@@ -507,8 +619,8 @@ function clickStage(sView, sd, si) {
             d3.select(this)
                 .attr("transform",
                     "translate("
-                    + (this.attributes["translateX"].value - svgButtonWidth/2) + ","
-                    + (this.attributes["translateY"].value - svgButtonHeight/2) + ") scale(2)");
+                    + (this.attributes["translateX"].value - svgButtonWidth / 2) + ","
+                    + (this.attributes["translateY"].value - svgButtonHeight / 2) + ") scale(2)");
         })
         .on("mouseout", function (d, i) {
             d3.select(this)
@@ -531,7 +643,7 @@ function clickStage(sView, sd, si) {
                     height: 0,
                     translateX: 0,
                     translateY: 0,
-                    setupData:{}
+                    setupData: {}
                 });
             buttonView.selectAll("image").remove();
             initAction();
@@ -633,47 +745,47 @@ function clickStage(sView, sd, si) {
 
 }
 
-function clickStart(sView,sd, si){
+function clickStart(sView, sd, si) {
 
     clickNodeData = sd;
     console.log(clickNodeData);
     //show git form
-    $.ajax( {
+    $.ajax({
         url: "./gitEdit.html",
         type: "GET",
-        cache:false,
-        success: function(data){
+        cache: false,
+        success: function (data) {
             $("#pipeline-info-edit").html($(data));
 
-            $.each(clickNodeData.setupData,function(name,value){
-                console.log($("#"+name));
-                $("#"+name).attr("value",value);
+            $.each(clickNodeData.setupData, function (name, value) {
+                console.log($("#" + name));
+                $("#" + name).attr("value", value);
             });
 
-            $("#uuid").attr("value",sd.id);
+            $("#uuid").attr("value", sd.id);
 
         }
     });
 }
 
-function clickAction(sView,sd, si){
+function clickAction(sView, sd, si) {
 
     clickNodeData = sd;
 
     //show git form
-    $.ajax( {
+    $.ajax({
         url: "./actionEdit.html",
         type: "GET",
-        cache:false,
-        success: function(data){
+        cache: false,
+        success: function (data) {
             $("#pipeline-info-edit").html($(data));
 
-            $.each(clickNodeData.setupData,function(name,value){
-                console.log($("#"+name));
-                $("#"+name).attr("value",value);
+            $.each(clickNodeData.setupData, function (name, value) {
+                console.log($("#" + name));
+                $("#" + name).attr("value", value);
             });
 
-            $("#uuid").attr("value",sd.id);
+            $("#uuid").attr("value", sd.id);
         }
     });
 
@@ -706,8 +818,8 @@ function clickAction(sView,sd, si){
             d3.select(this)
                 .attr("transform",
                     "translate("
-                    + (this.attributes["translateX"].value - svgButtonWidth/2) + ","
-                    + (this.attributes["translateY"].value - svgButtonHeight/2) + ") scale(2)");
+                    + (this.attributes["translateX"].value - svgButtonWidth / 2) + ","
+                    + (this.attributes["translateY"].value - svgButtonHeight / 2) + ") scale(2)");
         })
         .on("mouseout", function (d, i) {
             d3.select(this)
@@ -719,10 +831,10 @@ function clickAction(sView,sd, si){
         .on("click", function (d, i) {
             buttonView.selectAll("image").remove();
 
-            for (var key in pipelineData){
-                if(pipelineData[key].type == PIPELINE_STAGE && pipelineData[key].actions.length > 0){
-                    for (var actionKey in pipelineData[key].actions){
-                        if (pipelineData[key].actions[actionKey].id = sd.id){
+            for (var key in pipelineData) {
+                if (pipelineData[key].type == PIPELINE_STAGE && pipelineData[key].actions.length > 0) {
+                    for (var actionKey in pipelineData[key].actions) {
+                        if (pipelineData[key].actions[actionKey].id = sd.id) {
                             console.log(sd.id);
                             pipelineData[key].actions.splice(actionKey, 1);
                             initPipeline();
@@ -805,15 +917,14 @@ function nozoom() {
 }
 
 function saveData(saveForm) {
-    clickNodeData.setupData =saveForm.serializeObject();
+    clickNodeData.setupData = saveForm.serializeObject();
     return false;
 }
 
-$.fn.serializeObject = function()
-{
+$.fn.serializeObject = function () {
     var o = {};
     var a = this.serializeArray();
-    $.each(a, function() {
+    $.each(a, function () {
         if (o[this.name]) {
             if (!o[this.name].push) {
                 o[this.name] = [o[this.name]];
