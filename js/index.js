@@ -227,9 +227,9 @@ function initPipeline() {
             d3.select("#" + d.id)
                 .attr("xlink:href", function (d, i) {
                     if (d.type == PIPELINE_START) {
-                        return "./svg/start.svg";
+                        return "./svg/start-mouseover.svg";
                     } else if (d.type == PIPELINE_ADD_STAGE) {
-                        return "./svg/addStage.svg";
+                        return "./svg/addStage-mouseover.svg";
                     } else if (d.type == PIPELINE_END) {
                         return "./svg/end.svg";
                     } else if (d.type == PIPELINE_STAGE) {
@@ -453,10 +453,6 @@ function initLine() {
                         lineView[actionLineViewId]
                             .append("path")
                             .attr("d", function (ld, li) {
-                                // return diagonal({
-                                //     source: {x: ad.translateX + 15, y: ad.translateY + 25},
-                                //     target: {x: ad.translateX - 80, y: pipelineNodeStartY + 21}
-                                // });
                                 var leftLineData = [
                                     {"x": ad.translateX + 5, "y": ad.translateY + 12},
                                     {"x": ad.translateX - 30, "y": ad.translateY + 12},
@@ -489,28 +485,6 @@ function initLine() {
                 .attr("fill", "none")
                 .attr("stroke", "black")
                 .attr("stroke-width", 2);
-
-            // //Action line left
-            // lineView[actionLineViewId].selectAll("path")
-            //     .data(d.actions).enter()
-            //     .append("path")
-            //     .attr("d", function (ad, ai) {
-            //         if (ai % 2 == 0) {
-            //             return diagonal({
-            //                 source: {x: ad.translateX + 15, y: ad.translateY + 0},
-            //                 target: {x: ad.translateX - 110, y: pipelineNodeStartY + 21}
-            //             });
-            //         } else {
-            //             return diagonal({
-            //                 source: {x: ad.translateX + 15, y: ad.translateY + 25},
-            //                 target: {x: ad.translateX - 110, y: pipelineNodeStartY + 21}
-            //             });
-            //         }
-            //     })
-            //     .attr("fill", "none")
-            //     .attr("stroke", "green")
-            //     .attr("stroke-width", 1);
-
 
             // Action 2 Stage
             lineView[action2StageLineViewId] = linesView.append("g")
@@ -896,7 +870,6 @@ function clickAction(sView, sd, si) {
         });
 
 }
-
 
 function zoomed() {
     pipelineView.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
