@@ -808,8 +808,7 @@ function clickAction(sView, sd, si) {
             for (var key in pipelineData) {
                 if (pipelineData[key].type == PIPELINE_STAGE && pipelineData[key].actions.length > 0) {
                     for (var actionKey in pipelineData[key].actions) {
-                        if (pipelineData[key].actions[actionKey].id = sd.id) {
-                            console.log(sd.id);
+                        if (pipelineData[key].actions[actionKey].id == sd.id) {
                             pipelineData[key].actions.splice(actionKey, 1);
                             initPipeline();
                             initAction();
