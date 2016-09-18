@@ -50,10 +50,6 @@
         });
 
 
-        $("#beautify").on("click",function(){
-            var jsonText = $("#jsonText").val();
-            $('#jsonText').val(JSON.stringify(JSON.parse(jsonText), null, 4));
-        })
     }
 
     function isObject(o) { return Object.prototype.toString.call(o) == '[object Object]'; }
@@ -174,38 +170,6 @@
     }
 
 
-    function addChecker(item,opt){
-        if (item.children('.checker').length == 0) {
-            var checker =   $('<span>',  { 'class': 'checker fa fa-square-o' });
-            checker.bind('click', function() {
-                var path = $(this).parent().data('path'); 
-
-                if($(this).hasClass("fa-check-square-o")){
-                    $(this).removeClass("fa-check-square-o").addClass("fa-square-o");
-                }else{
-                    $(this).removeClass("fa-square-o").addClass("fa-check-square-o");
-
-                    
-                }
-
-                
-
-                    var i = 0,
-                        parts = path.split('.');
-                    for (var len = parts.length; i < len - 1; i++) {
-                        outPut = opt[parts[i]];
-                    }
-
-                console.log(outPut);
-
-
-            });
-            item.prepend(checker);
-        }
-    }
-
-
-
     function addListAppender(item, handler) {
         var appender = $('<div>', { 'class': 'item appender' }),
             btn      = $('<button></button>', { 'class': 'property' });
@@ -247,9 +211,9 @@
         for (var key in json) {
             if (!json.hasOwnProperty(key)) continue;
 
-            var item     = $('<div>',   { 'class': 'item', 'data-path': path }),
-                property =   $(opt.propertyElement || '<input>', { 'class': 'property' }),
-                value    =   $(opt.valueElement || '<input>', { 'class': 'value'    });
+            var item     = $('<div>',   { 'class': 'item row', 'data-path': path }),
+                property =   $(opt.propertyElement || '<input>', { 'class': 'property col-md-3' }),
+                value    =   $(opt.valueElement || '<input>', { 'class': 'value col-md-5'    });
 
             if (isObject(json[key]) || isArray(json[key])) {
                 addExpander(item);
@@ -262,7 +226,6 @@
 
             addDeleter(item, opt);
             addChangeType(item, opt);
-            addChecker(item,opt);
 
             item.append(property).append(value);
             root.append(item);

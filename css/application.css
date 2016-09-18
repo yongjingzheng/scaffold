@@ -8730,10 +8730,8 @@ a {
     padding: 3px;
     margin-right: 2px; }
   .json-editor .value {
-    background-color: #ECF3C3;
-    width: 100%; }
+    background-color: #ECF3C3; }
   .json-editor .property {
-    width: 154px;
     background-color: #B1C639;
     color: white;
     font-weight: bold;
@@ -8746,7 +8744,8 @@ a {
   .json-editor .item {
     line-height: 20px;
     margin-top: 2px;
-    position: relative; }
+    position: relative;
+    clear: both; }
   .json-editor .item:last-child {
     border-bottom: none; }
   .json-editor .item > .item {
@@ -8759,9 +8758,12 @@ a {
     height: 11px;
     display: inline-block;
     position: absolute;
-    left: 160px;
+    left: -35px;
     top: 5px;
-    cursor: pointer; }
+    cursor: pointer;
+    color: #bbb; }
+  .json-editor .deleter:hover {
+    color: #000; }
   .json-editor .checker {
     width: 16px;
     height: 11px;
@@ -8773,10 +8775,11 @@ a {
   .json-editor .change-type {
     display: inline-block;
     position: absolute;
-    left: 195px;
+    right: 10%;
     top: 0;
     cursor: pointer;
-    line-height: 26px; }
+    line-height: 26px;
+    color: #bbb; }
   .json-editor .itype {
     padding: 0 5px; }
   .json-editor .change-type:hover .type-items {
@@ -8797,8 +8800,11 @@ a {
     width: 16px;
     height: 11px;
     display: inline-block;
-    margin-left: -15px;
-    cursor: pointer; }
+    z-index: 9;
+    cursor: pointer;
+    position: absolute;
+    left: -15px;
+    top: 7px; }
   .json-editor .item.expanded > .expander {
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sKBBAdNcQGwvUAAAGjSURBVDjLzZNNS1tREIafOfdGjcaA65hFKQUpWIWCLgwI3fQnFMGN0Z/QiqsWKVgKLrpx78pNoZv+BUU0WNRC/dgoTaFCMWnUNoZ7b6aLm5ycS+quix44cJiPd953Zg78N2fv9BwAVRVVNXdccWMBpP04PPvmnxwdfd7Z2hyxzpZXtVNocqpwkssPjx6XtoNisdgBOK/8WnxamHhrjEEAEUkwVFUUaDYjNj58XH88cn8OwHSqSbpe/22T3XTX1rhtUKtWLUtDIlAQEYwIURRZexgGGBEX2IryXb3S8uXyeQYzGYc/XN/cUC6XQTq9SQIQI4RhxPMXSzyZLtjmGYHS/iGzM89iQX8DUBQUUr7P6+VXrPb1MpjNAnBVq1G/bdCT6iEIAkeACxDno0Dl8pIwDDGeZwONSJynybH6XaNSpQl4nmcLiUCz5YttKl1TUNWrTDabAEmwU0VR+gcGSKfTla5NXH2/wYOh3MGn0u4jZzcss3afxsbGg+r3r4WF+YXdBMDW/hemxh/yZvnlPc/zU7ax7Qm1tPz8cVFeebdW/2ef8A+6rb2Fr7Cr4wAAAABJRU5ErkJggg==") no-repeat center center; }
   .json-editor .item.appender > .property {

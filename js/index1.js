@@ -1,6 +1,3 @@
-$(function () {
-
-});
 
 var PIPELINE_START = "pipeline-start";
 var PIPELINE_END = "pipeline-end";
@@ -43,6 +40,8 @@ var svgButtonHeight = 30;
 var svg = null;
 var g = null;
 
+
+
 //This is the accessor function we talked about above
 var lineFunction = d3.svg.line()
     .x(function (d) {
@@ -65,30 +64,129 @@ var pipelineData = [
         translateY: 0,
         setupData: {}
     },
-    // {
-    //     id: PIPELINE_STAGE + "-" + uuid.v1(),
-    //     type: PIPELINE_STAGE,
-    //     class: PIPELINE_STAGE,
-    //     drawX: 0,
-    //     drawY: 0,
-    //     width: 0,
-    //     height: 0,
-    //     translateX: 0,
-    //     translateY: 0,
-    //     actions: [],
-    //     setupData:{}
-    // }, {
-    //     id: PIPELINE_STAGE + "-" + uuid.v1(),
-    //     type: PIPELINE_STAGE,
-    //     class: PIPELINE_STAGE,
-    //     drawX: 0,
-    //     drawY: 0,
-    //     width: 0,
-    //     height: 0,
-    //     translateX: 0,
-    //     translateY: 0,
-    //     actions: []
-    // },
+    {
+        id: PIPELINE_STAGE + "-" + uuid.v1(),
+        type: PIPELINE_STAGE,
+        class: PIPELINE_STAGE,
+        drawX: 0,
+        drawY: 0,
+        width: 0,
+        height: 0,
+        translateX: 0,
+        translateY: 0,
+        actions: [
+            {
+                id: PIPELINE_ACTION + "-" + uuid.v1(),
+                type: PIPELINE_ACTION,
+                class: PIPELINE_ACTION,
+                drawX: 0,
+                drawY: 0,
+                width: 0,
+                height: 0,
+                translateX: 0,
+                translateY: 0,
+                actions: [],
+                setupData: {}
+            },
+             {
+                id: PIPELINE_ACTION + "-" + uuid.v1(),
+                type: PIPELINE_ACTION,
+                class: PIPELINE_ACTION,
+                drawX: 0,
+                drawY: 0,
+                width: 0,
+                height: 0,
+                translateX: 0,
+                translateY: 0,
+                actions: [],
+                setupData: {}
+            }
+
+        ],
+        setupData:{}
+    },
+    {
+        id: PIPELINE_STAGE + "-" + uuid.v1(),
+        type: PIPELINE_STAGE,
+        class: PIPELINE_STAGE,
+        drawX: 0,
+        drawY: 0,
+        width: 0,
+        height: 0,
+        translateX: 0,
+        translateY: 0,
+        actions: [
+            {
+                id: PIPELINE_ACTION + "-" + uuid.v1(),
+                type: PIPELINE_ACTION,
+                class: PIPELINE_ACTION,
+                drawX: 0,
+                drawY: 0,
+                width: 0,
+                height: 0,
+                translateX: 0,
+                translateY: 0,
+                actions: [],
+                setupData: {}
+            },
+             {
+                id: PIPELINE_ACTION + "-" + uuid.v1(),
+                type: PIPELINE_ACTION,
+                class: PIPELINE_ACTION,
+                drawX: 0,
+                drawY: 0,
+                width: 0,
+                height: 0,
+                translateX: 0,
+                translateY: 0,
+                actions: [],
+                setupData: {}
+            }
+
+        ],
+        setupData:{}
+    },
+    {
+        id: PIPELINE_STAGE + "-" + uuid.v1(),
+        type: PIPELINE_STAGE,
+        class: PIPELINE_STAGE,
+        drawX: 0,
+        drawY: 0,
+        width: 0,
+        height: 0,
+        translateX: 0,
+        translateY: 0,
+        actions: [
+            {
+                id: PIPELINE_ACTION + "-" + uuid.v1(),
+                type: PIPELINE_ACTION,
+                class: PIPELINE_ACTION,
+                drawX: 0,
+                drawY: 0,
+                width: 0,
+                height: 0,
+                translateX: 0,
+                translateY: 0,
+                actions: [],
+                setupData: {}
+            },
+             {
+                id: PIPELINE_ACTION + "-" + uuid.v1(),
+                type: PIPELINE_ACTION,
+                class: PIPELINE_ACTION,
+                drawX: 0,
+                drawY: 0,
+                width: 0,
+                height: 0,
+                translateX: 0,
+                translateY: 0,
+                actions: [],
+                setupData: {}
+            }
+
+        ],
+        setupData:{}
+    },
     {
         id: "pipeline-add-stage" + "-" + uuid.v1(),
         type: PIPELINE_ADD_STAGE,
@@ -112,6 +210,15 @@ var pipelineData = [
     }
 ]
 
+
+var linePathAry = [];
+
+
+var drag = d3.behavior.drag()
+    .origin(function(d) { return d; })
+    .on("dragstart",dragstarted);
+
+
 $(document).ready(function () {
 
     $("#div-d3-main-svg").height($("main").height() / 1.5);
@@ -121,6 +228,8 @@ $(document).ready(function () {
     var zoom = d3.behavior.zoom()
         .on("zoom", zoomed);
 
+    
+
     svg = d3.select("#div-d3-main-svg")
         .on("touchstart", nozoom)
         .on("touchmove", nozoom)
@@ -128,6 +237,9 @@ $(document).ready(function () {
         .attr("width", svgWidth)
         .attr("height", svgHeight)
         .style("fill", "white");
+
+
+
 
     g = svg.append("g")
         .call(zoom)
@@ -158,14 +270,11 @@ $(document).ready(function () {
         .attr("height", svgHeight)
         .attr("id", "buttonView");
 
-    // linesView = g.append("g")
-    //     .attr("width", svgWidth)
-    //     .attr("height", svgHeight)
-    //     .attr("id", "linesView");
 
     initNodeXY();
     initPipeline();
     initAction();
+
 });
 
 function initNodeXY() {
@@ -174,6 +283,7 @@ function initNodeXY() {
 }
 
 function initPipeline() {
+
     pipelineView.selectAll("image").remove();
     pipelineView.selectAll("image")
         .data(pipelineData)
@@ -223,10 +333,22 @@ function initPipeline() {
                 return PIPELINE_STAGE;
             }
         })
+        .on("mousedown",function(d,i){
+
+            if (d.type == PIPELINE_START) {
+                dragDropSetPath({
+                        "data" : d,
+                        "node" : i
+                    });
+                
+            }
+
+        })
         .on("mouseover", function (d, i) {
             d3.select("#" + d.id)
                 .attr("xlink:href", function (d, i) {
                     if (d.type == PIPELINE_START) {
+                         mouseoverRelevantPipeline(d);
                         return "./svg/start-mouseover.svg";
                     } else if (d.type == PIPELINE_ADD_STAGE) {
                         return "./svg/addStage-mouseover.svg";
@@ -241,6 +363,7 @@ function initPipeline() {
             d3.select("#" + d.id)
                 .attr("xlink:href", function (d, i) {
                     if (d.type == PIPELINE_START) {
+                        mouseoutRelevantPipeline();
                         return "./svg/start.svg";
                     } else if (d.type == PIPELINE_ADD_STAGE) {
                         return "./svg/addStage.svg";
@@ -260,10 +383,16 @@ function initPipeline() {
             } else if (d.type == PIPELINE_STAGE) {
                 clickStage(this, d, i);
             }
-        });
+        }).call(drag);
+
+
+        
+
 }
 
 function clickAddStage(d, i) {
+
+
     //add stage data
     pipelineData.splice(
         pipelineData.length - 2,
@@ -336,6 +465,13 @@ function initAction() {
 
                     return "translate(" + ad.translateX + "," + ad.translateY + ")";
                 })
+                .on("mousedown",function(ad,ai){
+                    dragDropSetPath({
+                        "data" : ad,
+                        "node" : ai
+                    });
+                   
+                })
                 .on("mouseover", function (ad, ai) {
                     if (ai % 2 == 0) {
                         d3.select("#" + ad.id)
@@ -348,6 +484,7 @@ function initAction() {
                                 return "./svg/action-top-mouseover.svg";
                             });
                     }
+                    mouseoverRelevantPipeline(ad);
                 })
                 .on("mouseout", function (ad, ai) {
                     if (ai % 2 == 0) {
@@ -361,10 +498,11 @@ function initAction() {
                                 return "./svg/action-top.svg";
                             });
                     }
+                    mouseoutRelevantPipeline();
                 })
                 .on("click", function (ad, ai) {
                     clickAction(this, ad, ai);
-                });
+                }).call(drag);
         }
 
     });
@@ -463,57 +601,193 @@ function initLine() {
         }
 
     });
-
-
-    //start to stage1
-    getPathData(pipelineLineViewId,{x:50,y:382},{x:257,y:477});
-    getPathData(pipelineLineViewId,{x:50,y:382},{x:257,y:549});
-    getPathData(pipelineLineViewId,{x:50,y:382},{x:257,y:307});
-    getPathData(pipelineLineViewId,{x:50,y:382},{x:257,y:232});
-
-
-    getPathData(pipelineLineViewId,{x:257,y:232},{x:457,y:307});
-    getPathData(pipelineLineViewId,{x:257,y:307},{x:457,y:307});
-    getPathData(pipelineLineViewId,{x:257,y:232},{x:457,y:474});
-
-    getPathData(pipelineLineViewId,{x:257,y:549},{x:657,y:474});
-    getPathData(pipelineLineViewId,{x:457,y:307},{x:657,y:474});
-
-    getPathData(pipelineLineViewId,{x:457,y:474},{x:657,y:307});
-
-    getPathData(pipelineLineViewId,{x:257,y:474},{x:657,y:307});
-
-    getPathData(pipelineLineViewId,{x:257,y:474},{x:457,y:549});
-
-    getPathData(pipelineLineViewId,{x:657,y:307},{x:857,y:474});
-    getPathData(pipelineLineViewId,{x:657,y:474},{x:857,y:474});
-
+ 
+   linePathAry.forEach(function(i){
+        setPath(i);
+   })
 }
 
 
-function getPathData(pipelineLineViewId,sd,td){
-    lineView[pipelineLineViewId]
-        .append("path")
-        .attr("d", function () {
-            var curvature = .5;
-            var x0 = sd.x + 30,
-                x1 = td.x + 2,
-                xi = d3.interpolateNumber(x0, x1),
-                x2 = xi(curvature),
-                x3 = xi(1 - curvature),
-                y0 = sd.y + 30 / 2,
-                y1 = td.y + 30 / 2;
+function mouseoverRelevantPipeline(thisData){
+    var pathAry = d3.selectAll("#pipeline-line-view path")[0];
+    pathAry.forEach(function(i){
+       try{
+            var _path = d3.select(i),
+                _class = _path.attr("class");
+            if(!!_class){
+                // _path.attr("stroke-opacity","0.1");
+            }
+           
+            if(_class.indexOf(thisData.id) == 0){
+                i.parentNode.appendChild(i);
+                _path.attr("stroke-opacity","1");
+            }
+       }catch(e){
 
-            return "M" + x0 + "," + y0
-                + "C" + x2 + "," + y0
-                + " " + x3 + "," + y1
-                + " " + x1 + "," + y1;
-        })
+       }
+      
+    })
+}
+
+
+function mouseoutRelevantPipeline(){
+    var pathAry = d3.selectAll("#pipeline-line-view path")[0];
+    pathAry.forEach(function(i){
+        var _path = d3.select(i),
+             _class = _path.attr("class");
+        if(!!_class){
+            _path.attr("stroke-opacity","0.2");
+         }
+      
+    })
+}
+
+
+
+function dragDropSetPath(options){
+
+    
+    var thisData = options.data,
+        thisIndex = options.node;
+   
+
+    var  _path =  d3.select("svg>g").insert("path",":nth-child(2)").attr("class","drag-drop-line"),
+         _startX = $(window.event.target).offset().left,
+         _startY = $(window.event.target).offset().top,
+         _pageTitleHeight = $(".page-title").height();  
+
+    document.onmousemove = function(e){
+       
+        var diffX = e.pageX - _startX,
+            diffY = e.pageY - _startY;
+
+        _path.attr("d", getPathData({x:_startX-60,y:_startY-(105+_pageTitleHeight)},{x:_startX + diffX -40,y:_startY + diffY -(130+_pageTitleHeight)}))
+            .attr("fill", "none")
+            .attr("stroke-opacity", "1")
+            .attr("stroke", "green")
+            .attr("stroke-width", 10);
+    }
+    document.onmouseup = function (e){
+        document.onmousemove = null;   
+        document.onmouseup = null; 
+        d3.select(".drag-drop-line").remove();
+
+        try{
+            var _data = d3.select(e.target)[0][0].__data__;
+            var _class = thisData.id +_data.id;
+            if(d3.selectAll("."+_class)[0].length > 0){
+                alert("Repeated addition");
+                return false;
+            }
+        }catch(e){
+
+        }
+        
+
+        if(_data !== undefined && _data.translateX > thisData.translateX && _data.class === "pipeline-action"){
+            setPath({
+                pipelineLineViewId : "pipeline-line-view",
+                startPoint : {x:thisData.translateX,y:thisData.translateY},
+                endPoint : {x:_data.translateX,y:_data.translateY},
+                defaultClass : _class
+            });
+
+            linePathAry.push({
+                pipelineLineViewId : "pipeline-line-view",
+                startPoint : {x:thisData.translateX,y:thisData.translateY},
+                endPoint : {x:_data.translateX,y:_data.translateY},
+                defaultClass : _class
+            });
+
+           
+        } 
+        
+    }
+}
+
+
+
+
+function setPath(options){
+    lineView[options.pipelineLineViewId]
+        .append("path")
+        .attr("d", getPathData(options.startPoint,options.endPoint))
         .attr("fill", "none")
         .attr("stroke-opacity", "0.2")
         .attr("stroke", "green")
-        .attr("stroke-width", 15);
+        .attr("stroke-width", 15)
+        .attr("class",options.defaultClass)
+        .on("mouseover",function(){
+            this.parentNode.appendChild(this);
+            d3.select(this).attr("stroke-opacity","1");
+        })
+        .on("mouseout",function(){
+            d3.select(this).attr("stroke-opacity","0.2");
+        })
+        .on("click",function(d){
+            $.ajax({
+                url: "./templates/pipelineEdit.html",
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $("#pipeline-info-edit").html($(data));
+                    //pipelineEdit(data);
+
+                    $("#importJson").click(function(){
+                        
+                        var val = $("#importJsonText").val();
+                        var json;
+                        try{
+                            json = (JSON.parse(val));
+                            $('#importDiv').jsonEditor(json, {});
+                        }catch(e){
+                            console.log("Error in parsing json.");
+                            alert("Error in parsing json.");
+                        }
+
+                    });
+                }
+            });
+        });
+
 }
+
+function getPathData(startPoint,endPoint){  
+    var curvature = .5;
+    var x0 = startPoint.x + 30,
+        x1 = endPoint.x + 2,
+        xi = d3.interpolateNumber(x0, x1),
+        x2 = xi(curvature),
+        x3 = xi(1 - curvature),
+        y0 = startPoint.y + 30 / 2,
+        y1 = endPoint.y + 30 / 2;
+
+    return "M" + x0 + "," + y0
+        + "C" + x2 + "," + y0
+        + " " + x3 + "," + y1
+        + " " + x1 + "," + y1;
+}
+
+
+
+function pipelineEdit(data){
+
+
+     d3.json("js/flare.json", function (nodes) {
+       
+        var opt = { 
+            change: function(data) { /* called on every change */ },
+            propertyclick: function(path) { /* called when a property is clicked with the JS path to that property */ }
+        };
+        /* opt.propertyElement = '<textarea>'; */ // element of the property field, <input> is default
+        /* opt.valueElement = '<textarea>'; */  // element of the value field, <input> is default
+        $('#importDiv').jsonEditor(nodes, opt);
+    });  
+    
+}
+
+
+
 
 function clickStage(sView, sd, si) {
 
@@ -521,7 +795,7 @@ function clickStage(sView, sd, si) {
 
     //show stage form
     $.ajax({
-        url: "./stageEdit.html",
+        url: "./templates/stageEdit.html",
         type: "GET",
         cache: false,
         success: function (data) {
@@ -638,8 +912,7 @@ function clickStage(sView, sd, si) {
             buttonView.selectAll("image").remove();
             pipelineData.splice(si, 1);
 
-            // console.log(pipelineData);
-
+          
             initPipeline();
             initAction();
         });
@@ -693,10 +966,9 @@ function clickStage(sView, sd, si) {
 function clickStart(sView, sd, si) {
 
     clickNodeData = sd;
-    console.log(clickNodeData);
     //show git form
     $.ajax({
-        url: "./gitEdit.html",
+        url: "./templates/gitEdit.html",
         type: "GET",
         cache: false,
         success: function (data) {
@@ -719,7 +991,7 @@ function clickAction(sView, sd, si) {
 
     //show git form
     $.ajax({
-        url: "./actionEdit.html",
+        url: "./templates/actionEdit.html",
         type: "GET",
         cache: false,
         success: function (data) {
@@ -863,6 +1135,12 @@ function saveData(saveForm) {
     clickNodeData.setupData = saveForm.serializeObject();
     return false;
 }
+
+
+function dragstarted(d) {
+  d3.event.sourceEvent.stopPropagation();  
+}
+
 
 $.fn.serializeObject = function () {
     var o = {};
