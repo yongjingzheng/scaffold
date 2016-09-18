@@ -1,0 +1,38 @@
+[
+  {
+    spec: {
+      name: "gitUrl",
+      type: "inputValue constantValue array object",
+      constantValue: "abc123"
+    },
+    child: [
+      {
+        spec: {
+          name: "version",
+          type: "inputValue constantValue object array"
+        },
+        child: []
+      }
+    ]
+  },
+  {
+    spec: {
+      name: "gitAuth",
+      type: "object"
+    },
+    child: [
+      {
+        spec: {
+          name: "username",
+          type: "inputValue"
+        }
+      },
+      {
+        spec: {
+          name: "password",
+          type: "inputValue"
+        }
+      }
+    ]
+  }
+]

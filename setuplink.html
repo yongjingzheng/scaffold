@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scaffold</title>
+    <link href="css/application.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <script src="node_modules/node-uuid/uuid.js"></script>
+    <script>
+    </script>
+</head>
+<body>
+<div class="content-wrap">
+    <!-- main page content. the place to put widgets in. usually consists of .row > .col-md-* > .widget.  -->
+    <main id="content" class="content" role="main">
+        <div class="row">
+            <div id="div-d3-main-svg" class="col-md-12">
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<!-- common libraries. required for every page-->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/d3/d3.js"></script>
+
+<!-- page specific js -->
+<script src="js/sankey.js"></script>
+<script>
+    $("#div-d3-main-svg").height($("main").height() / 1.5);
+    var svgWidth = $("#div-d3-main-svg").width();
+    var svgHeight = $("#div-d3-main-svg").height();
+
+
+    var svg = d3.select("#div-d3-main-svg")
+            .append("svg")
+            .attr("width", svgWidth)
+            .attr("height", svgHeight)
+            .style("fill", "white");
+
+    // 节点和连接数据
+    var data = {
+        'nodes': [
+            {name: "0"},
+            {name: "1"},
+            {name: "2"},
+            {name: "3"},
+            {name: "4"},
+            {name: "5"},
+            {name: "6"},
+            {name: "7"},
+            {name: "8"}
+        ],
+        'links': [
+            {source: 0, target: 3, value: 5},
+            {source: 1, target: 4, value: 5},
+            {source: 2, target: 4, value: 5},
+            {source: 1, target: 5, value: 5},
+            {source: 3, target: 6, value: 5},
+            {source: 3, target: 7, value: 5},
+            {source: 4, target: 7, value: 5},
+            {source: 4, target: 8, value: 5},
+            {source: 5, target: 8, value: 5}
+        ]
+    };
+
+
+    // 定义桑基布局
+    var sankey = d3.sankey()
+            .nodeWidth(0)
+            .nodePadding(40)
+            .size([600, 300])
+            .nodes(data.nodes)
+            .links(data.links)
+            .layout(3);
+
+    // 路径数据生成器
+    var path = sankey.link();
+
+
+    // 绘制连接数据
+    var links = svg.append("g").selectAll("path")
+            .data(data.links)
+            .enter()
+
+    // 绑定节点数据
+    var nodes = svg.append("g").selectAll(".node")
+            .data(data.nodes)
+            .enter();
+
+    // 绘制连接线
+    links.append("path")
+            .attr({
+                fill: "none",   //填充色
+                stroke: function(d,i){ return "blue"; },  //描边色
+                "stroke-opacity": 0.5,  //描边透明度
+                d: path,  //路径数据
+                id: function(d,i){ return 'link' +i }  //ID
+            })
+            .style("stroke-width", function (d) {  //连线的宽度
+                return Math.max(1, d.dy);
+            });
+
+    // 绘制圆形节点
+    nodes.append("circle")
+            .attr("transform",function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            })
+            .attr("r", function(d) { return d.dy / 2; })
+            .attr("cx", function(d) { return d.dx/2; })
+            .attr("cy", function(d) { return d.dy / 2; })
+            .style("fill", "tomato")
+            .style("stroke", "gray");
+
+    // 绘制节点文本
+    nodes.append("text")
+            .attr({
+                x: function (d) { return d.x+sankey.nodeWidth() / 2; },
+                y: function (d) { return d.y+d.dy / 2; }
+            })
+            .text(function (d) { return d.name; });
+
+//    // 绘制圆形节点
+//    nodes.append("circle")
+//            .attr("transform",function (d) {
+//                return "translate(" + d.x + "," + d.y + ")";
+//            })
+//            .attr("r", function(d) { return d.dy / 2; })
+//            .attr("cx", function(d) { return d.dx / 2; })
+//            .attr("cy", function(d) { return d.dy / 2; })
+//            .style("fill", "tomato");
+</script>
+</body>
+</html>

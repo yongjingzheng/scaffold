@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scaffold</title>
+    <link href="css/application.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <script src="node_modules/node-uuid/uuid.js"></script>
+    <script>
+    </script>
+</head>
+<body>
+
+<!-- This is the white navigation bar seen on the top. A bit enhanced BS navbar. See .page-controls in _base.scss. -->
+<nav class="page-controls">
+    <div class="container-fluid">
+        <!-- .navbar-header contains links seen on xs & sm screens -->
+        <div class="navbar-header">
+            <ul class="nav navbar-nav">
+                <li class="ml-n-xs hidden-xs"><a href="#"><i class="fa fa-bars fa-lg"></i></a></li>
+                <li class="ml-sm mr-n-xs hidden-xs"><a href="#"><i class="fa fa-refresh fa-lg"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- this part is hidden for xs screens -->
+        <div class="collapse navbar-collapse">
+            <!-- search form! link it to your search server -->
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <div class="input-group input-group-no-border">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                        <input class="form-control" type="text" placeholder="Search Dashboard">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="content-wrap">
+    <!-- main page content. the place to put widgets in. usually consists of .row > .col-md-* > .widget.  -->
+    <main id="content" class="content" role="main">
+        <h1 class="page-title">
+            <image src="./img/logo.png" width="5%" height="5%"/>
+            ContainerOps
+            <small>
+                <small>pipeline design</small>
+            </small>
+        </h1>
+        <div class="row">
+            <div id="div-d3-main-svg" class="col-md-12">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <section class="widget">
+                    <header>
+                        <h5>
+                        </h5>
+                    </header>
+                    <div class="widget-body" id="pipeline-info-edit">
+                        <form class="form-horizontal" role="form">
+                            <fieldset>
+                                <legend><strong>Pipeline</strong> setup</legend>
+                            </fieldset>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!--<div class="row">-->
+        <!--<div class="col-md-6">-->
+        <!--</div>-->
+        <!--<div class="col-md-6">-->
+        <!--</div>-->
+        <!--<div class="col-md-4">-->
+        <!--</div>-->
+        <!--</div>-->
+    </main>
+</div>
+
+<!-- The Loader. Is shown when pjax happens -->
+<div class="loader-wrap hiding hide">
+    <i class="fa fa-circle-o-notch fa-spin-fast"></i>
+</div>
+
+<!-- common libraries. required for every page-->
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/d3/d3.js"></script>
+
+<!-- page specific js -->
+<script src="js/index1-4.js"></script>
+</body>
+</html>
