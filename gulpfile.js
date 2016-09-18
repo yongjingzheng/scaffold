@@ -6,7 +6,7 @@ var sass = require('gulp-sass');
 
 var rename = require ('gulp-rename');
 
-gulp.task('styles', function () {
+gulp.task('default', function () {
 
     gulp.src('./sass/application.scss')
         .pipe(sass().on('error', sass.logError))

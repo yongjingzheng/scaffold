@@ -102,9 +102,9 @@ $(document).ready(function () {
         .attr("height", svgHeight)
         .style("fill", "white");
 
-    g = svg.append("g");
-        //.call(zoom)
-        //.on("dblclick.zoom", null);
+    g = svg.append("g")
+        .call(zoom)
+        .on("dblclick.zoom", null);
 
     svgMainRect = g.append("rect")
         .attr("width", svgWidth)
@@ -130,6 +130,11 @@ $(document).ready(function () {
         .attr("width", svgWidth)
         .attr("height", svgHeight)
         .attr("id", "buttonView");
+
+    // linesView = g.append("g")
+    //     .attr("width", svgWidth)
+    //     .attr("height", svgHeight)
+    //     .attr("id", "linesView");
 
     initNodeXY();
     initPipeline();
@@ -210,11 +215,10 @@ function initPipeline() {
                         case PIPELINE_STAGE :
                             return "./svg/stage-mouseover.svg";
                             break;
-                } 
-            });
-        })
-        .on("mousedown",function(d, i){
-            console.log(window.event);
+                    }
+
+                  
+                });
         })
         .on("mouseout", function (d, i) {
             d3.select("#" + d.id)
@@ -528,28 +532,159 @@ function clickStage(sView, sd, si) {
         }
     });
 
-    var offset = $(sView).offset();
+    buttonView.selectAll("image").remove();
 
-   
-    bttonView({
-        x:offset.left,
-        y:offset.top
-    });
-}
+    //show stage pop button
+    buttonView.append("image")
+        .attr("xlink:href", function (d, i) {
+            return "./svg/actionAdd.svg";
+        })
+        .attr("id", function (d, i) {
+            return "button" + "-" + uuid.v1();
+        })
+        .attr("width", function (d, i) {
+            return svgButtonWidth;
+        })
+        .attr("height", function (d, i) {
+            return svgButtonHeight;
+        })
+        .attr("translateX", function (d, i) {
+            return sd.translateX - (svgButtonWidth * 2);
+        })
+        .attr("translateY", function (d, i) {
+            return sd.translateY;
+        })
+        .attr("transform", function (d, i) {
+            return "translate(" + this.attributes["translateX"].value + "," + this.attributes["translateY"].value + ")";
+        })
+        .on("mouseover", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + (this.attributes["translateX"].value - svgButtonWidth / 2) + ","
+                    + (this.attributes["translateY"].value - svgButtonHeight / 2) + ") scale(2)");
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + this.attributes["translateX"].value + ","
+                    + this.attributes["translateY"].value + ") scale(1)");
+        })
+        .on("click", function (d, i) {
+            sd.actions.splice(
+                sd.actions.length,
+                0,
+                {
+                    id: PIPELINE_ACTION + "-" + uuid.v1(),
+                    type: PIPELINE_ACTION,
+                    class:  ,
+                    drawX: 0,
+                    drawY: 0,
+                    width: 0,
+                    height: 0,
+                    translateX: 0,
+                    translateY: 0,
+                    setupData: {}
+                });
+            buttonView.selectAll("image").remove();
+            initAction();
+            // console.log(pipelineData)
+        });
+
+    //show del stage button
+    buttonView.append("image")
+        .attr("xlink:href", function (d, i) {
+            return "./svg/stageDel.svg";
+        })
+        .attr("id", function (d, i) {
+            return "button" + "-" + uuid.v1();
+        })
+        .attr("width", function (d, i) {
+            return svgButtonWidth;
+        })
+        .attr("height", function (d, i) {
+            return svgButtonHeight;
+        })
+        .attr("translateX", function (d, i) {
+            return sd.translateX + (svgButtonWidth / 3);
+        })
+        .attr("translateY", function (d, i) {
+            return sd.translateY - (svgButtonHeight * 2);
+        })
+        .attr("transform", function (d, i) {
+            return "translate("
+                + this.attributes["translateX"].value + ","
+                + this.attributes["translateY"].value + ")";
+        })
+        .on("mouseover", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + (this.attributes["translateX"].value - svgButtonWidth / 2) + ","
+                    + (this.attributes["translateY"].value - svgButtonHeight / 2) + ") scale(2)");
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + this.attributes["translateX"].value + ","
+                    + this.attributes["translateY"].value + ") scale(1)");
+        })
+        .on("click", function (d, i) {
+            buttonView.selectAll("image").remove();
+            pipelineData.splice(si, 1);
+
+            // console.log(pipelineData);
+
+            initPipeline();
+            initAction();
+        });
 
 
-function bttonView(options){
-    var $hotBox =  $(".state"),
-        $addButton = $hotBox.find("#addButton"),
-        $delButton = $hotBox.find("#delButton"),
-        $closeButton = $hotBox.find("#closeButton");
+    //show close stage pop button
+    buttonView.append("image")
+        .attr("xlink:href", function (d, i) {
+            return "./svg/stageClosePop.svg";
+        })
+        .attr("id", function (d, i) {
+            return "button" + "-" + uuid.v1();
+        })
+        .attr("width", function (d, i) {
+            return svgButtonWidth;
+        })
+        .attr("height", function (d, i) {
+            return svgButtonHeight;
+        })
+        .attr("translateX", function (d, i) {
+            return sd.translateX + (svgButtonWidth * 2.6);
+        })
+        .attr("translateY", function (d, i) {
+            return sd.translateY;
+        })
+        .attr("transform", function (d, i) {
+            return "translate("
+                + this.attributes["translateX"].value + ","
+                + this.attributes["translateY"].value + ")";
+        })
+        .on("mouseover", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + (this.attributes["translateX"].value - svgButtonWidth / 2) + ","
+                    + (this.attributes["translateY"].value - svgButtonHeight / 2) + ") scale(2)");
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .attr("transform",
+                    "translate("
+                    + this.attributes["translateX"].value + ","
+                    + this.attributes["translateY"].value + ") scale(1)");
+        })
+        .on("click", function (d, i) {
+            buttonView.selectAll("image").remove();
+        });
 
-    $hotBox.addClass("main").css("left",options.x).css("top",options.y-60);
-  
-
-     $closeButton.on("click",function(){
-        $hotBox.removeClass("main");
-     });
 }
 
 function clickStart(sView, sd, si) {
