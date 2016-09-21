@@ -1,0 +1,60 @@
+<form id="git-form" class="form-horizontal" role="form">
+    <fieldset>
+        <legend><strong>Git</strong> setup</legend>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="normal-field" class="col-sm-3 control-label">Git URL</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="git-url" name="git-url" class="form-control"
+                               placeholder="git url">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="hint-field" class="col-sm-3 control-label">
+                        Git tag
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" id="git-tag" name="git-tag" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="hint-field" class="col-sm-3 control-label">
+                        Git event
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" id="git-event" name="git-event" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="normal-field" class="col-sm-3 control-label">
+                        Callback URL
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" id="git-callback-url" name="git-callback-url" class="form-control"
+                               placeholder="srcPath=./;buildPath=../">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="form-actions">
+        <div class="row">
+            <div class="col-sm-offset-4 col-sm-7">
+                <input type="hidden" id="uuid" name="uuid" class="form-control">
+                <button type="button" class="btn btn-primary" onclick="saveData($('#git-form'),$('uuid'));">Save</button>
+                <button type="button" class="btn btn-inverse">Cancel</button>
+            </div>
+        </div>
+    </div>
+</form>
