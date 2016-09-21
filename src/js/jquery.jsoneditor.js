@@ -1,3 +1,5 @@
+import $ from "./jquery.min";
+
 // Simple yet flexible JSON editor plugin.
 // Turns any element into a stylable interactive JSON editor.
 
@@ -330,4 +332,4 @@
         item.find(".change-type .itype").text(className);
     }
 
-})( jQuery );
+})( $ );
