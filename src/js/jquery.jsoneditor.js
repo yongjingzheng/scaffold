@@ -1,4 +1,5 @@
-import $ from "./jquery.min";
+import $ from "../../node_modules/jquery/dist/jquery.min";
+
 
 // Simple yet flexible JSON editor plugin.
 // Turns any element into a stylable interactive JSON editor.
