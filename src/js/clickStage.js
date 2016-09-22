@@ -1,5 +1,5 @@
-import $ from "./jquery.min";
-import d3 from "./d3.min";
+import $ from "../../node_modules/jquery/dist/jquery.min";
+import d3 from "../../node_modules/d3/d3.min";
 import uuid from "./uuid/uuid";
 import * as constant from "./constant";
 import {initPipeline} from "./initPipeline";

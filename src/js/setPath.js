@@ -1,5 +1,5 @@
-import d3 from "./d3.min";
-import $ from "./jquery.min";
+import $ from "../../node_modules/jquery/dist/jquery.min";
+import d3 from "../../node_modules/d3/d3.min";
 import jsonEditor from "./jquery.jsoneditor";
 import * as constant from "./constant";
 import {drag} from "./drag";

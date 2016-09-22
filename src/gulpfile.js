@@ -11,7 +11,6 @@ const source = require('vinyl-source-stream');
 const sass = require('gulp-sass');
 
 
-// styles
 gulp.task('styles', function () {
 
     gulp.src('./sass/application.scss')
@@ -38,6 +37,13 @@ gulp.task('convertJS', function(){
     .pipe(uglify())
     .pipe(gulp.dest('dist/js'))
 })
+
+
+// watch
+// gulp.task('watch', function(){
+//   gulp.watch('/src/js/*.js', ['convertJS', 'browserify']);
+//   gulp.watch('./sass/*.scss', ['styles']);
+// })
 
 
 

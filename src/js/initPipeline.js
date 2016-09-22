@@ -1,5 +1,6 @@
 
-import d3 from "./d3.min";
+
+import d3 from "../../node_modules/d3/d3.min";
 import * as constant from "./constant";
 import {pipelineData} from "./pipelineData";
 import {drag} from "./drag";
