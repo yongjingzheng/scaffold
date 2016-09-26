@@ -35,7 +35,7 @@ gulp.task('convertJS', function(){
     .pipe(babel({
       presets: ['es2015']
     }))
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest('dist/js'))
 })
 
@@ -48,12 +48,19 @@ gulp.task("browserify",['convertJS'], function () {
     });
 
     return b.bundle()
-        .pipe(source("app.js"))
+        .pipe(source("main.js"))
         .pipe(gulp.dest("dist/js"));
 });
 
 
-gulp.task('default', ['convertJS','browserify','styles']);
+gulp.task('scripts',['browserify'], function() {
+  return gulp.src(['./node_modules/jquery/dist/jquery.min.js', './node_modules/d3/d3.min.js','./node_modules/node-uuid/uuid.js', './dist/js/main.js'])
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest('./dist/js'));
+});
+
+
+gulp.task('default', ['convertJS','browserify','scripts','styles']);
 
 
 

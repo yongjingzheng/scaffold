@@ -1,8 +1,8 @@
-import $ from "../../node_modules/jquery/dist/jquery.min";
-import d3 from "../../node_modules/d3/d3.min";
-import jsonEditor from "./jquery.jsoneditor";
+
 import * as constant from "./constant";
 import {drag} from "./drag";
+import {pipelineEdit} from "./pipelineEdit";
+
 
 export function setPath(options){
     constant.lineView[options.pipelineLineViewId]
@@ -26,22 +26,7 @@ export function setPath(options){
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    $("#pipeline-info-edit").html($(data));
-                    //pipelineEdit(data);
-
-                    $("#importJson").click(function(){
-                        
-                        var val = $("#importJsonText").val();
-                        var json;
-                        try{
-                            json = (JSON.parse(val));
-                            $('#importDiv').jsonEditor(json, {});
-                        }catch(e){
-                            console.log("Error in parsing json.");
-                            alert("Error in parsing json.");
-                        }
-
-                    });
+                    pipelineEdit(data);
                 }
             });
         });
