@@ -6,12 +6,11 @@ git clone
 
 <br>	
 ####Enter directory
-<br>
 ```
 npm install
 ```
-
 <br>
+####Compile JavaScript
 ```
 gulp
 ```
