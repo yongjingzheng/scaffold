@@ -1,6 +1,5 @@
 
-import d3 from "../../node_modules/d3/d3.min";
-import uuid from "./uuid/uuid";
+
 import {PIPELINE_STAGE} from "./pipelineConstant";
 import {svgActionWidth, svgActionHeight, svgButtonWidth, svgButtonHeight} from "./svgConstant";
 
