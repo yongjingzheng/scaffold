@@ -6,10 +6,6 @@ import * as constant from "./constant";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
 
-
-
-
-
 let zoom = d3.behavior.zoom().on("zoom", zoomed);
 
 
@@ -60,6 +56,12 @@ let buttonView = g.append("g")
     .attr("id", "buttonView");
 
 
+let actionLinkView = g.append("g")
+    .attr("width", constant.svgWidth)
+    .attr("height", constant.svgHeight)
+    .attr("id", "actionLinkView");
+
+
 constant.setSvg(svg);
 constant.setG(g);
 constant.setSvgMainRect(svgMainRect);
@@ -70,8 +72,24 @@ constant.setButtonView(buttonView);
 
 
 
+
 initPipeline();
 initAction();
+
+// initActionLinkView();
+
+function initActionLinkView() {
+    actionLinkView.append("rect")
+        .attr("x",10)
+        .attr("y",10)
+        .attr("rx",10)
+        .attr("ry",10)
+        .attr("width",120)
+        .attr("height",40)
+        .attr("stroke","red")
+        .attr("fill","red")
+    ;
+}
 
 
 function clicked(d, i) {
