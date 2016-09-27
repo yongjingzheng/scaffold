@@ -1,5 +1,5 @@
 
-import d3 from "../../node_modules/d3/d3.min";
+
 import * as constant from "./constant";
 import {setPath} from "./setPath";
 

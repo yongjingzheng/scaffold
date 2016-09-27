@@ -1,29 +1,86 @@
-import $ from "../../node_modules/jquery/dist/jquery.min";
 
 
-// Simple yet flexible JSON editor plugin.
-// Turns any element into a stylable interactive JSON editor.
+import {ContextMenu} from "./jquery.jsoneditor.menu";
+import {bipatiteArray} from "./bipatiteJson";
+import {bipatiteLine} from "./bipatiteLine";
+import {bipatiteViewOn} from "./pipelineEdit";
 
-// Copyright (c) 2013 David Durman
+    var items = [];
 
-// Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php).
+    items.push({
+          text: 'Type',
+          title: 'Change the type of this field',
+          className: 'jsoneditor-type-',
+          submenu: [
+            {
+              text: 'Array',
+              className: 'jsoneditor-type-array',
+              title: "titles.array",
+              click: function (button,opt) {
+                changeType('array',button,opt);
+              }
+            },
+            {
+              text: 'Object',
+              className: 'jsoneditor-type-object',
+              title: "titles.object",
+              click: function (button,opt) {
+                changeType('object',button,opt);
+              }
+            },
+            {
+              text: 'String',
+              className: 'jsoneditor-type-string',
+              title: "titles.string",
+              click: function (button,opt) {
+                changeType('string',button,opt);
+              }
+            }
+        ]
+    });
 
-// Dependencies:
 
-// * jQuery
-// * JSON (use json2 library for browsers that do not support JSON natively)
 
-// Example:
+    items.push({
+          text: 'ValueType',
+          title: 'Change the type of value',
+          className: 'jsoneditor-type-',
+          submenu: [
+            {
+              text: 'Changeable',
+              className: 'jsoneditor-value-change',
+              title: "titles.changeable",
+              click: function (button,opt) {
+                changeValueType("changeable",button,opt);
+              }
+            },
+            {
+              text: 'Unchangeable',
+              className: 'jsoneditor-value-unchange',
+              title: "titles.unchangeable",
+              click: function (button,opt) {
+                changeValueType("unchangeable",button,opt);
+              }
+            }
+        ]
+    });
 
-//     var myjson = { any: { json: { value: 1 } } };
-//     var opt = { change: function() { /* called on every change */ } };
-//     /* opt.propertyElement = '<textarea>'; */ // element of the property field, <input> is default
-//     /* opt.valueElement = '<textarea>'; */  // element of the value field, <input> is default
-//     $('#mydiv').jsonEditor(myjson, opt);
 
-(function( $ ) {
+
+    items.push({
+        text: 'Remove',
+        title: 'Remove this field (Ctrl+Del)',
+        className: 'jsoneditor-remove',
+        click: function (button,opt) {
+          removeItem(button,opt);
+        }
+    });
+
+
+
     var outPut;
-    $.fn.jsonEditor = function(json, options) {
+
+    export function jsonEditor(container,json, options) {
         options = options || {};
         // Make sure functions or other non-JSON data types are stripped down.
         json = parse(stringify(json));
@@ -32,13 +89,13 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
         var onchange = options.change || K;
         var onpropertyclick = options.propertyclick || K;
        
-        return this.each(function() {
-            JSONEditor($(this), json, onchange, onpropertyclick, options.propertyElement, options.valueElement);
+        return container.each(function() {
+            JSONEditorInit(container, json, onchange, onpropertyclick, options.propertyElement, options.valueElement);
         });
         
     };
     
-    function JSONEditor(target, json, onchange, onpropertyclick, propertyElement, valueElement) {
+    function JSONEditorInit(target, json, onchange, onpropertyclick, propertyElement, valueElement) {
         var opt = {
             target: target,
             onchange: onchange,
@@ -120,54 +177,71 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
             expander.bind('click', function() {
                 var item = $(this).parent();
                 item.toggleClass('expanded');
+
+                if(bipatiteViewOn){
+                    bipatiteLine(bipatiteArray);
+                }
+                
             });
             item.prepend(expander);
         }
     }
 
 
-    function addDeleter(item,opt){
-        if (item.children('.deleter').length == 0) {
-            var deleter =   $('<span>',  { 'class': 'deleter fa fa-trash' });
-            deleter.bind('click', function() {
-                var item = $(this).parent();
-                var path = $(this).parent().data('path'); 
-                var key = $(this).siblings("input.property").attr("title");
-                var original =  feed(opt.original, (path ? path + '.' : '') + key);
-                $(this).parent().remove();
-                opt.onchange(parse(stringify(original)))
+    function addMenu(item,opt){
+        if (item.children('.menuer').length == 0) {
+            var menuer =   $('<span>',  { 'class': 'menuer fa fa-navicon' });
+            menuer.bind('click', function() {
+                window.event.stopPropagation();
+                ContextMenu($(this),items,opt);
             });
-            item.prepend(deleter);
+            item.prepend(menuer);
         }
     }
 
+    function removeItem (button,opt){
+        // var menuButton = button.parents(".item").find(".menuer");
+        var item = button.parents(".item:eq(0)");
+        var path = item.data('path'); 
+        var key = item.find("input.property").attr("title");
+        var original =  feed(opt.original, (path ? path + '.' : '') + key);
+        item.remove();
+        opt.onchange(parse(stringify(original)))
+    }
 
-    function addChangeType(item,opt){
+    function changeType(type,button,opt){
+        var item = button.parents(".item:eq(0)");
+        var value = item.find("input.value");
+        
+
+        if(item.hasClass(type.toLowerCase())){
+            return false;
+        }
+        if(type == "string")value.val('""');
+        else if(type == "array") value.val("[]");
+        else if(type == "object") value.val("{}");
+
+        value.change();
+    }
+
+    function changeValueType(type,button,opt){
+        var item = button.parents(".item:eq(0)");
+        var input = item.find(">input.value");
+
+        if(type == "changeable"){
+            input.addClass("show");
+        }else{
+            input.removeClass("show");
+        }
+        
+    }
+
+    function showType(item,opt){
         if (item.children('.change-type').length == 0) {
             var changer =   $('<div class="change-type">'
                             +'<span class="itype"></span>'
-                            +'<div class="type-items"><a>string</a>'
-                            +'<a>array</a>'
-                            +'<a>object</a>'
-                            +'</div></div>')
-            changer.find("a").bind('click', function() {
-                var type = $(this).text();
-                var typeItems = $(this).parents(".type-items");
-                var itype = typeItems.siblings(".itype");
-                var value = $(this).parents(".change-type").siblings("input.value");
-                var oldType = itype.text();
-                itype.text(type);
-                if(type == oldType){
-                    return false;
-                }
-
-                if(type == "string")value.val('""');
-                else if(type == "array") value.val("[]");
-                else if(type == "object") value.val("{}");
-
-                value.change();
-                typeItems.hide();
-            });
+                            +'</div>')
+            
             item.prepend(changer);
         }
     }
@@ -207,7 +281,7 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
     }
     
     function construct(opt, json, root, path) {
-        path = path || '';
+        path = path || 'start';
         
         root.children('.item').remove();
         
@@ -227,8 +301,8 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
                 property.attr("disabled","disabled");
             }
 
-            addDeleter(item, opt);
-            addChangeType(item, opt);
+            addMenu(item, opt);
+            showType(item, opt);
 
             item.append(property).append(value);
             root.append(item);
@@ -244,7 +318,7 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
             property.click(propertyClicked(opt));
             
             if (isObject(json[key]) || isArray(json[key])) {
-                construct(opt, json[key], item, (path ? path + '.' : '') + key);
+                construct(opt, json[key], item, (path ? path + '-' : '') + key);
             }
         }
 
@@ -260,7 +334,7 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
     function updateParents(el, opt) {
         $(el).parentsUntil(opt.target).each(function() {
             var path = $(this).data('path');
-            path = (path ? path + '.' : path) + $(this).children('.property').val();
+            path = (path ? path + '-' : path) + $(this).children('.property').val();
             var val = stringify(def(opt.original, path, null));
             $(this).children('.value').val(val).attr('title', val);
         });
@@ -271,7 +345,7 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
             var path = $(this).parent().data('path');            
             var key = $(this).attr('title');
 
-            var safePath = path ? path.split('.').concat([key]).join('\'][\'') : key;
+            var safePath = path ? path.split('-').concat([key]).join('\'][\'') : key;
             
             opt.onpropertyclick('[\'' + safePath + '\']');
         };
@@ -285,8 +359,8 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
                 oldKey = $(this).attr('title');
             $(this).attr('title', newKey);
 
-            feed(opt.original, (path ? path + '.' : '') + oldKey);
-            if (newKey) feed(opt.original, (path ? path + '.' : '') + newKey, val);
+            feed(opt.original, (path ? path + '-' : '') + oldKey);
+            if (newKey) feed(opt.original, (path ? path + '-' : '') + newKey, val);
 
             updateParents(this, opt);
           
@@ -303,9 +377,9 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
                 item = $(this).parent(),
                 path = item.data('path');
 
-            feed(opt.original, (path ? path + '.' : '') + key, val);
+            feed(opt.original, (path ? path + '-' : '') + key, val);
             if ((isObject(val) || isArray(val)) && !$.isEmptyObject(val)) {
-                construct(opt, val, item, (path ? path + '.' : '') + key);
+                construct(opt, val, item, (path ? path + '-' : '') + key);
                 addExpander(item);
             } else {
                 item.find('.expander, .item').remove();
@@ -333,4 +407,4 @@ import $ from "../../node_modules/jquery/dist/jquery.min";
         item.find(".change-type .itype").text(className);
     }
 
-})( $ );
+

@@ -1,5 +1,4 @@
-import $ from "../../node_modules/jquery/dist/jquery.min";
-import d3 from "../../node_modules/d3/d3.min";
+
 import {setPath,getPathData} from "./setPath";
 import {linePathAry} from "./constant";
 

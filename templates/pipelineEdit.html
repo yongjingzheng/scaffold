@@ -2,17 +2,23 @@
     <fieldset>
         <legend><strong>Pipeline</strong> setup</legend>
 
-        <div class="row">
-            <div class="col-md-4">
-                <h4>Import</h4>
-                <textarea id="importJsonText" class="form-control"></textarea>
+        <div class="row" style="position:relative;">
+            <svg id="bipatiteLineSvg" style="position:absolute;right:0;top:0;left:0;bottom:0;width:100%;height:100%;">
                 
-                <div class="m">
-                    <input id="importJson" type="button" value="submit" class="btn btn-default">
-                </div>  
+            </svg>
+            <div class="col-md-4 import-div">
+                <h4 class="pr">Import <span id="importEditIcon" class="fa fa-edit"></span></h4>
+                <div id="importJsonDiv" class="hide">
+                    <textarea id="importJsonText" class="form-control"></textarea>
+                    <div>
+                        <input id="importJson" type="button" value="import" class="btn btn-primary">
+
+                        <input id="closeImportJson" type="button" value="close" class="btn btn-default">
+                    </div>  
+                </div>
                 <div id="importDiv" class="json-editor"></div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 config-col">
                 <h4>Config</h4>
                 <div>
                     <div class="form-group">
@@ -34,10 +40,11 @@
                         </div>
                     </div>
                 </div>
-                <input id="beautify" type="button" value="submit" class="btn btn-default" />
+                <input id="importOutput" type="button" value="submit" class="btn btn-default" />
             </div>
             <div class="col-md-4">
-                <h4>Output</h4>
+                <h4 class="pr">Output <span style="padding:0 10px;font-size:12px;cursor:pointer;" id="bipartiteView">bipartiteView</span></h4>
+                <div id="outputDiv" class="json-editor"></div>
             </div>
         </div>
     </fieldset>
