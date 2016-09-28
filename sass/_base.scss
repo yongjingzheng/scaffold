@@ -2,6 +2,9 @@
 /*        Layout       */
 /***********************/
 
+.cursor{
+  cursor:pointer;
+}
 
 .sidebar{
   position: fixed;
@@ -929,7 +932,10 @@
     padding: 3px;
     margin-right: 2px;
   }
-
+  span.property{
+    display:block;
+    width:150px;
+  }
   .value{
     background-color: #ECF3C3;
     display:none;
@@ -1267,7 +1273,16 @@ div.jsoneditor-contextmenu ul li ul {
     transition: all .3s ease-out
 }
 
-
+.relation-svg{
+  position:absolute;
+  right:0;
+  top:0;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:100%;
+  
+}
 
 
 

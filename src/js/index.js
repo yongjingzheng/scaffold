@@ -2,7 +2,7 @@
 import * as constant from "./constant";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
-
+import {bipatiteView} from "./bipatiteView";
 let zoom = d3.behavior.zoom().on("zoom", zoomed);
 
 
@@ -72,7 +72,7 @@ constant.setButtonView(buttonView);
 
 initPipeline();
 initAction();
-
+bipatiteView();
 // initActionLinkView();
 
 function initActionLinkView() {
