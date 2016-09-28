@@ -29,333 +29,466 @@
         <td><textarea id="result"></textarea></td>
         <td><textarea id="visibleOutputStr">.action;.pull_request;.user</textarea></td>
     </tr>
-    <tr><td><button onclick="getResultByInputAndOutput()">output/input JSON 生成对应Link初始化关系</button></td></tr>
+    <tr><td><button onclick="getResultByInputAndOutput()">初始化Link</button></td></tr>
     <tr><td><button onclick="getResultByLink()">根据自定义Link关系生成</button></td></tr>
+</table>
+
+<table>
+    <tr>
+        <td>起始Link关系</td>
+        <td>更改的变量PATH</td>
+        <td>结果</td>
+    </tr>
+    <tr>
+        <td><textarea id="startRelationStr"></textarea>></td>
+        <td>fromPath:<input id="fromPath" />toPath:<input id="toPath" /></td>
+        <td><textarea id="resultRelation"></textarea></td>
+    </tr>
+    <tr><td><button onclick="testAddRelation()">增加关联</button></td></tr>
+    <tr><td><button onclick="testDelRelation()">删除关联</button></td></tr>
 </table>
 <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-function getResultByInputAndOutput() {
-    var visibleInputStr = $("#visibleInputStr").val();
-    if (visibleInputStr == "") {
-        alert("请输入   数据提供JSON Tree展开情况   字段!");
-        return false;
+    function getResultByInputAndOutput() {
+        var visibleInputStr = $("#visibleInputStr").val();
+        if (visibleInputStr == "") {
+            alert("请输入   数据提供JSON Tree展开情况   字段!");
+            return false;
+        }
+
+        var visibleOutputStr = $("#visibleOutputStr").val();
+        if (visibleOutputStr == "") {
+            alert("请输入   数据接收JSON Tree展开情况   字段!");
+            return false;
+        }
+
+        var inputStr = $("#inputStr").val();
+        if (inputStr == "") {
+            alert("请输入   数据提供JSON定义   字段!");
+            return false;
+        }
+
+        var outputStr = $("#outputStr").val();
+        if (outputStr == "") {
+            alert("请输入   数据接收JSON定义   字段!");
+            return false;
+        }
+
+        var visibleInput = visibleInputStr.split(";");
+        var visibleOutput = visibleOutputStr.split(";");
+
+        var input = JSON.parse(inputStr);
+        var output = JSON.parse(outputStr);
+
+        var result = initPipeline(input,output,visibleInput,visibleOutput);
+        var resultStr = JSON.stringify(result);
+        $("#result").val(resultStr);
     }
 
-    var visibleOutputStr = $("#visibleOutputStr").val();
-    if (visibleOutputStr == "") {
-        alert("请输入   数据接收JSON Tree展开情况   字段!");
-        return false;
+    function getResultByLink() {
+        var visibleInputStr = $("#visibleInputStr").val();
+        if (visibleInputStr == "") {
+            alert("请输入   数据提供JSON Tree展开情况   字段!");
+            return false;
+        }
+
+        var visibleOutputStr = $("#visibleOutputStr").val();
+        if (visibleOutputStr == "") {
+            alert("请输入   数据接收JSON Tree展开情况   字段!");
+            return false;
+        }
+
+        var relationStr = $("#relationStr").val();
+        if (relationStr == "") {
+            alert("请输入   数据接收JSON Tree展开情况   字段!");
+            return false;
+        }
+
+        var visibleInput = visibleInputStr.split(";");
+        var visibleOutput = visibleOutputStr.split(";");
+
+        var relation = JSON.parse(relationStr);
+
+        var result = redrawPipeline(relation,visibleInput,visibleOutput);
+        var resultStr = JSON.stringify(result);
+        console.log(result);
+        $("#result").val(resultStr);
     }
 
-    var inputStr = $("#inputStr").val();
-    if (inputStr == "") {
-        alert("请输入   数据提供JSON定义   字段!");
-        return false;
+    function testAddRelation() {
+        var visibleInputStr = $("#visibleInputStr").val();
+        if (visibleInputStr == "") {
+            alert("请输入   数据提供JSON Tree展开情况   字段!");
+            return false;
+        }
+
+        var visibleOutputStr = $("#visibleOutputStr").val();
+        if (visibleOutputStr == "") {
+            alert("请输入   数据接收JSON Tree展开情况   字段!");
+            return false;
+        }
+
+        var startRelationStr = $("#startRelationStr").val();
+        if (startRelationStr == "") {
+            alert("请输入   初始Link关系   字段!");
+            return false;
+        }
+
+        var fromPath = $("#fromPath").val();
+        if (fromPath == "") {
+            alert("请输入   更改的变量PATH--fromPath   字段!");
+            return false;
+        }
+
+        var toPath = $("#toPath").val();
+        if (toPath == "") {
+            alert("请输入   更改的变量PATH--toPath   字段!");
+            return false;
+        }
+
+        var visibleInput = visibleInputStr.split(";");
+        var visibleOutput = visibleOutputStr.split(";");
+
+        var startRelation = JSON.parse(startRelationStr);
+
+        var result = addRelation(startRelation,true,fromPath,toPath,visibleInput,visibleOutput)
+        var resultStr = JSON.stringify(result);
+        console.log(result);
+        $("#resultRelation").val(resultStr);
     }
 
-    var outputStr = $("#outputStr").val();
-    if (outputStr == "") {
-        alert("请输入   数据接收JSON定义   字段!");
-        return false;
+    function testDelRelation() {
+        var startRelationStr = $("#startRelationStr").val();
+        if (startRelationStr == "") {
+            alert("请输入   初始Link关系   字段!");
+            return false;
+        }
+
+        var fromPath = $("#fromPath").val();
+        if (fromPath == "") {
+            alert("请输入   更改的变量PATH--fromPath   字段!");
+            return false;
+        }
+
+        var startRelation = JSON.parse(startRelationStr);
+
+        var result = delRelation(startRelation,fromPath)
+        var resultStr = JSON.stringify(result);
+        console.log(result);
+        $("#resultRelation").val(resultStr);
     }
-
-    var visibleInput = visibleInputStr.split(";");
-    var visibleOutput = visibleOutputStr.split(";");
-
-    var input = JSON.parse(inputStr);
-    var output = JSON.parse(outputStr);
-
-    var result = initPipeline(input,output,visibleInput,visibleOutput);
-    var resultStr = JSON.stringify(result);
-    $("#result").val(resultStr);
-}
-
-function getResultByLink() {
-    var visibleInputStr = $("#visibleInputStr").val();
-    if (visibleInputStr == "") {
-        alert("请输入   数据提供JSON Tree展开情况   字段!");
-        return false;
-    }
-
-    var visibleOutputStr = $("#visibleOutputStr").val();
-    if (visibleOutputStr == "") {
-        alert("请输入   数据接收JSON Tree展开情况   字段!");
-        return false;
-    }
-
-    var relationStr = $("#relationStr").val();
-    if (relationStr == "") {
-        alert("请输入   数据接收JSON Tree展开情况   字段!");
-        return false;
-    }
-
-    var visibleInput = visibleInputStr.split(";");
-    var visibleOutput = visibleOutputStr.split(";");
-
-    var relation = JSON.parse(relationStr);
-
-
-    var result = redrawPipeline(relation,visibleInput,visibleOutput);
-    var resultStr = JSON.stringify(result);
-    console.log(result);
-    $("#result").val(resultStr);
-}
 
 </script>
 <script type="text/javascript">
-// 输入节点的格式
-// [
-//   {
-//     "key":"action", // json的key
-//     "type":"string", // json的类型
-//     "path":".action" // json的路径
-//   },
-//   {
-//     "key":"pull_request",
-//     "type":"object",
-//     "path":".pull_request",
-//     "child_node":[ // 如果有子节点则相同的格式记录在child_node里
-//       {
-//         "key":"url",
-//         "type":"string",
-//         "path":".pull_request.url"
-//       },{
-//         "key":"id",
-//         "type":"number",
-//         "path":".pull_request.id"
-//       }
-//     ]
-//   },{
-//     "key":"user",
-//     "type":"object",
-//     "path":".user",
-//     "child_node":[
-//       {
-//         "key":"login",
-//         "type":"string",
-//         "path":".user.login"
-//       }
-//     ]
-// }
-// ]
-//
-// 关系描述json格式
-// {
-//     "from_action":"A", // 数据提供端
-//     "to_action":"B", // 数据接收端
-//     "relation":[ // 提供->接收转换关系
-//         {
-//             "to":".action", // 数据接收端接受节点路径
-//             "toShow":".action", // 前端显示数据接收端所用节点路径
-//             "isToEqual":true, // 当前接收节点和当前所用显示节点是否相同
-//             "from":".action", // 数据提供端输如节点路径
-//             "fromShow":".action", // 前端显示数据提供端所用节点路径
-//             "isFromEqual":true //  当前提供节点和当前所用显示节点是否相同
-//         },
-//         {
-//             "to":".pull_request",
-//             "toShow":".pull_request",
-//             "isToEqual":true,
-//             "from":".pull_request",
-//             "fromShow":".pull_request",
-//             "isFromEqual":true,
-//             "child":[ // 如果当前节点存在子节点,则使用相同结构记录在child中
-//                 {
-//                     "to":".pull_request.url",
-//                     "toShow":".pull_request",
-//                     "isToEqual":false,
-//                     "from":".pull_request.url",
-//                     "fromShow":".pull_request",
-//                     "isFromEqual":false
-//                 },
-//                 {
-//                     "to":".user",
-//                     "toShow":".user",
-//                     "isToEqual":true,
-//                     "from":".pull_request.user",
-//                     "fromShow":".pull_request",
-//                     "isFromEqual":false,
-//                     "child":[
-//                         {
-//                             "to":".user.login",
-//                             "toShow":".user",
-//                             "isToEqual":false,
-//                             "from":".pull_request.login",
-//                             "fromShow":".pull_request",
-//                             "isFromEqual":false
-//                         }
-//                     ]
-//                 }
-//             ]
-//         }
-//     ]
-// }
+    // 输入节点的格式
+    // [
+    //   {
+    //     "key":"action", // json的key
+    //     "type":"string", // json的类型
+    //     "path":".action" // json的路径
+    //   },
+    //   {
+    //     "key":"pull_request",
+    //     "type":"object",
+    //     "path":".pull_request",
+    //     "child_node":[ // 如果有子节点则相同的格式记录在child_node里
+    //       {
+    //         "key":"url",
+    //         "type":"string",
+    //         "path":".pull_request.url"
+    //       },{
+    //         "key":"id",
+    //         "type":"number",
+    //         "path":".pull_request.id"
+    //       }
+    //     ]
+    //   },{
+    //     "key":"user",
+    //     "type":"object",
+    //     "path":".user",
+    //     "child_node":[
+    //       {
+    //         "key":"login",
+    //         "type":"string",
+    //         "path":".user.login"
+    //       }
+    //     ]
+    // }
+    // ]
+    //
+    // 关系描述json格式
+    // {
+    //     "from_action":"A", // 数据提供端
+    //     "to_action":"B", // 数据接收端
+    //     "relation":[ // 提供->接收转换关系
+    //         {
+    //             "to":".action", // 数据接收端接受节点路径
+    //             "toShow":".action", // 前端显示数据接收端所用节点路径
+    //             "isToEqual":true, // 当前接收节点和当前所用显示节点是否相同
+    //             "from":".action", // 数据提供端输如节点路径
+    //             "fromShow":".action", // 前端显示数据提供端所用节点路径
+    //             "isFromEqual":true //  当前提供节点和当前所用显示节点是否相同
+    //         },
+    //         {
+    //             "to":".pull_request",
+    //             "toShow":".pull_request",
+    //             "isToEqual":true,
+    //             "from":".pull_request",
+    //             "fromShow":".pull_request",
+    //             "isFromEqual":true,
+    //             "child":[ // 如果当前节点存在子节点,则使用相同结构记录在child中
+    //                 {
+    //                     "to":".pull_request.url",
+    //                     "toShow":".pull_request",
+    //                     "isToEqual":false,
+    //                     "from":".pull_request.url",
+    //                     "fromShow":".pull_request",
+    //                     "isFromEqual":false
+    //                 },
+    //                 {
+    //                     "to":".user",
+    //                     "toShow":".user",
+    //                     "isToEqual":true,
+    //                     "from":".pull_request.user",
+    //                     "fromShow":".pull_request",
+    //                     "isFromEqual":false,
+    //                     "child":[
+    //                         {
+    //                             "to":".user.login",
+    //                             "toShow":".user",
+    //                             "isToEqual":false,
+    //                             "from":".pull_request.login",
+    //                             "fromShow":".pull_request",
+    //                             "isFromEqual":false
+    //                         }
+    //                     ]
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // }
 
-// var inputStr = '[{"key":"action","type":"string","path":".action"},{"key":"number","type":"number","path":".number"},{"key":"pull_request","type":"object","path":".pull_request","childNode":[{"key":"url","type":"string","path":".pull_request.url"},{"key":"id","type":"number","path":".pull_request.id"},{"key":"user","type":"object","path":".pull_request.user","childNode":[{"key":"login","type":"string","path":".pull_request.login"}]}]}]';
+    // var inputStr = '[{"key":"action","type":"string","path":".action"},{"key":"number","type":"number","path":".number"},{"key":"pull_request","type":"object","path":".pull_request","childNode":[{"key":"url","type":"string","path":".pull_request.url"},{"key":"id","type":"number","path":".pull_request.id"},{"key":"user","type":"object","path":".pull_request.user","childNode":[{"key":"login","type":"string","path":".pull_request.login"}]}]}]';
 
-// var input = JSON.parse(inputStr);
+    // var input = JSON.parse(inputStr);
 
-// var outputStr = '[{"key":"action","type":"string","path":".action"},{"key":"pull_request","type":"object","path":".pull_request","childNode":[{"key":"url","type":"string","path":".pull_request.url"},{"key":"id","type":"number","path":".pull_request.id"}]},{"key":"user","type":"object","path":".user","childNode":[{"key":"login","type":"string","path":".user.login"}]}]';
+    // var outputStr = '[{"key":"action","type":"string","path":".action"},{"key":"pull_request","type":"object","path":".pull_request","childNode":[{"key":"url","type":"string","path":".pull_request.url"},{"key":"id","type":"number","path":".pull_request.id"}]},{"key":"user","type":"object","path":".user","childNode":[{"key":"login","type":"string","path":".user.login"}]}]';
 
-// var output = JSON.parse(outputStr);
+    // var output = JSON.parse(outputStr);
 
-// var visibleInput = ['.action','.number','.pull_request'];
-// var visibleOutput = ['.action','.pull_request','.user'];
+    // var visibleInput = ['.action','.number','.pull_request'];
+    // var visibleOutput = ['.action','.pull_request','.user'];
 
-// var relationStr = '{"relation":[{"to":".action","toShow":".action","isToEqual":true,"from":".action","fromShow":".action","isFromEqual":true},{"to":".pull_request","toShow":".pull_request","isToEqual":true,"from":".pull_request","fromShow":".pull_request","isFromEqual":true,"child":[{"to":".pull_request.url","toShow":".pull_request","isToEqual":false,"from":".pull_request.url","fromShow":".pull_request","isFromEqual":false},{"to":".pull_request.id","toShow":".pull_request","isToEqual":false,"from":".pull_request.id","fromShow":".pull_request","isFromEqual":false},{"to":".user","toShow":".user","isToEqual":true,"from":".pull_request.user","fromShow":".pull_request","isFromEqual":false,"child":[{"to":".user.login","toShow":".user","isToEqual":false,"from":".pull_request.login","fromShow":".pull_request","isFromEqual":false}]}]}]}';
+    // var relationStr = '{"relation":[{"to":".action","toShow":".action","isToEqual":true,"from":".action","fromShow":".action","isFromEqual":true},{"to":".pull_request","toShow":".pull_request","isToEqual":true,"from":".pull_request","fromShow":".pull_request","isFromEqual":true,"child":[{"to":".pull_request.url","toShow":".pull_request","isToEqual":false,"from":".pull_request.url","fromShow":".pull_request","isFromEqual":false},{"to":".pull_request.id","toShow":".pull_request","isToEqual":false,"from":".pull_request.id","fromShow":".pull_request","isFromEqual":false},{"to":".user","toShow":".user","isToEqual":true,"from":".pull_request.user","fromShow":".pull_request","isFromEqual":false,"child":[{"to":".user.login","toShow":".user","isToEqual":false,"from":".pull_request.login","fromShow":".pull_request","isFromEqual":false}]}]}]}';
 
-// var relation = JSON.parse(relationStr);
+    // var relation = JSON.parse(relationStr);
 
-// 初始化pipeline
-function initPipeline(fromNodes,toNodes,visibleFromNode,visibleToNode) {
-    var result = [];
+    // 初始化pipeline
+    function initPipeline(fromNodes,toNodes,visibleFromNode,visibleToNode) {
+        var result = [];
 
-    visibleFromNode.sort().reverse();
-    visibleToNode.sort().reverse();
+        visibleFromNode.sort().reverse();
+        visibleToNode.sort().reverse();
 
-    for (var i = 0; i < fromNodes.length; i ++){
-        var tempFromNode = [];
+        for (var i = 0; i < fromNodes.length; i ++){
+            var tempFromNode = [];
 
-        var relation = getPipelineMap(fromNodes[i],toNodes,visibleFromNode,visibleToNode);
-        if (relation) {
-            tempFromNode = tempFromNode.concat(relation);
+            var relation = getPipelineMap(fromNodes[i],toNodes,visibleFromNode,visibleToNode);
+            if (relation) {
+                tempFromNode = tempFromNode.concat(relation);
+            }
+
+            result = result.concat(tempFromNode);
         }
 
-        result = result.concat(tempFromNode);
+        console.log(JSON.stringify(result));
+        return result;
     }
 
-    console.log(JSON.stringify(result));
-    return result;
-}
+    // 根据展开的情况重新获取pipeline情况
+    function redrawPipeline(relation,visibleFromNode,visibleToNode) {
+        var result = [];
 
-// 根据展开的情况重新获取pipeline情况
-function redrawPipeline(relation,visibleFromNode,visibleToNode){
-    var result = [];
-
-    visibleFromNode.sort().reverse();
-    visibleToNode.sort().reverse();
+        visibleFromNode.sort().reverse();
+        visibleToNode.sort().reverse();
 
 
-    for (var i = 0; i < relation.length; i ++ ){
-        var tempRelation = relation[i];
-        var pipelineInfo = calcPipelineInfo(tempRelation.from,tempRelation.to,visibleFromNode,visibleToNode);
+        for (var i = 0; i < relation.length; i ++ ){
+            var tempRelation = relation[i];
+            var pipelineInfo = calcPipelineInfo(tempRelation.from,tempRelation.to,visibleFromNode,visibleToNode);
 
-        console.log("====================================================");
-        console.log(tempRelation);
-        console.log(pipelineInfo);
-        console.log("----------------------------------------------------");
+            console.log("====================================================");
+            console.log(tempRelation);
+            console.log(pipelineInfo);
+            console.log("----------------------------------------------------");
 
-        if (tempRelation.child){
-            pipelineInfo['child'] = [];
-            var childPipelineInfo = redrawPipeline(tempRelation.child,visibleFromNode,visibleToNode);
-            pipelineInfo.child = pipelineInfo.child.concat(childPipelineInfo);
-        }
-        result = result.concat(pipelineInfo);
-    }
-
-    // console.log(relation);
-    // console.log(pipelineInfo);
-    return result;
-}
-
-// 获取对应关系图
-function getPipelineMap(fromNode,toNodes,visibleFromNode,visibleToNode) {
-    var resultMap = [];
-
-    for (var i = 0; i < toNodes.length; i ++) {
-        // 只有类型和名字相等才可以自动匹配上
-        if (fromNode.key == toNodes[i].key && fromNode.type == toNodes[i].type){
-            // 如果是对象,则匹配其所有子子节点
-            if (fromNode.type == "object" && fromNode.childNode) {
-                var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
+            if (tempRelation.child){
                 pipelineInfo['child'] = [];
-                for (var j = 0; j < fromNode.childNode.length; j ++) {
-                    var childResult = getPipelineMap(fromNode.childNode[j],toNodes,visibleFromNode,visibleToNode);
-                    pipelineInfo.child = pipelineInfo.child.concat(childResult);
+                var childPipelineInfo = redrawPipeline(tempRelation.child,visibleFromNode,visibleToNode);
+                pipelineInfo.child = pipelineInfo.child.concat(childPipelineInfo);
+            }
+            result = result.concat(pipelineInfo);
+        }
+
+        // console.log(relation);
+        // console.log(pipelineInfo);
+        return result;
+    }
+
+    // 删除一个关系
+    function delRelation(relation,fromPath) {
+        var finalRelation = [];
+        for (var i = 0; i < relation.length; i ++ ) {
+            var tempRelation = relation[i];
+
+            if (tempRelation.from == fromPath) {
+                // 如果开始路径相同,则直接删除即可
+                continue;
+            } else if (tempRelation.child && fromPath.indexOf(tempRelation.from+".") == 0) {
+                // 如果当前起始路径含有子节点,则在子节点里找
+                // 这里添加一个判断,只有当前节点是fromPath的父级时才进入判断,这样可以省略很多无用的子节点判断
+                tempRelation.child = delRelation(tempRelation.child,fromPath);
+            }
+
+            // 如果当前路径不是要删除的,则保留下来当前路径
+            finalRelation = finalRelation.concat(tempRelation);
+        }
+
+        return finalRelation;
+    }
+
+    // 添加两个节点的关系
+    // 需要首先判断两个节点的关系,如果已经存在,则先删除已有关系,然后再添加新的关系
+    function addRelation(relation,needDel,fromPath,toPath,visibleFromNode,visibleToNode) {
+        var finalRelation = [];
+        if (needDel) {
+            relation = delRelation(relation,fromPath,toPath);
+        }
+
+        if (fromPath.split(".").length == 2) {
+            // 如果是根节点,则直接添加一个即可,
+            finalRelation = relation.concat(calcPipelineInfo(fromPath,toPath,visibleFromNode,visibleToNode));
+            return finalRelation;
+        }
+
+        for (var i = 0; i < relation.length; i ++ ) {
+            var tempRelation = relation[i];
+            if (tempRelation.from + "." + fromPath.split(".")[fromPath.split(".").length - 1] == fromPath) {
+                // 如果当前点 + 目标点的最后一段 == 目标点 则代表找到了目标点的直接父节点,直接在当前点的child中加入指定的关系即可
+                if (!tempRelation.child) {
+                    tempRelation.child = [];
                 }
 
-                resultMap = resultMap.concat(pipelineInfo);
-            } else {
-                var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
-                resultMap = resultMap.concat(pipelineInfo);
+                tempRelation.child = tempRelation.child.concat(calcPipelineInfo(fromPath,toPath,visibleFromNode,visibleToNode));
+            } else if (tempRelation.child && fromPath.indexOf(tempRelation.from + ".") == 0) {
+                // 如果当前点存在子节点,并且是目标点的父节点,则进入寻找
+                tempRelation.child = addRelation(tempRelation.child,false,fromPath,toPath,visibleFromNode,visibleToNode)
+            }
+
+            finalRelation = finalRelation.concat(tempRelation)
+        }
+
+        return finalRelation;
+    }
+
+    // 获取对应关系图
+    function getPipelineMap(fromNode,toNodes,visibleFromNode,visibleToNode) {
+        var resultMap = [];
+
+        for (var i = 0; i < toNodes.length; i ++) {
+            // 只有类型和名字相等才可以自动匹配上
+            if (fromNode.key == toNodes[i].key && fromNode.type == toNodes[i].type){
+                // 如果是对象,则匹配其所有子子节点
+                if (fromNode.type == "object" && fromNode.childNode) {
+                    var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
+                    pipelineInfo['child'] = [];
+                    for (var j = 0; j < fromNode.childNode.length; j ++) {
+                        var childResult = getPipelineMap(fromNode.childNode[j],toNodes,visibleFromNode,visibleToNode);
+                        pipelineInfo.child = pipelineInfo.child.concat(childResult);
+                    }
+
+                    resultMap = resultMap.concat(pipelineInfo);
+                } else {
+                    var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
+                    resultMap = resultMap.concat(pipelineInfo);
+                    break;
+                }
+            }
+
+            // 如果toNodes存在子节点,则寻找子节点有没有可以匹配当前节点的
+            if (toNodes[i].childNode) {
+                var tempResult = getPipelineMap(fromNode,toNodes[i].childNode,visibleFromNode,visibleToNode)
+                if (tempResult) {
+                    resultMap = tempResult;
+                    break;
+                }
+            }
+        }
+
+
+        if (resultMap.length > 0) {
+            // console.log(resultMap);
+            return resultMap;
+        }else {
+            return null;
+        }
+    }
+
+    // 计算节点所属可现实的最先节点
+    // 计算两个路径可以绑定的最接近自己的节点,并返回
+    //
+    // 正则判断:
+    // visibleNode = [".a",".a.b",".b.c",".b",".c".".cc",".c.bb"]
+    // nodePath = ".c.bb"
+    //
+    // visibleNode after sort and reverse
+    // visibleNode = [".cc", ".c.bb", ".c", ".b.c", ".b", ".a.b", ".a"]
+    // nodePath        regx        result
+    // ".c.bb"        /^.cc         null
+    // ".c.bb"        /^.c.bb       [".c.bb", index: 0, input: ".c.bb"]
+    // ".c.bb"        /^.c          [".c", index: 0, input: ".c.bb"]
+    // ".c.bb"        /^.b.c        null
+    // ".c.bb"        /^.b          null
+    // ".c.bb"        /^.a.b        null
+    // ".c.bb"        /^.a          null
+    function calcPipelineInfo(fromPath,toPath,visibleFromNode,visibleToNode) {
+        var pipelineInfo = {};
+        for (var i = 0; i < visibleToNode.length; i ++ ) {
+            // 通过正则匹配当前路径可以匹配上的,
+            // 因为已经进行过排序+倒序了,所以第一个匹配上的肯定是距离当前节点最近的可见节点
+            var regx = new RegExp('^' + visibleToNode[i]);
+            var rs = regx.exec(toPath);
+            if (rs) {
+                pipelineInfo['to'] = toPath;
+                pipelineInfo['toShow'] = visibleToNode[i];
+
+                if (toPath== visibleToNode[i]) {
+                    pipelineInfo["isToEqual"] = true;
+                }else {
+                    pipelineInfo["isToEqual"] = false;
+                }
                 break;
             }
         }
 
-        // 如果toNodes存在子节点,则寻找子节点有没有可以匹配当前节点的
-        if (toNodes[i].childNode) {
-            var tempResult = getPipelineMap(fromNode,toNodes[i].childNode,visibleFromNode,visibleToNode)
-            if (tempResult) {
-                resultMap = tempResult;
+        for (var i = 0; i < visibleFromNode.length; i ++ ) {
+            var regx = new RegExp('^' + visibleFromNode[i]);
+            var rs = regx.exec(fromPath);
+            if (rs) {
+                pipelineInfo['from'] = fromPath;
+                pipelineInfo['fromShow'] = visibleFromNode[i];
+                if (fromPath == visibleFromNode[i]) {
+                    pipelineInfo["isFromEqual"] = true;
+                }else {
+                    pipelineInfo["isFromEqual"] = false;
+                }
                 break;
             }
         }
+
+        return pipelineInfo;
     }
-
-
-    if (resultMap.length > 0) {
-        // console.log(resultMap);
-        return resultMap;
-    }else {
-        return null;
-    }
-}
-
-// 计算节点所属可现实的最先节点
-// 计算两个路径可以绑定的最接近自己的节点,并返回
-//
-// 正则判断:
-// visibleNode = [".a",".a.b",".b.c",".b",".c".".cc",".c.bb"]
-// nodePath = ".c.bb"
-//
-// visibleNode after sort and reverse
-// visibleNode = [".cc", ".c.bb", ".c", ".b.c", ".b", ".a.b", ".a"]
-// nodePath        regx        result
-// ".c.bb"        /^.cc         null
-// ".c.bb"        /^.c.bb       [".c.bb", index: 0, input: ".c.bb"]
-// ".c.bb"        /^.c          [".c", index: 0, input: ".c.bb"]
-// ".c.bb"        /^.b.c        null
-// ".c.bb"        /^.b          null
-// ".c.bb"        /^.a.b        null
-// ".c.bb"        /^.a          null
-function calcPipelineInfo(fromPath,toPath,visibleFromNode,visibleToNode) {
-    var pipelineInfo = {};
-    for (var i = 0; i < visibleToNode.length; i ++ ) {
-        // 通过正则匹配当前路径可以匹配上的,
-        // 因为已经进行过排序+倒序了,所以第一个匹配上的肯定是距离当前节点最近的可见节点
-        var regx = new RegExp('^' + visibleToNode[i]);
-        var rs = regx.exec(toPath);
-        if (rs) {
-            pipelineInfo['to'] = toPath;
-            pipelineInfo['toShow'] = visibleToNode[i];
-
-            if (toPath== visibleToNode[i]) {
-                pipelineInfo["isToEqual"] = true;
-            }else {
-                pipelineInfo["isToEqual"] = false;
-            }
-            break;
-        }
-    }
-
-    for (var i = 0; i < visibleFromNode.length; i ++ ) {
-        var regx = new RegExp('^' + visibleFromNode[i]);
-        var rs = regx.exec(fromPath);
-        if (rs) {
-            pipelineInfo['from'] = fromPath;
-            pipelineInfo['fromShow'] = visibleFromNode[i];
-            if (fromPath == visibleFromNode[i]) {
-                pipelineInfo["isFromEqual"] = true;
-            }else {
-                pipelineInfo["isFromEqual"] = false;
-            }
-            break;
-        }
-    }
-
-    return pipelineInfo;
-}
 
 </script>
 </body>
