@@ -1,4 +1,4 @@
-import d3 from "./d3.min";
+
 
 export function mouseoverRelevantPipeline(thisData){
     var pathAry = d3.selectAll("#pipeline-line-view path")[0];

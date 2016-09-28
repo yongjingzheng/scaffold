@@ -1,4 +1,3 @@
-import $ from "./jquery.min";
 
 export function clickStart(sd, si) {
     //show git form

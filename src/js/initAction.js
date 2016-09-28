@@ -1,4 +1,4 @@
-import d3 from "./d3.min";
+
 import * as constant from "./constant";
 import {drag} from "./drag";
 import {mouseoverRelevantPipeline,mouseoutRelevantPipeline} from "./lineHover";

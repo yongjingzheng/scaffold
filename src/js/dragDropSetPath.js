@@ -1,5 +1,4 @@
-import d3 from "./d3.min";
-import $ from "./jquery.min";
+
 import {setPath,getPathData} from "./setPath";
 import {linePathAry} from "./constant";
 

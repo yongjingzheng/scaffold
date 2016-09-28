@@ -1,6 +1,4 @@
-import $ from "./jquery.min";
-import d3 from "./d3.min";
-import uuid from "./uuid/uuid";
+
 import * as constant from "./constant";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";

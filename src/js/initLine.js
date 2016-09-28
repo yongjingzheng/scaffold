@@ -1,4 +1,5 @@
-import d3 from "./d3.min";
+
+
 import * as constant from "./constant";
 import {setPath} from "./setPath";
 

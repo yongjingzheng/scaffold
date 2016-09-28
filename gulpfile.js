@@ -1,29 +1,5 @@
 'use strict';
 
-// var gulp = require('gulp');
-
-// var sass = require('gulp-sass');
-
-// var rename = require ('gulp-rename');
-
-// gulp.task('default', function () {
-
-//     gulp.src('./sass/application.scss')
-//         .pipe(sass().on('error', sass.logError))
-//         .pipe(gulp.dest('./css'));
-
-//     gulp.src('./sass/application.scss')
-//         .pipe(sass({
-//             outputStyle: 'compressed'
-//         }).on('error', sass.logError))
-//         .pipe(rename({suffix: '.min'}))
-//         .pipe(gulp.dest('./css'));
-// });
-
-// gulp.task('watch', function () {
-//     gulp.watch('./sass/*.scss', ['styles']);
-// });
-
 
 const gulp = require('gulp');
 const babel = require('gulp-babel');
@@ -32,8 +8,28 @@ const rename = require('gulp-rename');
 const concat = require('gulp-concat');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
+const sass = require('gulp-sass');
 
-// 编译并压缩js
+
+// styles
+gulp.task('styles', function () {
+
+    gulp.src('./sass/application.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('./css'));
+
+    gulp.src('./sass/application.scss')
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }).on('error', sass.logError))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('./css'));
+});
+
+
+
+
+// convert
 gulp.task('convertJS', function(){
   return gulp.src('src/js/**/*.js',{base:"./src/js"})
     .pipe(babel({
@@ -44,27 +40,28 @@ gulp.task('convertJS', function(){
 })
 
 
-// 监视文件变化，自动执行任务
-gulp.task('watch', function(){
-  gulp.watch('/src/js/*.js', ['convertJS', 'browserify']);
-})
-
-
 
 // browserify
-gulp.task("browserify", function () {
+gulp.task("browserify",['convertJS'], function () {
     var b = browserify({
         entries: "dist/js/index.js"
     });
 
     return b.bundle()
-        .pipe(source("app.js"))
+        .pipe(source("main.js"))
         .pipe(gulp.dest("dist/js"));
 });
 
-// gulp.task('start', ['convertJS']);
-// gulp.task('start', ['convertJS','browserify']);
-gulp.task('start', ['browserify']);
+
+gulp.task('scripts',['browserify'], function() {
+  return gulp.src(['./node_modules/jquery/dist/jquery.min.js', './node_modules/d3/d3.min.js','./node_modules/node-uuid/uuid.js', './dist/js/main.js'])
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest('./dist/js'));
+});
+
+
+gulp.task('default', ['convertJS','browserify','scripts','styles']);
+
 
 
 

@@ -1,7 +1,6 @@
 
 import {pipelineData} from "./pipelineData";
 import * as constant from "./constant";
-import uuid from "./uuid/uuid";
 
 export function clickAddStage(d, i) {
     //add stage data

@@ -1,0 +1,36 @@
+[
+  {
+    "key":"action",
+    "type":"string",
+    "path":".action"
+  },
+  {
+    "key":"pull_request",
+    "type":"object",
+    "path":".pull_request",
+
+    "child_node":[
+      {
+        "key":"url",
+        "type":"string",
+        "path":".pull_request.url"
+      },{
+        "key":"id",
+        "type":"number",
+        "path":".pull_request.id"
+      }
+    ]
+
+  },{
+    "key":"user",
+    "type":"object",
+    "path":".user",
+    "child_node":[
+      {
+        "key":"login",
+        "type":"string",
+        "path":".user.login"
+      }
+    ]
+}
+]
