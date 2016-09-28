@@ -1,5 +1,4 @@
 
-
 import {ContextMenu} from "./jquery.jsoneditor.menu";
 import {bipatiteArray} from "./bipatiteJson";
 import {bipatiteLine} from "./bipatiteLine";
@@ -129,7 +128,7 @@ import {bipatiteViewOn} from "./pipelineEdit";
         if (path.indexOf('.') > -1) {
             var diver = o,
                 i = 0,
-                parts = path.split('.');
+                parts = path.split('-');
             for (var len = parts.length; i < len - 1; i++) {
                 diver = diver[parts[i]];
             }

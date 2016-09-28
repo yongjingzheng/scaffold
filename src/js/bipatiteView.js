@@ -1,186 +1,21 @@
 import {getPathData} from "./setPath";
 import {isObject,isArray,isBoolean,isNumber,isString} from "./util";
-
-var demoJson = {
-	 "action": "created",
-	 "comment": {
-	 	"id": 11056394,
-    	"user": {
-    		"login": "baxterthehacker"
-    	},
-    	"urls":[
-    		{
-    			"html_url" : "",
-    			"events_url":"",
-    			"events" : {
-    				"click" : ""
-    			}
-    		},
-    		{
-    			"html_url" : "",
-    			"events_url":"",
-    			"events" : {
-    				"change" : ""
-    			}
-    		}
-    	]
-	}
-}
+import {addRelation,delRelation} from "./relation";
 
 
+var relationArray = [];
 
 
-
-var importJson = [
-  {
-    "key":"action",
-    "type":"string",
-    "path":".action"
-  },
-  {
-    "key":"number",
-    "type":"number",
-    "path":".number"
-  },
-  {
-    "key":"pull_request",
-    "type":"object",
-    "path":".pull_request",
-    "child_node":[
-      {
-        "key":"url",
-        "type":"string",
-        "path":".pull_request.url"
-      },{
-        "key":"id",
-        "type":"number",
-        "path":".pull_request.id"
-      },{
-        "key":"user",
-        "type":"object",
-        "path":".pull_request.user",
-        "child_node":[
-          {
-            "key":"login",
-            "type":"string",
-            "path":".pull_request.login"
-          }
-        ]
-      }
-    ]
-  }
-];
-
-var outputJson = [
-  {
-    "key":"action",
-    "type":"string",
-    "path":".action"
-  },
-  {
-    "key":"pull_request",
-    "type":"object",
-    "path":".pull_request",
-    "child_node":[
-      {
-        "key":"url",
-        "type":"string",
-        "path":".pull_request.url"
-      },{
-        "key":"id",
-        "type":"number",
-        "path":".pull_request.id"
-      }
-    ]
-
-  },{
-    "key":"user",
-    "type":"object",
-    "path":".user",
-    "child_node":[
-      {
-        "key":"login",
-        "type":"string",
-        "path":".user.login"
-      }
-    ]
-}
-];
-
-
-
-var relationJson = {
-  "relation": [
-    {
-      "from": ".action",
-      "from_show": ".action",
-
-      "to": ".action",
-      "to_show": ".action",
-
-      "is_from_equal": true,
-      "is_to_equal": true
-
-    },
-    {
-      "to": ".pull_request",
-      "to_show": ".pull_request",
-      "is_to_equal": true,
-      "from": ".pull_request",
-      "from_show": ".pull_request",
-      "is_from_equal": true,
-      "child": [
-        {
-          "to": ".pull_request.url",
-          "to_show": ".pull_request",
-          "is_to_equal": false,
-          "from": ".pull_request.url",
-          "from_show": ".pull_request",
-          "is_from_equal": false
-        },
-        {
-          "to": ".pull_request.id",
-          "to_show": ".pull_request",
-          "is_to_equal": false,
-          "from": ".pull_request.id",
-          "from_show": ".pull_request",
-          "is_from_equal": false
-        },
-        {
-          "to": ".user",
-          "to_show": ".user",
-          "is_to_equal": true,
-          "from": ".pull_request.user",
-          "from_show": ".pull_request",
-          "is_from_equal": false,
-          "child": [
-            {
-              "to": ".user.login",
-              "to_show": ".user",
-              "is_to_equal": false,
-              "from": ".pull_request.login",
-              "from_show": ".pull_request",
-              "is_from_equal": false
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-
-
-
-
-
-export function bipatiteView(){
+export function bipatiteView(importJson,outputJson){
 	$.ajax({
         url: "./templates/bipatiteView.html",
         type: "GET",
         cache: false,
         success: function (data) {
             $("#pipeline-info-edit").html($(data));
-            initView();
+            var importTree = jsonTransformation(importJson);
+            var outputTree = jsonTransformation(outputJson);
+            initView(importTree,outputTree);
         }
     });  
 }
@@ -189,37 +24,25 @@ export function bipatiteView(){
 
 
 
-function initView(){
+function initView(importTree,outputTree){
 
-	construct($("#importDiv"),importJson);
+	construct($("#importDiv"),importTree);
+	construct($("#outputDiv"),outputTree);
+	var visibleInputStr = getVisibleInputStr();
+	var visibleOutputStr = getVisibleOutputStr();
 
-	// construct($("#importDiv"),jsonTransformation(demoJson));
-	construct($("#outputDiv"),outputJson);
-
-	relationLineInit(relationJson.relation);
+	relationLineInit(relationArray);
 
 	dragDropRelation();
 
 	$("#removeLine").click(function(){
 		var path = $("#bipatiteLineSvg path.active");
-		var depthArray = path.attr("data-depth").split(".");
-
-		var demoJson = relationJson.relation;
-		for(var i=0;i<depthArray.length-1;i++){
-			if(i >0){
-				demoJson = demoJson.child[depthArray[i]];
-			}else{
-				demoJson = demoJson[depthArray[i]];
-			}
-			
-		}
 		
-		if(isObject(demoJson)){
-			demoJson.child.splice(depthArray[depthArray.length-1],1);
-		}else{
-			demoJson.splice(depthArray[depthArray.length-1],1);
-		}
-		relationLineInit(relationJson.relation);
+		var fromPath = path.attr("from"); 
+		fromPath = fromPath.replace(/\-/g,'.').substring(5);
+		
+		relationArray = delRelation(relationArray,fromPath);
+		relationLineInit(relationArray);
 	});
 }
 
@@ -248,7 +71,7 @@ function addExpander(item){
         expander.bind('click', function() {
             var item = $(this).parent();
             item.toggleClass('expanded');
-            relationLineInit(relationJson.relation);
+            relationLineInit(relationArray);
         });
         item.prepend(expander);
     }
@@ -259,7 +82,7 @@ function relationLineInit(ary){
 	relationLine(ary);
 }
 
-function relationLine(ary,depth){
+function relationLine(ary){
 	
 	var rootImport = $("#importDiv"),
 		rootOutput = $("#outputDiv");
@@ -278,7 +101,7 @@ function relationLine(ary,depth){
 				fromDom.offset().top,
 				toDom.offset().left,
 				toDom.offset().top	
-			],depth == undefined ? i : depth+"."+i);	
+			],fromPath,toPath);	
 		}
 
 
@@ -290,7 +113,7 @@ function relationLine(ary,depth){
 				fromDom.offset().top,
 				parentDom.offset().left,
 				parentDom.offset().top	
-			],depth == undefined ? i : depth+"."+i);	
+			],fromPath,toPath);	
 		}
 
 		if(fromDom.is(":hidden") && toDom.is(":visible")){
@@ -301,18 +124,13 @@ function relationLine(ary,depth){
 				parentDom.offset().top,
 				toDom.offset().left,
 				toDom.offset().top	
-			],depth == undefined ? i : depth+"."+i);	
+			],fromPath,toPath);	
 		}
 
 
 
 		if(ary[i].child){
-			if(depth == undefined){
-				depth = i;
-			}else{
-				depth = depth+"."+i
-			}
-			relationLine(ary[i].child,depth);
+			relationLine(ary[i].child);
 		}
 	
 
@@ -334,7 +152,7 @@ function jsonTransformation(json){
 		}
 		
 	}
-	return newJsonArray;
+	return newJsonArray.sort().reverse();
 
 }
 
@@ -371,7 +189,7 @@ function jsonChange(child,json,path){
 	}
 }
 
-function settingOut(point,depth){
+function settingOut(point,fromPath,toPath){
 	var offsetTop = $("#bipatiteLineSvg").offset().top;
 	var offsetLeft = $("#bipatiteLineSvg").offset().left;
 	var x1 = point[0]-offsetLeft+51;
@@ -388,7 +206,8 @@ function settingOut(point,depth){
     .attr("fill","none")
     .attr("stroke-opacity", "0.8")
     .attr("class","cursor")
-    .attr("data-depth",depth)
+    .attr("from",fromPath)
+    .attr("to",toPath)
     .on("click",function(d,i){
     	$("#bipatiteLineSvg path").attr("stroke","green").removeClass("active");
     	$(this).attr("stroke","red").addClass("active");
@@ -435,9 +254,12 @@ function dragDropRelation(){
 
 
 	$("span.property").mousedown(function(event){
+
 		var _startX = $(event.target).offset().left,
-	        _startY = $(event.target).offset().top;
-	     console.log(_startX);
+	        _startY = $(event.target).offset().top,
+	    	fromPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
+	    	fromPath = fromPath.substring(5);
+		
 	    document.onmousemove = function(event){
 	    	event.pageX
 	    	event.pageY
@@ -449,9 +271,15 @@ function dragDropRelation(){
         	document.onmouseup = null; 
         	
 	    	var endX = $(event.target).offset().left,
-	    		endY = $(event.target).offset().top;
+	    		endY = $(event.target).offset().top,
+	    		toPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
+	    		toPath = toPath.substring(5);
 	    	
 	    	$("#bipatiteLineSvg .drag-drop-line").remove();
+
+
+	    	relationArray = addRelation(relationArray,true,fromPath,toPath,getVisibleInputStr(),getVisibleOutputStr());
+	    	relationLineInit(relationArray);
 	    }
 	})
 
@@ -484,4 +312,34 @@ function dragDropLine(point){
 	}
 
 }
+
+function getVisibleInputStr(){
+	var str = "";
+	
+	$("#importDiv div.item").each(function(){
+		
+		if($(this).is(":visible")){
+			var path = $(this).attr("data-path").replace(/\-/g,'.');
+			str = str + path.substring(5)+";";
+		}
+	})
+
+	return str;
+}
+
+function getVisibleOutputStr(){
+	var str = "";
+	
+	$("#outputDiv div.item").each(function(){
+		
+		if($(this).is(":visible")){
+			var path = $(this).attr("data-path").replace(/\-/g,'.');
+			str = str + path.substring(5)+";";
+		}
+	})
+
+	return str;
+}
+
+
 
