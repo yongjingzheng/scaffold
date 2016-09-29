@@ -30,10 +30,9 @@ export function pipelineEdit(data){
             importJson = (JSON.parse(val));
             jsonEditor($('#importDiv'),importJson, {
             	change:function(data){
-            		outputJson = data;
+            		importJson = data;
 	            }
 	        });
-	        outputJson = importJson;
             $("#importJsonDiv").removeClass("show").addClass("hide");
 
         }catch(e){
@@ -46,26 +45,15 @@ export function pipelineEdit(data){
     $("#bipartiteView").click(function(){
 
     	bipatiteView(importJson,outputJson);
-    	
-
-   //  	var type = $(this).text().trim()
-   //  	if(type == "editView"){
-			// $(this).text("bipartiteView");
-			// $(".json-editor").removeClass("bipartite-view");
-			// $(".config-col").children().removeClass("hide");
-			// bipatiteViewOn = false;
-   //  	}else{
-   //  		$(this).text("editView");
-   //  		$(".json-editor").addClass("bipartite-view");
-   //  		$(".config-col").children().addClass("hide");
-   //  		bipatiteViewOn = true;
-   //  		bipatiteLine(bipatiteJson(importJson,outputJson,"start"));
-   //  	}
-
     });
 
     $("#importOutput").click(function(){
-    	jsonEditor($('#outputDiv'),outputJson, {});
+    	outputJson = importJson;
+    	jsonEditor($('#outputDiv'),outputJson, {
+    		change:function(data){
+            	outputJson = data;
+	        }
+    	});
     });
 
 
