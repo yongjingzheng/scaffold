@@ -94,7 +94,7 @@ $(function(){
                 $(this).closest('li').removeClass('open');
             });
 
-        window.onerror = $.proxy(this._logErrors, this);
+        // window.onerror = $.proxy(this._logErrors, this);
     };
 
     /**
