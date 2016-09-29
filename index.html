@@ -14,30 +14,39 @@
 </head>
 <body>
 
+<nav id="sidebar" class="sidebar" role="navigation">
+    <!-- need this .js class to initiate slimscroll -->
+    <div class="js-sidebar-content">
+        <header class="logo hidden-sm-down">
+            <a href="index.html">Scaffold</a>
+        </header>
+        
+        <!-- main notification links are placed inside of .sidebar-nav -->
+        <ul class="sidebar-nav">
+            <li class="active">
+                <a href="index.html">
+                    <span class="icon">
+                        <i class="fa fa-desktop"></i>
+                    </span>
+                    Pipeline Design
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
 <!-- This is the white navigation bar seen on the top. A bit enhanced BS navbar. See .page-controls in _base.scss. -->
-<nav class="page-controls">
+<nav class="page-controls navbar navbar-dashboard">
     <div class="container-fluid">
         <!-- .navbar-header contains links seen on xs & sm screens -->
         <div class="navbar-header">
             <ul class="nav navbar-nav">
-                <li class="ml-n-xs hidden-xs"><a href="#"><i class="fa fa-bars fa-lg"></i></a></li>
-                <li class="ml-sm mr-n-xs hidden-xs"><a href="#"><i class="fa fa-refresh fa-lg"></i></a></li>
+                <li class="ml-n-xs hidden-xs">
+                    <a href="#" id="nav-state-toggle" class="hidden-md-down nav-link" data-toggle="tooltip" data-html="true" data-original-title="Turn<br>on/off<br>sidebar<br>collapsing" data-placement="bottom">
+                        <i class="fa fa-bars fa-lg"></i>
+                    </a>
+                </li>
             </ul>
-        </div>
-
-        <!-- this part is hidden for xs screens -->
-        <div class="collapse navbar-collapse">
-            <!-- search form! link it to your search server -->
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <div class="input-group input-group-no-border">
-                    <span class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </span>
-                        <input class="form-control" type="text" placeholder="Search Dashboard">
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </nav>
