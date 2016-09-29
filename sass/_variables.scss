@@ -69,9 +69,9 @@ $link-color: #218BC3 !default;
 // Layout
 // -------------------------
 $sidebar-padding-horizontal: 11px;
-$sidebar-icon-state-width: 4px !default;
+$sidebar-icon-state-width: 50px !default;
 $sidebar-slim-scroll-width: 4px;
-$sidebar-width: 4px;
+$sidebar-width: 200px + $sidebar-slim-scroll-width !default;
 
 $sidebar-transition-time: .3s !default;
 
@@ -257,3 +257,34 @@ $icon-font-path: "../node_modules/bootstrap-sass/assets/fonts/bootstrap/" !defau
 // ------------------------
 
 $fa-font-path: "../node_modules/font-awesome/fonts" !default;
+
+//== Navbar
+//
+
+$navbar-margin-bottom:             0 !default;
+$navbar-border-radius:             0 !default;
+
+$navbar-dashboard-bg:                $white !default;
+$navbar-dashboard-color:             #777 !default;
+$navbar-dashboard-border:            darken($navbar-dashboard-bg, 6.5%) !default;
+
+// Navbar links
+$navbar-dashboard-link-color:                #666 !default;
+
+// Navbar links
+$navbar-dashboard-link-hover-color:          #333 !default;
+$navbar-dashboard-link-hover-bg:             transparent !default;
+$navbar-dashboard-link-active-color:         #555 !default;
+$navbar-dashboard-link-active-bg:            darken($navbar-dashboard-bg, 6.5%) !default;
+$navbar-dashboard-link-disabled-color:       #ccc !default;
+$navbar-dashboard-link-disabled-bg:          transparent !default;
+
+// Navbar brand label
+$navbar-dashboard-brand-color:               $navbar-dashboard-link-color !default;
+$navbar-dashboard-brand-hover-color:         darken($navbar-dashboard-brand-color, 10%) !default;
+$navbar-dashboard-brand-hover-bg:            transparent !default;
+
+// Navbar toggle
+$navbar-dashboard-toggle-hover-bg:           #ddd !default;
+$navbar-dashboard-toggle-icon-bar-bg:        #888 !default;
+$navbar-dashboard-toggle-border-color:       #ddd !default;

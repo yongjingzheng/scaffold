@@ -54,7 +54,21 @@ gulp.task("browserify",['convertJS'], function () {
 
 
 gulp.task('scripts',['browserify'], function() {
-  return gulp.src(['./node_modules/jquery/dist/jquery.min.js', './node_modules/d3/d3.min.js','./node_modules/node-uuid/uuid.js', './dist/js/main.js'])
+  return gulp.src([
+    './bower_components/jquery/dist/jquery.min.js', 
+    './bower_components/jquery-pjax/jquery.pjax.js',
+    './bower_components/tether/dist/js/tether.js',
+    './bower_components/bootstrap/js/dist/util.js',
+    './bower_components/bootstrap/js/dist/collapse.js',
+    './bower_components/bootstrap/js/dist/tooltip.js',
+    './bower_components/slimScroll/jquery.slimscroll.js',
+    './bower_components/widgster/widgster.js',
+    './dist/js/theme/settings.js',
+    './dist/js/theme/app.js',
+    './node_modules/d3/d3.min.js',  
+    './node_modules/node-uuid/uuid.js', 
+    './dist/js/main.js'
+    ])
     .pipe(concat('app.js'))
     .pipe(gulp.dest('./dist/js'));
 });
