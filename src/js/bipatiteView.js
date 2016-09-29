@@ -1,0 +1,345 @@
+import {getPathData} from "./setPath";
+import {isObject,isArray,isBoolean,isNumber,isString} from "./util";
+import {addRelation,delRelation} from "./relation";
+
+
+var relationArray = [];
+
+
+export function bipatiteView(importJson,outputJson){
+	$.ajax({
+        url: "./templates/bipatiteView.html",
+        type: "GET",
+        cache: false,
+        success: function (data) {
+            $("#pipeline-info-edit").html($(data));
+            var importTree = jsonTransformation(importJson);
+            var outputTree = jsonTransformation(outputJson);
+            initView(importTree,outputTree);
+        }
+    });  
+}
+
+
+
+
+
+function initView(importTree,outputTree){
+
+	construct($("#importDiv"),importTree);
+	construct($("#outputDiv"),outputTree);
+	var visibleInputStr = getVisibleInputStr();
+	var visibleOutputStr = getVisibleOutputStr();
+
+	relationLineInit(relationArray);
+
+	dragDropRelation();
+
+	$("#removeLine").click(function(){
+		var path = $("#bipatiteLineSvg path.active");
+		
+		var fromPath = path.attr("from"); 
+		fromPath = fromPath.replace(/\-/g,'.').substring(5);
+		
+		relationArray = delRelation(relationArray,fromPath);
+		relationLineInit(relationArray);
+	});
+}
+
+
+function construct(root,json){
+	for(var i=0;i<json.length;i++){
+
+		var item     = $('<div>',   { 'class': 'item row '+json[i].type, 'data-path': replacePoint(json[i].path) }),
+			property =   $('<span>', { 'class': 'property' });
+
+		property.text(json[i].key).attr("title",json[i].key);
+		item.append(property);
+		root.append(item);
+
+		if(json[i].child_node){
+			addExpander(item);
+			construct(item,json[i].child_node);
+		}
+	}	
+}
+
+
+function addExpander(item){
+	if (item.children('.expander').length == 0) {
+        var expander =   $('<span>',  { 'class': 'expander' });
+        expander.bind('click', function() {
+            var item = $(this).parent();
+            item.toggleClass('expanded');
+            relationLineInit(relationArray);
+        });
+        item.prepend(expander);
+    }
+}
+
+function relationLineInit(ary){
+	d3.select("#bipatiteLineSvg").selectAll("path").remove();
+	relationLine(ary);
+}
+
+function relationLine(ary){
+	
+	var rootImport = $("#importDiv"),
+		rootOutput = $("#outputDiv");
+		
+	for(var i=0;i<ary.length;i++){
+		var fromPath = replacePoint(ary[i].from),
+			toPath = replacePoint(ary[i].to),
+			fromDom = rootImport.find("div[data-path="+fromPath+"]"),
+			toDom = rootOutput.find("div[data-path="+toPath+"]"),
+			parentDom;
+
+		
+		if(fromDom.is(":visible") && toDom.is(":visible")){
+			settingOut([
+				fromDom.offset().left,
+				fromDom.offset().top,
+				toDom.offset().left,
+				toDom.offset().top	
+			],fromPath,toPath);	
+		}
+
+
+		if(fromDom.is(":visible") && toDom.is(":hidden")){
+			
+		  	parentDom = getVisibleParent(toDom);
+		  	settingOut([
+				fromDom.offset().left,
+				fromDom.offset().top,
+				parentDom.offset().left,
+				parentDom.offset().top	
+			],fromPath,toPath);	
+		}
+
+		if(fromDom.is(":hidden") && toDom.is(":visible")){
+
+		  	parentDom = getVisibleParent(fromDom);
+		  	settingOut([
+				parentDom.offset().left,
+				parentDom.offset().top,
+				toDom.offset().left,
+				toDom.offset().top	
+			],fromPath,toPath);	
+		}
+
+
+
+		if(ary[i].child){
+			relationLine(ary[i].child);
+		}
+	
+
+	}
+}
+
+function jsonTransformation(json){
+	var newJsonArray=[];
+
+	for(var key in json){
+		newJsonArray.push({
+			"key" : key,
+			"type" : JsonType(json[key]),
+			"path" : "."+key
+		});
+		if(isObject(json[key]) || isArray(json[key])){
+			var child = newJsonArray[newJsonArray.length-1].child_node = [];
+			jsonChange(child,json[key],newJsonArray[newJsonArray.length-1].path);
+		}
+		
+	}
+	return newJsonArray.sort().reverse();
+
+}
+
+function jsonChange(child,json,path){
+	
+	if(isObject(json)){
+		for(var key in json){
+			child.push({
+				"key" : key,
+				"type" : JsonType(json[key]),
+				"path" : path+"."+key
+			})
+			if(isObject(json[key]) || isArray(json[key])){
+				var childNode = child[child.length-1].child_node = [];
+				jsonChange(childNode,json[key],child[child.length-1].path);
+			}
+		}
+	}else if(isArray(json)){
+		for(var i =0;i<json.length;i++){
+			if(isObject(json[i])){
+				for(var key in json[i]){
+					child.push({
+						"key" : key,
+						"type" : JsonType(json[i][key]),
+						"path" : path+"."+i+"."+key
+					})
+					if(isObject(json[i][key]) || isArray(json[i][key])){
+						var childNode = child[child.length-1].child_node = [];
+						jsonChange(childNode,json[i][key],child[child.length-1].path);
+					}
+				}
+			}
+		}
+	}
+}
+
+function settingOut(point,fromPath,toPath){
+	var offsetTop = $("#bipatiteLineSvg").offset().top;
+	var offsetLeft = $("#bipatiteLineSvg").offset().left;
+	var x1 = point[0]-offsetLeft+51;
+	var y1 = point[1]-offsetTop;
+	var x2 = point[2]-offsetLeft+5
+	var y2 = point[3]-offsetTop;
+	var d = getPathData({x:x1,y:y1},{x:x2,y:y2});
+
+	d3.select("#bipatiteLineSvg")
+	.append("path")
+	.attr("d",d)
+	.attr("stroke", "green")
+    .attr("stroke-width", 3)
+    .attr("fill","none")
+    .attr("stroke-opacity", "0.8")
+    .attr("class","cursor")
+    .attr("from",fromPath)
+    .attr("to",toPath)
+    .on("click",function(d,i){
+    	$("#bipatiteLineSvg path").attr("stroke","green").removeClass("active");
+    	$(this).attr("stroke","red").addClass("active");
+    });
+
+}
+
+
+
+function replacePoint(str){
+	str = ("start"+str).replace(/\./g,'-');
+	return str;
+}
+
+function getVisibleParent(dom){
+
+	var parent = dom.parent();
+
+	if(parent.is(":visible")){
+		return parent;
+	}else{
+		getVisibleParent(parent);
+	}
+}
+
+function JsonType(json){
+	if(isObject(json)){
+		return "object";
+	}else if(isArray(json)){
+		return "array";
+	}else if(isBoolean(json)){
+		return "boolean";
+	}else if(isString(json)){
+		return "string";
+	}else if(isNumber(json)){
+		return "number";
+	}else {
+		return "null";
+	}
+}
+
+function dragDropRelation(){
+
+
+
+	$("span.property").mousedown(function(event){
+
+		var _startX = $(event.target).offset().left,
+	        _startY = $(event.target).offset().top,
+	    	fromPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
+	    	fromPath = fromPath.substring(5);
+		
+	    document.onmousemove = function(event){
+	    	event.pageX
+	    	event.pageY
+	    	dragDropLine([_startX,_startY,event.pageX,event.pageY]);
+	    }
+
+	    document.onmouseup = function(event){
+	    	document.onmousemove = null;   
+        	document.onmouseup = null; 
+        	
+	    	var endX = $(event.target).offset().left,
+	    		endY = $(event.target).offset().top,
+	    		toPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
+	    		toPath = toPath.substring(5);
+	    	
+	    	$("#bipatiteLineSvg .drag-drop-line").remove();
+
+
+	    	relationArray = addRelation(relationArray,true,fromPath,toPath,getVisibleInputStr(),getVisibleOutputStr());
+	    	relationLineInit(relationArray);
+	    }
+	})
+
+
+}
+
+
+function dragDropLine(point){
+
+	var offsetTop = $("#bipatiteLineSvg").offset().top;
+	var offsetLeft = $("#bipatiteLineSvg").offset().left;
+	var x1 = point[0]-offsetLeft+51;
+	var y1 = point[1]-offsetTop;
+	var x2 = point[2]-offsetLeft+5
+	var y2 = point[3]-offsetTop;
+	var d = getPathData({x:x1,y:y1},{x:x2,y:y2});
+
+	if($("#bipatiteLineSvg .drag-drop-line").length == 0){
+		d3.select("#bipatiteLineSvg")
+		.append("path")
+		.attr("d",d)
+		.attr("stroke", "red")
+	    .attr("stroke-width", 3)
+	    .attr("fill","none")
+	    .attr("stroke-opacity", "0.8")
+	    .attr("class","drag-drop-line");
+	}else{
+		d3.select(".drag-drop-line")
+		.attr("d",d);
+	}
+
+}
+
+function getVisibleInputStr(){
+	var str = "";
+	
+	$("#importDiv div.item").each(function(){
+		
+		if($(this).is(":visible")){
+			var path = $(this).attr("data-path").replace(/\-/g,'.');
+			str = str + path.substring(5)+";";
+		}
+	})
+
+	return str;
+}
+
+function getVisibleOutputStr(){
+	var str = "";
+	
+	$("#outputDiv div.item").each(function(){
+		
+		if($(this).is(":visible")){
+			var path = $(this).attr("data-path").replace(/\-/g,'.');
+			str = str + path.substring(5)+";";
+		}
+	})
+
+	return str;
+}
+
+
+
