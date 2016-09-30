@@ -288,3 +288,30 @@ $navbar-dashboard-brand-hover-bg:            transparent !default;
 $navbar-dashboard-toggle-hover-bg:           #ddd !default;
 $navbar-dashboard-toggle-icon-bar-bg:        #888 !default;
 $navbar-dashboard-toggle-border-color:       #ddd !default;
+
+$border-radius:          .25rem !default;
+$border-radius-lg:       .3rem !default;
+$border-radius-sm:       .2rem !default;
+
+$font-size-base:             1rem !default;
+$font-size-lg:               1.25rem !default;
+$font-size-sm:               .875rem !default;
+$font-size-xs:               .75rem !default;
+
+// Grid breakpoints
+//
+// Define the minimum and maximum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+
+$grid-breakpoints: (
+  // Extra small screen / phone
+  xs: 0,
+  // Small screen / phone
+  sm: 544px,
+  // Medium screen / tablet
+  md: 768px,
+  // Large screen / desktop
+  lg: 992px,
+  // Extra large screen / wide desktop
+  xl: 1200px
+) !default;

@@ -1,9 +1,13 @@
-
+import {jsonEditor} from "./jquery.jsoneditor";
 import * as constant from "./constant";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
 import {initLine} from "./initLine";
 import {pipelineData} from "./pipelineData";
+
+export var inputJson = {};
+   
+export var outputJson = {};
 
 export function clickAction(sd, si) {
 
@@ -23,6 +27,72 @@ export function clickAction(sd, si) {
             });
 
             $("#uuid").attr("value", sd.id);
+
+            // input
+            $("#importInputIcon").click(function(){
+                if($("#inputJsonDiv").hasClass("hide")){
+                    $("#inputJsonDiv").removeClass("hide").addClass("show");
+                    
+                }else{
+                    $("#inputJsonDiv").removeClass("show").addClass("hide");
+                    
+                }
+            })
+
+            $("#importInputJson").click(function(){
+                var val = $("#inputJsonText").val();
+                try{
+                    inputJson = (JSON.parse(val));
+                    jsonEditor($('#inputTreeDiv'),inputJson, {
+                        change:function(data){
+                            inputJson = data;
+                        }
+                    });
+                    $("#inputJsonDiv").removeClass("show").addClass("hide");
+
+                }catch(e){
+                    console.log("Error in parsing json.");
+                    alert("Error in parsing json.");
+                }
+                
+            });
+
+            $("#closeImportInputJson").click(function(){
+                $("#inputJsonDiv").removeClass("show").addClass("hide");
+            })
+
+            // output
+            $("#importOutputIcon").click(function(){
+                if($("#outputJsonDiv").hasClass("hide")){
+                    $("#outputJsonDiv").removeClass("hide").addClass("show");
+                    
+                }else{
+                    $("#outputJsonDiv").removeClass("show").addClass("hide");
+                    
+                }
+            })
+
+            $("#importOutputJson").click(function(){
+                var val = $("#outputJsonText").val();
+                try{
+                    outputJson = (JSON.parse(val));
+                    jsonEditor($('#outputTreeDiv'),outputJson, {
+                        change:function(data){
+                            outputJson = data;
+                        }
+                    });
+                    $("#outputJsonDiv").removeClass("show").addClass("hide");
+
+                }catch(e){
+                    console.log("Error in parsing json.");
+                    alert("Error in parsing json.");
+                }
+                
+            });
+
+            $("#closeImportOutputJson").click(function(){
+                $("#outputJsonDiv").removeClass("show").addClass("hide");
+            })
         }
     });
 
