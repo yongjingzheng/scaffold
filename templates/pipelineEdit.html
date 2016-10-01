@@ -1,52 +1,20 @@
-<form id="pipeline-form" class="form-horizontal" role="form">
-    <fieldset>
-        <legend><strong>Pipeline</strong> setup</legend>
-
-        <div class="row" style="position:relative;">
-            <svg id="bipatiteLineSvg" style="position:absolute;right:0;top:0;left:0;bottom:0;width:100%;height:100%;">
-                
-            </svg>
-            <div class="col-md-4 import-div">
-                <h4 class="pr">Import <span id="importEditIcon" class="fa fa-edit"></span></h4>
-                <div id="importJsonDiv" class="hide">
-                    <textarea id="importJsonText" class="form-control"></textarea>
-                    <div>
-                        <input id="importJson" type="button" value="import" class="btn btn-primary">
-
-                        <input id="closeImportJson" type="button" value="close" class="btn btn-default">
-                    </div>  
-                </div>
-                <div id="importDiv" class="json-editor"></div>
-            </div>
-            <div class="col-md-4 config-col">
-                <h4>Config</h4>
-                <div>
-                    <div class="form-group">
-                        <label for="normal-field" class="col-sm-3 control-label">Action ID</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="action-id" name="action-id" class="form-control" placeholder="Action ID">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="normal-field" class="col-sm-3 control-label">Action ID</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="action-id" name="action-id" class="form-control" placeholder="Action ID">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="normal-field" class="col-sm-3 control-label">Action ID</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="action-id" name="action-id" class="form-control" placeholder="Action ID">
-                        </div>
-                    </div>
-                </div>
-                <input id="importOutput" type="button" value="submit" class="btn btn-default" />
-            </div>
-            <div class="col-md-4">
-                <h4 class="pr">Output <span style="padding:0 10px;font-size:12px;cursor:pointer;" id="bipartiteView">bipartiteView</span></h4>
-                <div id="outputDiv" class="json-editor"></div>
-            </div>
+<fieldset>
+    <legend><strong>Action bipartite</strong> setup</legend>
+    <input type="button" id="removeLine" value="remove line" />
+    <div class="row" style="position:relative;">
+        <svg id="bipatiteLineSvg" class="relation-svg" style="">
+            
+        </svg>
+        <div class="col-md-2 import-div">
+            <h4 class="pr">Import</h4>
+            <div id="importDiv" class="json-editor"></div>
         </div>
-    </fieldset>
-   
-</form>
+        <div class="col-md-6">
+            
+        </div>
+        <div class="col-md-4">
+            <h4 class="pr">Output</h4>
+            <div id="outputDiv" class="json-editor"></div>
+        </div>
+    </div>
+</fieldset>

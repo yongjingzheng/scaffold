@@ -7,17 +7,11 @@ var relationArray = [];
 
 
 export function bipatiteView(importJson,outputJson){
-	$.ajax({
-        url: "./templates/bipatiteView.html",
-        type: "GET",
-        cache: false,
-        success: function (data) {
-            $("#pipeline-info-edit").html($(data));
-            var importTree = jsonTransformation(importJson);
-            var outputTree = jsonTransformation(outputJson);
-            initView(importTree,outputTree);
-        }
-    });  
+	
+    var importTree = jsonTransformation(importJson);
+    var outputTree = jsonTransformation(outputJson);
+    initView(importTree,outputTree);
+       
 }
 
 
@@ -209,8 +203,9 @@ function settingOut(point,fromPath,toPath){
     .attr("from",fromPath)
     .attr("to",toPath)
     .on("click",function(d,i){
+    	console.log($(this));
     	$("#bipatiteLineSvg path").attr("stroke","green").removeClass("active");
-    	$(this).attr("stroke","red").addClass("active");
+    	$(this).attr("class","cursor active").attr("stroke","red");
     });
 
 }
