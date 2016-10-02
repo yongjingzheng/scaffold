@@ -4,6 +4,7 @@ import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
 import {initLine} from "./initLine";
 import {pipelineData} from "./pipelineData";
+import {resizeWidget} from "./theme/widget";
 
 export var inputJson = {};
    
@@ -92,7 +93,9 @@ export function clickAction(sd, si) {
 
             $("#closeImportOutputJson").click(function(){
                 $("#outputJsonDiv").removeClass("show").addClass("hide");
-            })
+            });
+
+            resizeWidget();
         }
     });
 

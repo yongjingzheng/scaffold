@@ -3,6 +3,7 @@ import * as constant from "./constant";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
 import {pipelineData} from "./pipelineData";
+import {resizeWidget} from "./theme/widget";
 
 
 export function clickStage(sd, si) {
@@ -22,6 +23,8 @@ export function clickStage(sd, si) {
             });
 
             $("#uuid").attr("value", sd.id);
+
+            resizeWidget();
         }
     });
 
