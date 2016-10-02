@@ -1,3 +1,4 @@
+import {resizeWidget} from "./theme/widget";
 
 export function clickStart(sd, si) {
     //show git form
@@ -15,6 +16,7 @@ export function clickStart(sd, si) {
 
             $("#uuid").attr("value", sd.id);
 
+            resizeWidget();
         }
     });
 }
