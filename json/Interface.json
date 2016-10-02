@@ -1,0 +1,373 @@
+
+
+
+============= pipeline init ==============
+
+
+{
+  "url": "pipelineInit.do",
+  "return" : {
+    "stageArray" : [
+      {
+        "id" : "",
+        "type" : ""
+      },
+      {
+        "id": "",
+        "type" : "",
+        "actions" : [
+          {
+            "id": "",
+            "type": ""
+          }
+        ]
+      }
+    ],
+
+    "linkPathArray" : [
+      {
+        "id" : "",
+        "startId" : "",
+        "endId" : ""
+      }
+    ]
+  }
+}
+
+
+============= add stage==============
+
+
+{
+  "url": "addStage.do",
+  "request" : {
+      "type" : ""
+    },
+  "return" : {
+      "id" : ""
+    }
+}
+
+
+
+
+============= set start stage setup data ==============
+
+
+{
+  "url": "setStartStageSetupData.do",
+  "request" : {
+      "id" : "",
+      "setupData" : {
+        "gitUrl" : "",
+        "gitTag" : "",
+        "gitEvent" : "",
+        "callbackUrl" : ""
+      }
+    },
+  "return" : {
+      "message" : "error&success"
+    }
+}
+
+============= get start stage setup data ==============
+
+{
+  "url": "getStartStageSetupData.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "setupData" : {
+        "gitUrl" : "",
+        "gitTag" : "",
+        "gitEvent" : "",
+        "callbackUrl" : ""
+      } 
+    }
+}
+
+============= set stage setup data ==============
+
+{
+  "url": "setStageSetupData.do",
+  "request" : {
+      "id" : "",
+      "setupData" : {
+        "stageID" : "",
+        "stageName" : "",
+        "stageTimeout" : "",
+        "stageEnv" : "",
+        "callbackUrl" : ""
+      }
+    },
+  "return" : {
+      "message" : "error&success"
+    }
+}
+
+
+============= get stage setup data ==============
+
+{
+  "url": "getStageSetupData.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "setupData" : {
+        "stageID" : "",
+        "stageName" : "",
+        "stageTimeout" : "",
+        "stageEnv" : "",
+        "callbackUrl" : ""
+      } 
+    }
+}
+
+
+============= delete stage ==============
+
+{
+  "url": "deleteStage.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "message" : "error&success"
+    }
+}
+
+
+============= add action ==============
+
+{
+  "url": "addAction.do",
+  "request" : {
+      "parentStageId" : ""
+    },
+  "return" : {
+      "id": "",
+      "type": "",
+      "typeConfig" : {},
+      "setupData" : {
+
+      }
+    }
+}
+
+
+============= delete action ==============
+
+{
+  "url": "deleteAction.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "message" : "error & success"
+    }
+}
+
+
+============= set action setup data ==============
+
+{
+  "url": "setActionSetupData.do",
+  "request" : {
+      "id" : "",
+      "setupData" : {
+        "actionId" : "",
+        "actionName" :"",
+        "actionTimeout" : "",
+        "actionEnv" : "",
+        "actionImage" : ""
+      }
+    },
+  "return" : {
+      "message" : "error & success"
+    }
+}
+
+
+
+============= get action setup data ==============
+
+{
+  "url": "getActionSetupData.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "actionId" : "",
+      "actionName" :"",
+      "actionTimeout" : "",
+      "actionEnv" : "",
+      "actionImage" : ""
+    }
+}
+
+
+============= set action import&output ==============
+
+{
+  "url": "setActionImportOutput.do",
+  "request" : {
+      "id" : "",
+      "import" : {},
+      "output" : {
+
+      }
+    },
+  "return" : {
+      "message" : "error&success"
+    }
+}
+
+
+============= get action import&output ==============
+
+{
+  "url": "getActionImportOutput.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "import" : {},
+      "output" : {}
+    }
+}
+
+
+
+============= add link path ==============
+
+{
+  "url": "setLinkPath.do",
+  "request" : {
+      "startId" : "",
+      "endId" : ""
+    },
+  "return" : {
+      "id" : ""
+    }
+}
+
+============= delete link path ==============
+
+{
+  "url": "setLinkPath.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "message" : "error&success"
+    }
+}
+
+
+
+
+============= set link path config&import&output ==============
+
+{
+  "url": "setLinkPathConfig.do",
+  "request" : {
+      "id" : "",
+      "config" : {},
+      "import" : [
+        {
+          "key" : ".action",
+          "type" : "object",
+          "path" : ".action",
+          "childNode" : [
+            {
+              "key" : "",
+              "type" : "",
+              "path" : "",
+              "childNode" : []
+            }
+          ]
+        }
+      ],
+      "output" : [],
+      "relation" : [
+        {
+          "from" : "",
+          "fromShow" : "",
+          "to" : "",
+          "toShow" : "",
+          "isToEqual" : true,
+          "isFromEqual" : true,
+          "child" : [
+            {
+              "from" : "",
+              "fromShow" : "",
+              "to" : "",
+              "toShow" : "",
+              "isToEqual" : true,
+              "isFromEqual" : true,
+              "child" : []
+            }
+          ]
+        }
+      ]
+    },
+  "return" : {
+      "id" : ""
+    }
+}
+
+
+============= get link path config&import&output ==============
+
+{
+  "url": "getLinkPathConfig.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "config" : {},
+      "import" : [
+        {
+          "key" : ".action",
+          "type" : "object",
+          "path" : ".action",
+          "childNode" : [
+            {
+              "key" : "",
+              "type" : "",
+              "path" : "",
+              "childNode" : []
+            }
+          ]
+        }
+      ],
+      "output" : [],
+      "relation" : [
+        {
+          "from" : "",
+          "fromShow" : "",
+          "to" : "",
+          "toShow" : "",
+          "isToEqual" : true,
+          "isFromEqual" : true,
+          "child" : [
+            {
+              "from" : "",
+              "fromShow" : "",
+              "to" : "",
+              "toShow" : "",
+              "isToEqual" : true,
+              "isFromEqual" : true,
+              "child" : []
+            }
+          ]
+        }
+      ]
+    }
+}
+
+
+
+
