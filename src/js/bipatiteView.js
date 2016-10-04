@@ -1,29 +1,39 @@
 import {getPathData} from "./setPath";
 import {isObject,isArray,isBoolean,isNumber,isString} from "./util";
-import {addRelation,delRelation} from "./relation";
+import {addRelation,delRelation,initPipeline} from "./relation";
 
 
 var relationArray = [];
 
+var importTreeJson,outputTreeJson;
 
 export function bipatiteView(importJson,outputJson){
 	
-    var importTree = jsonTransformation(importJson);
-    var outputTree = jsonTransformation(outputJson);
+    var importTree = importTreeJson = jsonTransformation(importJson);
+    var outputTree = outputTreeJson = jsonTransformation(outputJson);
     initView(importTree,outputTree);
        
 }
 
+function getRelationArray(){
+	var visibleInputStr = getVisibleInputStr();
+	var visibleOutputStr = getVisibleOutputStr();
 
+	var visibleInput = visibleInputStr.split(";");
+    var visibleOutput = visibleOutputStr.split(";");
 
+	return initPipeline(importTreeJson,outputTreeJson,visibleInput,visibleOutput);
+}
 
 
 function initView(importTree,outputTree){
 
 	construct($("#importDiv"),importTree);
 	construct($("#outputDiv"),outputTree);
-	var visibleInputStr = getVisibleInputStr();
-	var visibleOutputStr = getVisibleOutputStr();
+
+	
+
+	relationArray = getRelationArray();
 
 	relationLineInit(relationArray);
 
@@ -65,6 +75,7 @@ function addExpander(item){
         expander.bind('click', function() {
             var item = $(this).parent();
             item.toggleClass('expanded');
+            relationArray = getRelationArray();
             relationLineInit(relationArray);
         });
         item.prepend(expander);
@@ -131,6 +142,8 @@ function relationLine(ary){
 	}
 }
 
+
+
 function jsonTransformation(json){
 	var newJsonArray=[];
 
@@ -146,7 +159,7 @@ function jsonTransformation(json){
 		}
 		
 	}
-	return newJsonArray.sort().reverse();
+	return newJsonArray;
 
 }
 
@@ -267,14 +280,17 @@ function dragDropRelation(){
         	
 	    	var endX = $(event.target).offset().left,
 	    		endY = $(event.target).offset().top,
-	    		toPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
-	    		toPath = toPath.substring(5);
+	    		toPath = $(event.target).parent().attr("data-path");
+	    		
 	    	
 	    	$("#bipatiteLineSvg .drag-drop-line").remove();
 
-
-	    	relationArray = addRelation(relationArray,true,fromPath,toPath,getVisibleInputStr(),getVisibleOutputStr());
-	    	relationLineInit(relationArray);
+	    	if(toPath != undefined){
+	    		toPath = toPath.replace(/\-/g,'.').substring(5);
+	    		relationArray = addRelation(relationArray,true,fromPath,toPath,getVisibleInputStr(),getVisibleOutputStr());
+	    		relationLineInit(relationArray);
+	    	}
+	    	
 	    }
 	})
 
