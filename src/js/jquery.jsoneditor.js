@@ -361,6 +361,34 @@ function valueChanged(opt) {
     };
 }
 
+
+function changeType(type,button,opt){
+    var item = button.parents(".item:eq(0)");
+    var value = item.find("input.value");
+    
+
+    if(item.hasClass(type.toLowerCase())){
+        return false;
+    }
+    if(type == "string")value.val('""');
+    else if(type == "array") value.val("[]");
+    else if(type == "object") value.val("{}");
+
+    value.change();
+}
+
+function changeValueType(type,button,opt){
+    var item = button.parents(".item:eq(0)");
+    var input = item.find(">input.value");
+
+    if(type == "changeable"){
+        input.addClass("show");
+    }else{
+        input.removeClass("show");
+    }
+    
+}
+
 function assignType(item, val) {
     var className = 'null';
     
