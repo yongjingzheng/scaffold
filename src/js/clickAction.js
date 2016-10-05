@@ -5,6 +5,7 @@ import {initAction} from "./initAction";
 import {initLine} from "./initLine";
 import {pipelineData} from "./pipelineData";
 import {resizeWidget} from "./theme/widget";
+import {pipelineEdit} from "./pipelineEdit";
 
 export var inputJson = {};
    
@@ -29,24 +30,16 @@ export function clickAction(sd, si) {
 
             $("#uuid").attr("value", sd.id);
 
-            // input
-            $("#importInputIcon").click(function(){
-                if($("#inputJsonDiv").hasClass("hide")){
-                    $("#inputJsonDiv").removeClass("hide").addClass("show");
-                    
-                }else{
-                    $("#inputJsonDiv").removeClass("show").addClass("hide");
-                    
-                }
-            })
+           
 
-            $("#importInputJson").click(function(){
+            $("#inputJsonText").blur(function(){
                 var val = $("#inputJsonText").val();
                 try{
                     inputJson = (JSON.parse(val));
                     jsonEditor($('#inputTreeDiv'),inputJson, {
                         change:function(data){
                             inputJson = data;
+                            jsonChanged($("#inputJsonText"),inputJson);
                         }
                     });
                     $("#inputJsonDiv").removeClass("show").addClass("hide");
@@ -58,28 +51,16 @@ export function clickAction(sd, si) {
                 
             });
 
-            $("#closeImportInputJson").click(function(){
-                $("#inputJsonDiv").removeClass("show").addClass("hide");
-            })
+            
 
-            // output
-            $("#importOutputIcon").click(function(){
-                if($("#outputJsonDiv").hasClass("hide")){
-                    $("#outputJsonDiv").removeClass("hide").addClass("show");
-                    
-                }else{
-                    $("#outputJsonDiv").removeClass("show").addClass("hide");
-                    
-                }
-            })
-
-            $("#importOutputJson").click(function(){
+            $("#outputJsonText").blur(function(){
                 var val = $("#outputJsonText").val();
                 try{
                     outputJson = (JSON.parse(val));
                     jsonEditor($('#outputTreeDiv'),outputJson, {
                         change:function(data){
                             outputJson = data;
+                            jsonChanged($("#outputJsonText"),outputJson);
                         }
                     });
                     $("#outputJsonDiv").removeClass("show").addClass("hide");
@@ -91,11 +72,20 @@ export function clickAction(sd, si) {
                 
             });
 
-            $("#closeImportOutputJson").click(function(){
-                $("#outputJsonDiv").removeClass("show").addClass("hide");
-            });
-
+           
             resizeWidget();
+
+
+            $("#see-links").click(function(){
+                $.ajax({
+                    url: "./templates/pipelineEdit.html",
+                    type: "GET",
+                    cache: false,
+                    success: function (data) {
+                        pipelineEdit(data);
+                    }
+                });
+            })
         }
     });
 
@@ -204,4 +194,9 @@ export function clickAction(sd, si) {
             constant.buttonView.selectAll("image").remove();
         });
 
+}
+
+
+function jsonChanged(root,json){
+    root.val(JSON.stringify(json));
 }

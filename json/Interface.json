@@ -15,6 +15,7 @@
       {
         "id": "",
         "type" : "",
+        "preStageId":"",
         "actions" : [
           {
             "id": "",
@@ -35,18 +36,7 @@
 }
 
 
-============= add stage==============
 
-
-{
-  "url": "addStage.do",
-  "request" : {
-      "type" : ""
-    },
-  "return" : {
-      "id" : ""
-    }
-}
 
 
 
@@ -87,12 +77,16 @@
     }
 }
 
-============= set stage setup data ==============
+
+
+============= add stage & set stage ==============
+
 
 {
-  "url": "setStageSetupData.do",
+  "url": "stage.do",
   "request" : {
       "id" : "",
+      "preStageId" : "",
       "setupData" : {
         "stageID" : "",
         "stageName" : "",
@@ -102,9 +96,11 @@
       }
     },
   "return" : {
-      "message" : "error&success"
+      "message" : "error&success",
+      "stage" : {}
     }
 }
+
 
 
 ============= get stage setup data ==============
@@ -314,7 +310,7 @@
       ]
     },
   "return" : {
-      "id" : ""
+      "message" : "error & success"
     }
 }
 
@@ -369,5 +365,26 @@
 }
 
 
+============= get actions link path array (import and output) ==============
 
-
+{
+  "url": "getActionLinkPath.do",
+  "request" : {
+      "id" : ""
+    },
+  "return" : {
+      "importLink" : [
+        {
+          "id" : "",
+          "startId" : "",
+          "endId" : ""
+        },
+        {
+          "id" : "",
+          "startId" : "",
+          "endId" : ""
+        }
+      ],
+      "outputLink" : []
+    }
+}
