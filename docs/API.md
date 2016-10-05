@@ -109,6 +109,7 @@
       "message" : "error&success"
     } 
 <br>
+## Action
 ### POST: /addAction.do   (Add an action) 
 #### Request Parameters
     {
@@ -186,6 +187,7 @@
       "output" : {}
     } 
 <br>
+## Relationship
 ### POST: /setLinkPath.do   (Add relationship between actions) 
 #### Request Parameters
     {
