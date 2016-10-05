@@ -30,9 +30,19 @@ export function clickAction(sd, si) {
 
             $("#uuid").attr("value", sd.id);
 
-           
+           // input
+             $("#importInputIcon").click(function(){
+                 if($("#inputJsonDiv").hasClass("hide")){
+                     $("#inputJsonDiv").removeClass("hide").addClass("show");
+                     
+                 }else{
+                     $("#inputJsonDiv").removeClass("show").addClass("hide");
+                     
+                 }
+             })
+ 
 
-            $("#inputJsonText").blur(function(){
+            $("#importInputJson").click(function(){
                 var val = $("#inputJsonText").val();
                 try{
                     inputJson = (JSON.parse(val));
@@ -51,9 +61,22 @@ export function clickAction(sd, si) {
                 
             });
 
-            
+            $("#closeImportInputJson").click(function(){
+                $("#inputJsonDiv").removeClass("show").addClass("hide");
+            })
 
-            $("#outputJsonText").blur(function(){
+            // output
+             $("#importOutputIcon").click(function(){
+                 if($("#outputJsonDiv").hasClass("hide")){
+                     $("#outputJsonDiv").removeClass("hide").addClass("show");
+                     
+                 }else{
+                     $("#outputJsonDiv").removeClass("show").addClass("hide");
+                     
+                 }
+             })
+
+            $("#importOutputJson").click(function(){
                 var val = $("#outputJsonText").val();
                 try{
                     outputJson = (JSON.parse(val));
@@ -72,7 +95,11 @@ export function clickAction(sd, si) {
                 
             });
 
-           
+            $("#closeImportOutputJson").click(function(){
+                 $("#outputJsonDiv").removeClass("show").addClass("hide");
+             })
+
+
             resizeWidget();
 
 
