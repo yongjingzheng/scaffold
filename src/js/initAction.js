@@ -7,7 +7,7 @@ import {clickAction} from "./clickAction";
 import {dragDropSetPath} from "./dragDropSetPath";
 
 export function initAction() {
-    constant.actionsView.selectAll("image").remove();
+    constant.actionsView.selectAll("g").remove();
 
     //Action
     constant.pipelineView.selectAll("image").each(function (d, i) {

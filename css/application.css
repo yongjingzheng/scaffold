@@ -8845,7 +8845,7 @@ a {
   .json-editor .item.appender > .property {
     background-color: #999999;
     cursor: pointer;
-    width: 100px; }
+    width: 150px; }
   .json-editor .item.string > .property {
     background-color: #009408; }
   .json-editor .item.array > .property {

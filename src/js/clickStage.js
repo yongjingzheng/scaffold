@@ -75,13 +75,6 @@ export function clickStage(sd, si) {
                 {
                     id: constant.PIPELINE_ACTION + "-" + uuid.v1(),
                     type: constant.PIPELINE_ACTION,
-                    class: constant.PIPELINE_ACTION,
-                    drawX: 0,
-                    drawY: 0,
-                    width: 0,
-                    height: 0,
-                    translateX: 0,
-                    translateY: 0,
                     setupData: {}
                 });
             constant.buttonView.selectAll("image").remove();

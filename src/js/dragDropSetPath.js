@@ -44,7 +44,7 @@ export function dragDropSetPath(options){
         }
         
 
-        if(_data !== undefined && _data.translateX > thisData.translateX && _data.class === "pipeline-action"){
+        if(_data !== undefined && _data.translateX > thisData.translateX && _data.type === "pipeline-action"){
             setPath({
                 pipelineLineViewId : "pipeline-line-view",
                 startPoint : {x:thisData.translateX,y:thisData.translateY},
