@@ -35,11 +35,24 @@ export function initAction() {
                 .attr("id", function (ad, ai) {
                     return ad.id;
                 })
+                .attr("data-index",function(ad,ai){
+                    return ai;
+                })
+                .attr("data-parent",i)
                 .attr("width", function (ad, ai) {
                     return constant.svgActionWidth;
                 })
                 .attr("height", function (ad, ai) {
                     return constant.svgActionHeight;
+                })
+                .attr("translateX",actionStartX)
+                .attr("translateY",function(ad, ai){
+                    if (ai % 2 == 0) {
+                        ad.translateY = actionStartY + constant.svgStageHeight - 25 + constant.ActionNodeSpaceSize * (ai / 2 + 1);
+                    } else {
+                        ad.translateY = actionStartY - constant.svgStageHeight + 5 - constant.ActionNodeSpaceSize * (ai / 2);
+                    }
+                    return ad.translateY;
                 })
                 .attr("transform", function (ad, ai) {
                     ad.width = constant.svgActionWidth;
