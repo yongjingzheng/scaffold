@@ -9033,6 +9033,20 @@ div.jsoneditor-contextmenu ul li ul {
   width: 100%;
   height: 100%; }
 
+#inputTreeEditor .jsoneditor-contextmenu-root {
+  position: relative;
+  width: 0;
+  height: 0;
+  left: 0;
+  top: 0; }
+
+#outputTreeEditor .jsoneditor-contextmenu-root {
+  position: relative;
+  width: 0;
+  height: 0;
+  left: 0;
+  top: 0; }
+
 /***********************/
 /*       Widget        */
 /***********************/

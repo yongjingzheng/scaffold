@@ -98,17 +98,20 @@
                                          <div class="clearfix">
                                             <ul class="nav nav-tabs pull-xs-left" id="actionTabs" role="tablist">
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="tree-edit-tab" data-toggle="tab" href="#tree_edit" role="tab" aria-controls="tree_edit" aria-expanded="false">Tree Edit</a>
+                                                    <a class="nav-link active" id="tree-edit-tab" data-toggle="tab" href="#tree_edit" role="tab" aria-controls="tree_edit" aria-expanded="false">Tree Edit</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" id="from-edit-tab" data-toggle="tab" href="#from_edit" role="tab" aria-controls="from_edit" aria-expanded="true">From Edit</a>
+                                                    <a class="nav-link" id="input-from-edit-tab" data-toggle="tab" href="#input_from_edit" role="tab" aria-controls="input_from_edit" aria-expanded="true">Input From Edit</a>
+                                                </li> 
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="output-from-edit-tab" data-toggle="tab" href="#output_from_edit" role="tab" aria-controls="output_from_edit" aria-expanded="true">Output From Edit</a>
                                                 </li> 
                                             </ul>
                                         </div>
                                         <div class="tab-content">
                                             
 
-                                            <div class="row tab-pane" id="tree_edit" class="tab-pane" role="tabpanel" aria-labelledby="tree-edit-tab" aria-expanded="true">
+                                             <div class="row tab-pane active" id="tree_edit" class="tab-pane" role="tabpanel" aria-labelledby="tree-edit-tab" aria-expanded="true">
                                                 <div class="col-md-6 import-div">
                                                     <h4 class="pr">Import Input Json</h4>
                                                    
@@ -122,17 +125,27 @@
                                             </div>
 
 
-                                             <div class="row tab-pane active" id="from_edit" class="tab-pane" role="tabpanel" aria-labelledby="from-edit-tab" aria-expanded="false">
-                                                <div class="col-md-6">
-                                                    <h4 class="pr">Import Input Json</h4>
-                                                    <textarea id="inputJsonText" class="form-control"></textarea>
-                                                    
-                                                    
+                                             <div class="row tab-pane" id="input_from_edit" class="tab-pane" role="tabpanel" aria-labelledby="input-from-edit-tab" aria-expanded="false">
+                                                <div class="col-md-5">
+                                                    <div id="inputCodeEditor" style="width: 100%;height:300px"></div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <span id="inputFromJson" class="glyphicon glyphicon-triangle-right" style="margin-top:140px;margin-left:40%;cursor:pointer"></span>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <h4 class="pr">Import Output Json</h4>
-                                                    <textarea id="outputJsonText" class="form-control"></textarea>
-                                                   
+                                                    <div id="inputTreeEditor" style="width: 100%;height:300px"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row tab-pane" id="output_from_edit" class="tab-pane" role="tabpanel" aria-labelledby="output-from-edit-tab" aria-expanded="false">
+                                                <div class="col-md-5">
+                                                    <div id="outputCodeEditor" style="width: 100%;height:300px"></div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <span id="outputFromJson" class="glyphicon glyphicon-triangle-right" style="margin-top:140px;margin-left:40%;cursor:pointer"></span>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div id="outputTreeEditor" style="width: 100%;height:300px"></div>
                                                 </div>
                                             </div>
                                         </div>

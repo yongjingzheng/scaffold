@@ -10,7 +10,7 @@ let zoom = d3.behavior.zoom().on("zoom", zoomed);
 
 let $div = $("#div-d3-main-svg").height($("main").height() / 1.5);
 
-constant.setSvgWidth($div.width());
+constant.setSvgWidth("100%");
 constant.setSvgHeight($div.height());
 constant.setPipelineNodeStartX(50);
 constant.setPipelineNodeStartY($div.height()/2);

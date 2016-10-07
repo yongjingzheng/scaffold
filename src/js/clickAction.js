@@ -6,10 +6,11 @@ import {initLine} from "./initLine";
 import {pipelineData} from "./pipelineData";
 import {resizeWidget} from "./theme/widget";
 import {pipelineEdit} from "./pipelineEdit";
+import {inputJson,outputJson,initFromEdit,fromCodeToTree} from "./action.io";
 
-export var inputJson = {};
+// export var inputJson = {};
    
-export var outputJson = {};
+// export var outputJson = {};
 
 export function clickAction(sd, si) {
 
@@ -30,62 +31,68 @@ export function clickAction(sd, si) {
 
             $("#uuid").attr("value", sd.id);
 
-           
+           // create the editor
+            $("#input-from-edit-tab").on('click',function(){
+                initFromEdit("input",$("#inputCodeEditor")[0],$("#inputTreeEditor")[0]);
+            })
 
-            $("#inputJsonText").blur(function(){
-                var val = $("#inputJsonText").val();
-                try{
-                    inputJson = (JSON.parse(val));
-                    jsonEditor($('#inputTreeDiv'),inputJson, {
-                        change:function(data){
-                            inputJson = data;
-                            jsonChanged($("#inputJsonText"),inputJson);
-                        }
-                    });
-                    $("#inputJsonDiv").removeClass("show").addClass("hide");
-
-                }catch(e){
-                    console.log("Error in parsing json.");
-                    alert("Error in parsing json.");
-                }
-                
+            $("#output-from-edit-tab").on('click',function(){
+                initFromEdit("output",$("#outputCodeEditor")[0],$("#outputTreeEditor")[0]);
             });
+            // $("#inputJsonText").blur(function(){
+            //     var val = $("#inputJsonText").val();
+            //     try{
+            //         inputJson = (JSON.parse(val));
+            //         jsonEditor($('#inputTreeDiv'),inputJson, {
+            //             change:function(data){
+            //                 inputJson = data;
+            //                 jsonChanged($("#inputJsonText"),inputJson);
+            //             }
+            //         });
+            //         $("#inputJsonDiv").removeClass("show").addClass("hide");
+
+            //     }catch(e){
+            //         console.log("Error in parsing json.");
+            //         alert("Error in parsing json.");
+            //     }
+                
+            // });
 
             
 
-            $("#outputJsonText").blur(function(){
-                var val = $("#outputJsonText").val();
-                try{
-                    outputJson = (JSON.parse(val));
-                    jsonEditor($('#outputTreeDiv'),outputJson, {
-                        change:function(data){
-                            outputJson = data;
-                            jsonChanged($("#outputJsonText"),outputJson);
-                        }
-                    });
-                    $("#outputJsonDiv").removeClass("show").addClass("hide");
+            // $("#outputJsonText").blur(function(){
+            //     var val = $("#outputJsonText").val();
+            //     try{
+            //         outputJson = (JSON.parse(val));
+            //         jsonEditor($('#outputTreeDiv'),outputJson, {
+            //             change:function(data){
+            //                 outputJson = data;
+            //                 jsonChanged($("#outputJsonText"),outputJson);
+            //             }
+            //         });
+            //         $("#outputJsonDiv").removeClass("show").addClass("hide");
 
-                }catch(e){
-                    console.log("Error in parsing json.");
-                    alert("Error in parsing json.");
-                }
+            //     }catch(e){
+            //         console.log("Error in parsing json.");
+            //         alert("Error in parsing json.");
+            //     }
                 
-            });
+            // });
 
            
             resizeWidget();
 
 
-            $("#see-links").click(function(){
-                $.ajax({
-                    url: "./templates/pipelineEdit.html",
-                    type: "GET",
-                    cache: false,
-                    success: function (data) {
-                        pipelineEdit(data);
-                    }
-                });
-            })
+            // $("#see-links").click(function(){
+            //     $.ajax({
+            //         url: "./templates/pipelineEdit.html",
+            //         type: "GET",
+            //         cache: false,
+            //         success: function (data) {
+            //             pipelineEdit(data);
+            //         }
+            //     });
+            // })
         }
     });
 

@@ -64,6 +64,7 @@ gulp.task('scripts',['browserify'], function() {
     './bower_components/bootstrap/js/dist/tab.js',
     './bower_components/slimScroll/jquery.slimscroll.js',
     './bower_components/widgster/widgster.js',
+    './node_modules/jsoneditor/dist/jsoneditor.min.js',
     './dist/js/theme/settings.js',
     './dist/js/theme/app.js',
     './node_modules/d3/d3.min.js',  
