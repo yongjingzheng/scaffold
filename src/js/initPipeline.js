@@ -37,6 +37,9 @@ export function initPipeline() {
         .attr("id", function (d, i) {
             return d.id;
         })
+        .attr("data-index",function(d, i){
+            return i;
+        })
         .attr("width", function (d, i) {
             return constant.svgStageWidth;
         })
@@ -50,6 +53,10 @@ export function initPipeline() {
             d.translateY = constant.pipelineNodeStartY;
             return "translate(" + d.translateX + "," + d.translateY + ")";
         })
+        .attr("translateX",function(d,i){
+            return i * constant.PipelineNodeSpaceSize + constant.pipelineNodeStartX;
+        })
+        .attr("translateY",constant.pipelineNodeStartY)
         .attr("class", function (d, i) {
             // console.log(d);
             if (d.type == constant.PIPELINE_START) {

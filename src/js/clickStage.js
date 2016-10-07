@@ -4,7 +4,7 @@ import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
 import {pipelineData} from "./pipelineData";
 import {resizeWidget} from "./theme/widget";
-
+import {removeLinkArray} from "./removeLinkArray";
 
 export function clickStage(sd, si) {
 
@@ -75,13 +75,8 @@ export function clickStage(sd, si) {
                 {
                     id: constant.PIPELINE_ACTION + "-" + uuid.v1(),
                     type: constant.PIPELINE_ACTION,
-                    class: constant.PIPELINE_ACTION,
-                    drawX: 0,
-                    drawY: 0,
-                    width: 0,
-                    height: 0,
-                    translateX: 0,
-                    translateY: 0,
+                    parentIndex : si,
+                    index : i,
                     setupData: {}
                 });
             constant.buttonView.selectAll("image").remove();
@@ -129,9 +124,11 @@ export function clickStage(sd, si) {
         })
         .on("click", function (d, i) {
             constant.buttonView.selectAll("image").remove();
+           
+            $("#pipeline-info-edit").html("");
             pipelineData.splice(si, 1);
 
-          
+            removeLinkArray(sd);
             initPipeline();
             initAction();
         });
