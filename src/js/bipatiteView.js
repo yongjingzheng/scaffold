@@ -47,6 +47,7 @@ function initView(importTree,outputTree){
 		
 		relationArray = delRelation(relationArray,fromPath);
 		relationLineInit(relationArray);
+		$("#removeLine").addClass("hide");
 	});
 }
 
@@ -216,7 +217,7 @@ function settingOut(point,fromPath,toPath){
     .attr("from",fromPath)
     .attr("to",toPath)
     .on("click",function(d,i){
-    	console.log($(this));
+    	$("#removeLine").removeClass("hide");
     	$("#bipatiteLineSvg path").attr("stroke","green").removeClass("active");
     	$(this).attr("class","cursor active").attr("stroke","red");
     });
