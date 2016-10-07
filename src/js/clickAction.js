@@ -18,7 +18,7 @@ export function clickAction(sd, si) {
 
     //show git form
     $.ajax({
-        url: "./templates/actionEdit1.html",
+        url: "./templates/actionEdit.html",
         type: "GET",
         cache: false,
         success: function (data) {
