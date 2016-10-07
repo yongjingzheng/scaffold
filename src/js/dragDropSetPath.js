@@ -5,12 +5,10 @@ import {linePathAry} from "./constant";
 
 export function dragDropSetPath(options){
 
-   
+    
     var thisData = options.data,
-        thisIndex = options.node,
-        fromParentIndex = $(window.event.target).attr("data-parent");
-        
-
+        thisIndex = options.node;
+   
 
     var  _path =  d3.select("svg>g").insert("path",":nth-child(2)").attr("class","drag-drop-line"),
          _mainContentX = $("#content").offset().left,
@@ -30,7 +28,6 @@ export function dragDropSetPath(options){
             .attr("stroke-width", 10);
     }
     document.onmouseup = function (e){
-
         document.onmousemove = null;   
         document.onmouseup = null; 
         d3.select(".drag-drop-line").remove();
@@ -38,8 +35,6 @@ export function dragDropSetPath(options){
         try{
             var _data = d3.select(e.target)[0][0].__data__;
             var _class = thisData.id +_data.id;
-            var toParentIndex = $(e.target).attr("data-parent");
-            var toIndex = $(e.target).attr("data-index");
             if(d3.selectAll("."+_class)[0].length > 0){
                 alert("Repeated addition");
                 return false;
@@ -49,33 +44,19 @@ export function dragDropSetPath(options){
         }
         
 
-        if(_data !== undefined && _data.translateX > thisData.translateX && _data.type === "pipeline-action"){
+        if(_data !== undefined && _data.translateX > thisData.translateX && _data.class === "pipeline-action"){
             setPath({
                 pipelineLineViewId : "pipeline-line-view",
-                startData:options.data,
-                endData :d3.select(e.target)[0][0].__data__,
                 startPoint : {x:thisData.translateX,y:thisData.translateY},
                 endPoint : {x:_data.translateX,y:_data.translateY},
-                defaultClass : _class,
-                fromIndex : thisIndex,
-                fromParentIndex : fromParentIndex,
-                toParentIndex : toParentIndex,
-                toIndex: toIndex,
-                index: linePathAry.length
+                defaultClass : _class
             });
 
             linePathAry.push({
                 pipelineLineViewId : "pipeline-line-view",
-                startData:options.data,
-                endData :d3.select(e.target)[0][0].__data__,
                 startPoint : {x:thisData.translateX,y:thisData.translateY},
                 endPoint : {x:_data.translateX,y:_data.translateY},
-                defaultClass : _class,
-                fromIndex : thisIndex,
-                fromParentIndex : fromParentIndex,
-                toParentIndex : toParentIndex,
-                toIndex: toIndex,
-                index: linePathAry.length
+                defaultClass : _class
             });
 
            
