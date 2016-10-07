@@ -123,7 +123,7 @@
       "setupData" : {}
     } 
 <br>
-### Delete: /deleteAction.do   (Delete an action) 
+### DELETE: /deleteAction.do   (Delete an action) 
 #### Request Parameters
     {
       "id" : ""
