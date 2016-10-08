@@ -9703,6 +9703,9 @@ div.jsoneditor-contextmenu ul li ul {
   left: 0;
   top: 0; }
 
+.jsoneditor-poweredBy {
+  visibility: hidden; }
+
 #outputTreeEditor .jsoneditor-contextmenu-root {
   position: relative;
   width: 0;
