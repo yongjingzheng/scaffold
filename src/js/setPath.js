@@ -8,6 +8,13 @@ export function setPath(options){
     var fromDom = $("#"+options.startData.id)[0].__data__;
     var toDom = $("#"+options.endData.id)[0].__data__;
 
+
+    var fromParentIndex = $("#"+options.startData.id).attr("data-parent");
+    var fromIndex = $("#"+options.startData.id).attr("data-index");
+
+    var toParentIndex = $("#"+options.endData.id).attr("data-parent");
+    var toIndex = $("#"+options.endData.id).attr("data-index");
+
     var startPoint = {x:fromDom.translateX,y:fromDom.translateY},
         endPoint = {x:toDom.translateX,y:toDom.translateY}
    
@@ -19,10 +26,10 @@ export function setPath(options){
         .attr("stroke", "green")
         .attr("stroke-width", 15)
         .attr("class",options.defaultClass)
-        .attr("from-parent",!fromDom.parentIndex ? -1 : fromDom.parentIndex)
-        .attr("from-index",fromDom.index)
-        .attr("to-parent",toDom.parentIndex)
-        .attr("to-index",toDom.index)
+        .attr("from-parent",!fromParentIndex ? -1 : fromParentIndex)
+        .attr("from-index",fromIndex)
+        .attr("to-parent",toParentIndex)
+        .attr("to-index",toIndex)
         .attr("data-index",options.index)
         .on("mouseover",function(){
             this.parentNode.appendChild(this);
