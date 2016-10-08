@@ -4,6 +4,7 @@
 @import "../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "../node_modules/font-awesome/scss/font-awesome";
 
+
 @import "../bower_components/bootstrap/scss/mixins/breakpoints";
 
 @import "bootstrap-override";
@@ -15,3 +16,4 @@
 @import "widget";
 @import "tabs";
 @import "button";
+@import "jsoneditor";
