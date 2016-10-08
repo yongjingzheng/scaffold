@@ -3,15 +3,15 @@ import {isObject,isArray,isBoolean,isNumber,isString} from "./util";
 import {addRelation,delRelation,initPipeline} from "./relation";
 
 
-var relationArray = [];
+var relationArray;
 
 var importTreeJson,outputTreeJson;
 
-export function bipatiteView(importJson,outputJson){
+export function bipatiteView(importJson,outputJson,linePathData){
 	
     var importTree = importTreeJson = jsonTransformation(importJson);
     var outputTree = outputTreeJson = jsonTransformation(outputJson);
-    initView(importTree,outputTree);
+    initView(importTree,outputTree,linePathData);
        
 }
 
@@ -26,18 +26,57 @@ function getRelationArray(){
 }
 
 
-function initView(importTree,outputTree){
-
-	construct($("#importDiv"),importTree);
-	construct($("#outputDiv"),outputTree);
+function initView(importTree,outputTree,linePathData){
 
 	
 
-	relationArray = getRelationArray();
+	if(linePathData.relation == undefined){
+		linePathData.relation = getRelationArray();
+	}
 
-	relationLineInit(relationArray);
+	construct($("#importDiv"),importTree,linePathData.relation);
+	construct($("#outputDiv"),outputTree,linePathData.relation);
 
-	dragDropRelation();
+	relationLineInit(linePathData.relation);
+
+	
+
+	$("span.property").mousedown(function(event){
+
+		var _startX = $(event.target).offset().left,
+	        _startY = $(event.target).offset().top,
+	    	fromPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
+	    	fromPath = fromPath.substring(5);
+		
+	    document.onmousemove = function(event){
+	    	event.pageX
+	    	event.pageY
+	    	dragDropLine([_startX,_startY,event.pageX,event.pageY]);
+	    }
+
+	    document.onmouseup = function(event){
+	    	document.onmousemove = null;   
+        	document.onmouseup = null; 
+        	
+	    	var endX = $(event.target).offset().left,
+	    		endY = $(event.target).offset().top,
+	    		toPath = $(event.target).parent().attr("data-path");
+	    		
+	    	
+	    	$("#bipatiteLineSvg .drag-drop-line").remove();
+
+	    	if(toPath != undefined){
+	    		toPath = toPath.replace(/\-/g,'.').substring(5);
+	    		linePathData.relation = addRelation(linePathData.relation,true,fromPath,toPath,getVisibleInputStr(),getVisibleOutputStr());
+	    	
+	    		relationLineInit(linePathData.relation);
+	    	}
+	    	
+	    }
+	})
+
+
+
 
 	$("#removeLine").click(function(){
 		var path = $("#bipatiteLineSvg path.active");
@@ -45,13 +84,14 @@ function initView(importTree,outputTree){
 		var fromPath = path.attr("from"); 
 		fromPath = fromPath.replace(/\-/g,'.').substring(5);
 		
-		relationArray = delRelation(relationArray,fromPath);
-		relationLineInit(relationArray);
+		linePathData.relation = delRelation(linePathData.relation,fromPath);
+		relationLineInit(linePathData.relation);
+		$(this).addClass("hide");
 	});
 }
 
 
-function construct(root,json){
+function construct(root,json,relationArray){
 	for(var i=0;i<json.length;i++){
 
 		var item     = $('<div>',   { 'class': 'item row '+json[i].type, 'data-path': replacePoint(json[i].path) }),
@@ -62,20 +102,19 @@ function construct(root,json){
 		root.append(item);
 
 		if(json[i].childNode){
-			addExpander(item);
-			construct(item,json[i].childNode);
+			addExpander(item,relationArray);
+			construct(item,json[i].childNode,relationArray);
 		}
 	}	
 }
 
 
-function addExpander(item){
+function addExpander(item,relationArray){
 	if (item.children('.expander').length == 0) {
         var expander =   $('<span>',  { 'class': 'expander' });
         expander.bind('click', function() {
             var item = $(this).parent();
             item.toggleClass('expanded');
-            relationArray = getRelationArray();
             relationLineInit(relationArray);
         });
         item.prepend(expander);
@@ -262,45 +301,6 @@ function JsonType(json){
 	}
 }
 
-function dragDropRelation(){
-
-
-
-	$("span.property").mousedown(function(event){
-
-		var _startX = $(event.target).offset().left,
-	        _startY = $(event.target).offset().top,
-	    	fromPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
-	    	fromPath = fromPath.substring(5);
-		
-	    document.onmousemove = function(event){
-	    	event.pageX
-	    	event.pageY
-	    	dragDropLine([_startX,_startY,event.pageX,event.pageY]);
-	    }
-
-	    document.onmouseup = function(event){
-	    	document.onmousemove = null;   
-        	document.onmouseup = null; 
-        	
-	    	var endX = $(event.target).offset().left,
-	    		endY = $(event.target).offset().top,
-	    		toPath = $(event.target).parent().attr("data-path");
-	    		
-	    	
-	    	$("#bipatiteLineSvg .drag-drop-line").remove();
-
-	    	if(toPath != undefined){
-	    		toPath = toPath.replace(/\-/g,'.').substring(5);
-	    		relationArray = addRelation(relationArray,true,fromPath,toPath,getVisibleInputStr(),getVisibleOutputStr());
-	    		relationLineInit(relationArray);
-	    	}
-	    	
-	    }
-	})
-
-
-}
 
 
 function dragDropLine(point){
@@ -334,10 +334,10 @@ function getVisibleInputStr(){
 	
 	$("#importDiv div.item").each(function(){
 		
-		if($(this).is(":visible")){
+		// if($(this).is(":visible")){
 			var path = $(this).attr("data-path").replace(/\-/g,'.');
 			str = str + path.substring(5)+";";
-		}
+		// }
 	})
 
 	return str;
@@ -348,10 +348,10 @@ function getVisibleOutputStr(){
 	
 	$("#outputDiv div.item").each(function(){
 		
-		if($(this).is(":visible")){
+		// if($(this).is(":visible")){
 			var path = $(this).attr("data-path").replace(/\-/g,'.');
 			str = str + path.substring(5)+";";
-		}
+		// }
 	})
 
 	return str;
