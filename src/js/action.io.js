@@ -4,7 +4,7 @@ export let actionData;
 
 var treeEdit_InputContainer,treeEdit_OutputContainer;
 var fromEdit_InputCodeContainer,fromEdit_InputTreeContainer,fromEdit_OutputCodeContainer,fromEdit_OutputTreeContainer;
-
+var fromEdit_OutputViewContainer;
 var fromEdit_CodeEditor,fromEdit_TreeEditor;
 
 export function initActionIO(data){
@@ -22,6 +22,7 @@ export function initActionIO(data){
     fromEdit_InputTreeContainer = $("#inputTreeEditor")[0];
     fromEdit_OutputCodeContainer = $("#outputCodeEditor")[0];
     fromEdit_OutputTreeContainer = $("#outputTreeEditor")[0];
+    fromEdit_OutputViewContainer = $("#outputTreeViewer")[0];
 }
 
 export function initTreeEdit(){
@@ -128,4 +129,20 @@ function fromTreeToCode(type){
             alert("Output Tree Changes Error in parsing json.");
         } 
     }
+}
+
+export function initFromView(){
+    if(fromEdit_TreeEditor){
+        fromEdit_TreeEditor.destroy();
+    }
+
+    var treeOptions = {
+        "mode": "view",
+        "search": true
+    };
+
+    fromEdit_TreeEditor = new JSONEditor(fromEdit_OutputViewContainer, treeOptions);
+    fromEdit_TreeEditor.set(actionData.outputJson);
+    
+    fromEdit_TreeEditor.expandAll();
 }

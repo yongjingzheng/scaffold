@@ -1,4 +1,3 @@
-import {jsonEditor} from "./jquery.jsoneditor";
 import * as constant from "./constant";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
@@ -24,110 +23,12 @@ export function clickAction(sd, si) {
             initActionIO(sd);
             initTreeEdit();
 
-            // if(sd.inputJson != undefined){
-            //     try{
-            //         jsonEditor($('#inputTreeDiv'),sd.inputJson, {
-            //             change:function(data){
-            //                 setInputJson(data);
-            //                 sd.inputJson = data;
-            //             }
-            //         });
-            //     }catch(e){
-            //         alert("Input Error in parsing json.");
-            //     }
-            // }
-
-            // if(sd.outputJson != undefined){
-            //     try{
-            //         jsonEditor($('#outputTreeDiv'),sd.outputJson, {
-            //             change:function(data){
-            //                 setOutputJson(data);
-            //                 sd.outputJson = data;
-            //             }
-            //         });
-            //     }catch(e){
-            //         alert("Output Error in parsing json.");
-            //     }
-            // }
-
             $.each(sd.setupData, function (name, value) {
                 console.log($("#" + name));
                 $("#" + name).attr("value", value);
             });
 
             $("#uuid").attr("value", sd.id);
-
-            // input
-            //  $("#importInputIcon").click(function(){
-            //      if($("#inputJsonDiv").hasClass("hide")){
-            //          $("#inputJsonDiv").removeClass("hide").addClass("show");
-                     
-            //      }else{
-            //          $("#inputJsonDiv").removeClass("show").addClass("hide");
-                     
-            //      }
-            //  })
- 
-
-            // $("#importInputJson").click(function(){
-            //     var val = $("#inputJsonText").val();
-            //     try{
-            //         inputJson = (JSON.parse(val));
-            //         jsonEditor($('#inputTreeDiv'),inputJson, {
-            //             change:function(data){
-            //                 inputJson = data;
-            //                 sd.inputJson = inputJson;
-            //             }
-            //         });
-            //         sd.inputJson = inputJson;
-            //         $("#inputJsonDiv").removeClass("show").addClass("hide");
-
-            //     }catch(e){
-            //         console.log("Error in parsing json.");
-            //         alert("Error in parsing json.");
-            //     }
-                
-            // });
-
-            // $("#closeImportInputJson").click(function(){
-            //     $("#inputJsonDiv").removeClass("show").addClass("hide");
-            // })
-
-            // output
-            //  $("#importOutputIcon").click(function(){
-            //      if($("#outputJsonDiv").hasClass("hide")){
-            //          $("#outputJsonDiv").removeClass("hide").addClass("show");
-                     
-            //      }else{
-            //          $("#outputJsonDiv").removeClass("show").addClass("hide");
-                     
-            //      }
-            //  })
-
-            // $("#importOutputJson").click(function(){
-            //     var val = $("#outputJsonText").val();
-            //     try{
-            //         outputJson = (JSON.parse(val));
-            //         jsonEditor($('#outputTreeDiv'),outputJson, {
-            //             change:function(data){
-            //                 outputJson = data;
-            //                 sd.outputJson = outputJson;
-            //             }
-            //         });
-            //         sd.outputJson = outputJson;
-            //         $("#outputJsonDiv").removeClass("show").addClass("hide");
-
-            //     }catch(e){
-            //         console.log("Error in parsing json.");
-            //         alert("Error in parsing json.");
-            //     }
-                
-            // });
-
-            // $("#closeImportOutputJson").click(function(){
-            //      $("#outputJsonDiv").removeClass("show").addClass("hide");
-            //  })
-
 
             $("#see-links").click(function(){
                 $.ajax({
