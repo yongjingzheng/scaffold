@@ -20,7 +20,7 @@ export function ContextMenu($span,items,opt) {
 
   	// create root element
   	var root = document.createElement('div');
-  	root.className = 'jsoneditor-contextmenu-root';
+  	root.className = 'jsoneditor-contextmenu-root-treeedit';
   	dom.root = root;
 
   	// create a container element
@@ -161,12 +161,12 @@ function createMenuItems (list, domItems,items,opt) {
 
 
 	$("body").click(function(){
-		$(".jsoneditor-contextmenu-root").remove();
+		$(".jsoneditor-contextmenu-root-treeedit").remove();
 	});
 }
 
 function menuHide(){
-	$(".jsoneditor-contextmenu-root").remove();
+	$(".jsoneditor-contextmenu-root-treeedit").remove();
 }
 
 
