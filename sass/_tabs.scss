@@ -2,14 +2,14 @@
 .nav-tabs {
   & .nav-item+.nav-item { margin-left: 0}
   border-bottom: none;
-  background-color: $gray-semi-lighter;
+  background-color: none;
   border-top-left-radius: $border-radius;
   border-top-right-radius: $border-radius;
   > .nav-item {
     margin-bottom: -2px;
     > .nav-link {
       padding: 12px 18px;
-      border: none;
+      border: 1px solid $brand-primary-light;
       color: $text-muted;
 
       .label {
@@ -18,7 +18,7 @@
 
       @include transition(color .15s ease-in-out);
       &:hover {
-        background-color: transparent;
+        background-color: $brand-primary-light;
         color: $text-color;
       }
     }
@@ -48,7 +48,7 @@
 .tab-content {
   position: relative;
   z-index: 1;
-  background-color: $white;
+  background-color: #FAFAFA;
   > .tab-pane {
     padding: $line-height-computed*2 $line-height-computed*2;
   }
