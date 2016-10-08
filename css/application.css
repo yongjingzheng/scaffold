@@ -3583,8 +3583,8 @@ tbody.collapse.in {
       .nav-tabs > li > a:hover {
         border-color: #eeeeee #eeeeee #ddd; }
     .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-      color: #555555;
-      background-color: #fff;
+      color: #fff;
+      background-color: #5d8fc2;
       border: 1px solid #ddd;
       border-bottom-color: transparent;
       cursor: default; }
@@ -9220,7 +9220,7 @@ div.jsoneditor-contextmenu ul li ul {
 
 .nav-tabs {
   border-bottom: none;
-  background-color: #ddd;
+  background-color: none;
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem; }
   .nav-tabs .nav-item + .nav-item {
@@ -9229,7 +9229,7 @@ div.jsoneditor-contextmenu ul li ul {
     margin-bottom: -2px; }
     .nav-tabs > .nav-item > .nav-link {
       padding: 12px 18px;
-      border: none;
+      border: 1px solid #dee4ee;
       color: #999999;
       -webkit-transition: color 0.15s ease-in-out;
       -o-transition: color 0.15s ease-in-out;
@@ -9237,14 +9237,14 @@ div.jsoneditor-contextmenu ul li ul {
       .nav-tabs > .nav-item > .nav-link .label {
         margin-bottom: -2px; }
       .nav-tabs > .nav-item > .nav-link:hover {
-        background-color: transparent;
+        background-color: #dee4ee;
         color: #555555; }
     .nav-tabs > .nav-item .nav-link.open, .nav-tabs > .nav-item .nav-link.open:hover, .nav-tabs > .nav-item .nav-link.open:focus {
-      background-color: #fff;
-      color: #555555; }
+      background-color: #5d8fc2;
+      color: #fff; }
     .nav-tabs > .nav-item .nav-link.active, .nav-tabs > .nav-item .nav-link.active:hover, .nav-tabs > .nav-item .nav-link.active:focus {
-      background-color: #fff;
-      color: #555555;
+      background-color: #5d8fc2;
+      color: #fff;
       border: none;
       -webkit-box-shadow: 1px 1px 2px #ccc;
       box-shadow: 1px 1px 2px #ccc; }
@@ -9252,7 +9252,7 @@ div.jsoneditor-contextmenu ul li ul {
 .tab-content {
   position: relative;
   z-index: 1;
-  background-color: #fff; }
+  background-color: #FAFAFA; }
   .tab-content > .tab-pane {
     padding: 40px 40px; }
 
