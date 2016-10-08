@@ -3,11 +3,12 @@
 # compiled output
 /dist
 /tmp
+/css/
 
 # dependencies
 /node_modules
 /bower_components
-/css/*.css
+
 
 # IDEs and editors
 /.idea
