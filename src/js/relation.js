@@ -2,7 +2,7 @@
 
 export function initPipeline(fromNodes,toNodes,visibleFromNode,visibleToNode) {
         var result = [];
-
+        
         visibleFromNode.sort().reverse();
         visibleToNode.sort().reverse();
 

@@ -61,9 +61,9 @@ function construct(root,json){
 		item.append(property);
 		root.append(item);
 
-		if(json[i].child_node){
+		if(json[i].childNode){
 			addExpander(item);
-			construct(item,json[i].child_node);
+			construct(item,json[i].childNode);
 		}
 	}	
 }
@@ -113,23 +113,28 @@ function relationLine(ary){
 		if(fromDom.is(":visible") && toDom.is(":hidden")){
 			
 		  	parentDom = getVisibleParent(toDom);
-		  	settingOut([
-				fromDom.offset().left,
-				fromDom.offset().top,
-				parentDom.offset().left,
-				parentDom.offset().top	
-			],fromPath,toPath);	
+		  	if(parentDom != undefined){
+			  	settingOut([
+					fromDom.offset().left,
+					fromDom.offset().top,
+					parentDom.offset().left,
+					parentDom.offset().top	
+				],fromPath,toPath);	
+			  }
 		}
 
 		if(fromDom.is(":hidden") && toDom.is(":visible")){
 
 		  	parentDom = getVisibleParent(fromDom);
-		  	settingOut([
-				parentDom.offset().left,
-				parentDom.offset().top,
-				toDom.offset().left,
-				toDom.offset().top	
-			],fromPath,toPath);	
+		  	if(parentDom != undefined){
+		  		settingOut([
+					parentDom.offset().left,
+					parentDom.offset().top,
+					toDom.offset().left,
+					toDom.offset().top	
+				],fromPath,toPath);	
+		  	}
+		  	
 		}
 
 
@@ -154,7 +159,7 @@ function jsonTransformation(json){
 			"path" : "."+key
 		});
 		if(isObject(json[key]) || isArray(json[key])){
-			var child = newJsonArray[newJsonArray.length-1].child_node = [];
+			var child = newJsonArray[newJsonArray.length-1].childNode = [];
 			jsonChange(child,json[key],newJsonArray[newJsonArray.length-1].path);
 		}
 		
@@ -173,7 +178,7 @@ function jsonChange(child,json,path){
 				"path" : path+"."+key
 			})
 			if(isObject(json[key]) || isArray(json[key])){
-				var childNode = child[child.length-1].child_node = [];
+				var childNode = child[child.length-1].childNode = [];
 				jsonChange(childNode,json[key],child[child.length-1].path);
 			}
 		}
@@ -187,7 +192,7 @@ function jsonChange(child,json,path){
 						"path" : path+"."+i+"."+key
 					})
 					if(isObject(json[i][key]) || isArray(json[i][key])){
-						var childNode = child[child.length-1].child_node = [];
+						var childNode = child[child.length-1].childNode = [];
 						jsonChange(childNode,json[i][key],child[child.length-1].path);
 					}
 				}
