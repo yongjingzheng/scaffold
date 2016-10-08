@@ -34,7 +34,7 @@ export function pipelineEdit(data,linkDom){
     if(fromParent != -1){
         if(pipelineData[fromParent].actions[fromIndex].inputJson!= undefined){
             $("#importDiv").html("");
-            importJson = pipelineData[fromParent].actions[fromIndex].inputJson;
+            importJson = pipelineData[fromParent].actions[fromIndex].outputJson;
         }else{
             $("#importDiv").html("no data");
             importJson = {};
@@ -46,7 +46,7 @@ export function pipelineEdit(data,linkDom){
 
     if(pipelineData[toParent].actions[toIndex].outputJson != undefined){
         $("#outputDiv").html("");
-        outputJson = pipelineData[toParent].actions[toIndex].outputJson;
+        outputJson = pipelineData[toParent].actions[toIndex].inputJson;
     }else{
         $("#outputDiv").html("no data");
         outputJson = {};
