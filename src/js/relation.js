@@ -116,43 +116,43 @@ function calcPipelineInfo(fromPath,toPath,visibleFromNode,visibleToNode) {
 
 
 function getPipelineMap(fromNode,toNodes,visibleFromNode,visibleToNode) {
-        var resultMap = [];
+    var resultMap = [];
 
-        for (var i = 0; i < toNodes.length; i ++) {
-            // 只有类型和名字相等才可以自动匹配上
-            if (fromNode.key == toNodes[i].key && fromNode.type == toNodes[i].type){
-                // 如果是对象,则匹配其所有子子节点
-                if (fromNode.type == "object" && fromNode.childNode) {
-                    var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
-                    pipelineInfo['child'] = [];
-                    for (var j = 0; j < fromNode.childNode.length; j ++) {
-                        var childResult = getPipelineMap(fromNode.childNode[j],toNodes,visibleFromNode,visibleToNode);
-                        pipelineInfo.child = pipelineInfo.child.concat(childResult);
-                    }
-
-                    resultMap = resultMap.concat(pipelineInfo);
-                } else {
-                    var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
-                    resultMap = resultMap.concat(pipelineInfo);
-                    break;
+    for (var i = 0; i < toNodes.length; i ++) {
+        // 只有类型和名字相等才可以自动匹配上
+        if (fromNode.key == toNodes[i].key && fromNode.type == toNodes[i].type){
+            // 如果是对象,则匹配其所有子子节点
+            if (fromNode.type == "object" && fromNode.childNode && toNodes[i].childNode) {
+                var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
+                pipelineInfo['child'] = [];
+                for (var j = 0; j < fromNode.childNode.length; j ++) {
+                    var childResult = getPipelineMap(fromNode.childNode[j],toNodes[i].childNode,visibleFromNode,visibleToNode);
+                    pipelineInfo.child = pipelineInfo.child.concat(childResult);
                 }
-            }
 
-            // 如果toNodes存在子节点,则寻找子节点有没有可以匹配当前节点的
-            if (toNodes[i].childNode) {
-                var tempResult = getPipelineMap(fromNode,toNodes[i].childNode,visibleFromNode,visibleToNode)
-                if (tempResult) {
-                    resultMap = tempResult;
-                    break;
-                }
+                resultMap = resultMap.concat(pipelineInfo);
+            } else {
+                var pipelineInfo = calcPipelineInfo(fromNode.path,toNodes[i].path,visibleFromNode,visibleToNode);
+                resultMap = resultMap.concat(pipelineInfo);
+                break;
             }
         }
 
-
-        if (resultMap.length > 0) {
-            // console.log(resultMap);
-            return resultMap;
-        }else {
-            return null;
-        }
+        // // 如果toNodes存在子节点,则寻找子节点有没有可以匹配当前节点的
+        // if (toNodes[i].childNode) {
+        //     var tempResult = getPipelineMap(fromNode,toNodes[i].childNode,visibleFromNode,visibleToNode)
+        //     if (tempResult) {
+        //         resultMap = tempResult;
+        //         break;
+        //     }
+        // }
     }
+
+
+    if (resultMap.length > 0) {
+        // console.log(resultMap);
+        return resultMap;
+    }else {
+        return null;
+    }
+}
