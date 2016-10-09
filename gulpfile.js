@@ -75,13 +75,26 @@ gulp.task('scripts',['browserify'], function() {
     .pipe(gulp.dest('./dist/js'));
 });
 
+gulp.task("watch",  () => {
 
-gulp.task('default', ['convertJS','browserify','scripts','styles']);
+   gulp.watch("src/js/**/*.js",['scripts']);
+
+});
+
+gulp.task('default', ['convertJS','browserify','scripts','styles','watch']);
 
 
 
-
-
-
+/** 
+   new gulp content for changing directory
+*/
+// let gulp = require('gulp');
+// let babel = require('gulp-babel');
+// let sass = require('gulp-sass');
+// let requireDir = require('require-dir');
+// let tasks = requireDir('./gulp');
+//  gulp.task('default', function () {
+//     gulp.start("dev")
+//  });
 
 
