@@ -29,8 +29,6 @@ export function pipelineEdit(data,linkDom){
         $("#pipeline-info-edit").html("");
     })
 
-
-
     if(fromParent != -1){
         if(pipelineData[fromParent].actions[fromIndex].inputJson!= undefined){
             $("#importDiv").html("");
@@ -51,9 +49,9 @@ export function pipelineEdit(data,linkDom){
         $("#outputDiv").html("no data");
         outputJson = {};
     }
-    
+    console.log(constant.linePathAry[index]);
 
-    bipatiteView(importJson,outputJson);
+    bipatiteView(importJson,outputJson,constant.linePathAry[index]);
 
     resizeWidget();
 }
