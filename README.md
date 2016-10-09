@@ -6,7 +6,7 @@ git clone
 ```
 
 <br>	
-####Enter directory
+####Enter directory and install dependencies
 ```
 npm install
 bower install
