@@ -1,0 +1,145 @@
+<div class="row">
+    <div class="col-lg-12">
+        <section class="widget">
+            <div class="widget-body">
+                <form id="stage-form" class="form-horizontal" role="form">
+                    <fieldset>
+                        <legend><strong>Start Pipeline</strong></legend>
+                        <div class="widget-controls">
+                            <a data-widgster="fullscreen" title="" href="#" data-original-title="Full Screen" style="display: inline;"><i class="glyphicon glyphicon-fullscreen"></i></a>
+                            <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
+                        </div>
+                        <div class="row col-md-6" style="float:right">
+                            <label class="col-md-4 control-label" for="type-select">Select Type</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="type-select">
+                                    <option value="github">Github</option>
+                                    <option value="gitlab">Gitlab</option>
+                                    <option value="customize">Customize</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-lg treeview">
+                            <div class="col-lg-12">
+                                <div class="clearfix">
+                                    <ul class="nav nav-tabs pull-xs-left" id="actionTabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="git-tab" data-toggle="tab" href="#git" role="tab" aria-controls="git" aria-expanded="false">Git Setup</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="output-tab" data-toggle="tab" href="#output" role="tab" aria-controls="output" aria-expanded="true">Output</a>
+                                    </li> 
+                                    
+                                </ul>
+                                </div>
+                                <div class="tab-content mb-lg" id="actionTabsContent">
+                                    <div role="tabpanel" class="tab-pane clearfix active" id="git" aria-labelledby="git-tab" aria-expanded="true">
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="normal-field" class="col-sm-3 control-label">Git URL</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="git-url" name="git-url" class="form-control"
+                                                                   placeholder="git url">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="hint-field" class="col-sm-3 control-label">
+                                                            Git tag
+                                                        </label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="git-tag" name="git-tag" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="hint-field" class="col-sm-3 control-label">
+                                                            Git event
+                                                        </label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="git-event" name="git-event" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="normal-field" class="col-sm-3 control-label">
+                                                            Callback URL
+                                                        </label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" id="git-callback-url" name="git-callback-url" class="form-control"
+                                                                   placeholder="srcPath=./;buildPath=../">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-sm-offset-5 col-sm-7">
+                                                    <input type="hidden" id="uuid" name="uuid" class="form-control">
+                                                    <button type="button" class="btn btn-primary" onclick="saveData($('#action-form'),$('uuid'));">Save</button>
+                                                    <button type="button" class="btn btn-inverse">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="output" role="tabpanel" aria-labelledby="output-tab" aria-expanded="false">
+                                        <div id="outputTreeViewer" style="width: 90%;height:400px"></div>
+                                        <div id="outputTreeDesigner">
+                                             <div class="clearfix">
+                                                <ul class="nav nav-tabs pull-xs-left" id="actionTabs" role="tablist">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link active" id="tree-edit-tab" data-toggle="tab" href="#tree_edit" role="tab" aria-controls="tree_edit" aria-expanded="false">Tree Edit</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="output-from-edit-tab" data-toggle="tab" href="#output_from_edit" role="tab" aria-controls="output_from_edit" aria-expanded="true">From Edit</a>
+                                                    </li> 
+                                                </ul>
+                                            </div>
+                                            <div class="tab-content">
+                                                 <div class="row tab-pane active" id="tree_edit" class="tab-pane" role="tabpanel" aria-labelledby="tree-edit-tab" aria-expanded="true">
+                                                    <div class="col-md-12 import-div">
+                                                        <h4 class="pr">Output Tree</h4>
+                                                        
+                                                        <div id="outputTreeDiv" class="json-editor"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row tab-pane" id="output_from_edit" class="tab-pane" role="tabpanel" aria-labelledby="output-from-edit-tab" aria-expanded="false">
+                                                    <div class="col-md-5">
+                                                        <div id="outputCodeEditor" style="width: 100%;height:300px"></div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button id="outputFromJson" type="button" class="btn btn-warning">
+                                                            <i class="glyphicon glyphicon-triangle-right"></i>
+                                                        </button>
+                                                        <button id="outputToJson" type="button" class="btn btn-warning" style="margin-top:10px">
+                                                            <i class="glyphicon glyphicon-triangle-left"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div id="outputTreeEditor" style="width: 100%;height:300px"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>   
+            </div>
+        </section>
+    </div>
+</div>
