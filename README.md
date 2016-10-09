@@ -1,17 +1,18 @@
 ##Quick start
 <br>
+####Clone codes
 ```
 git clone 
 ```
 
 <br>	
-####Enter directory
+####Enter directory and install dependencies
 ```
-bower install
 npm install
+bower install
 ```
 <br>
-####Compile JavaScript
+####Compile all items and start web server
 ```
-gulp
+gulp dev
 ```
