@@ -40,7 +40,7 @@ function settingOut(point){
 	var d = getPathData({x:x1,y:y1},{x:x2,y:y2});
 
 	
-	
+
 	d3.select("#bipatiteLineSvg")
 	.append("path")
 	.attr("d",d)

@@ -66,8 +66,8 @@ function initView(importTree,outputTree,linePathData){
 	    		
 	    	
 	    	$("#bipatiteLineSvg .drag-drop-line").remove();
-
-	    	if(startClass != endClass){
+	    	
+            if(startClass != endClass){
 	    		alert("difference type");
 	    		return false;
 	    	}

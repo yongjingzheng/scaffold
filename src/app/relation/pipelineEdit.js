@@ -49,7 +49,7 @@ export function pipelineEdit(data,linkDom){
         $("#outputDiv").html("no data");
         outputJson = {};
     }
-   
+
     bipatiteView(importJson,outputJson,constant.linePathAry[index]);
 
     resizeWidget();

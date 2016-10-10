@@ -66,7 +66,7 @@ export function initLine() {
 
                         return diagonal({
                             source: {x: ad.translateX + 15, y: ad.translateY},
-                            target: {x: ad.translateX + 15, y: ad.translateY - 26}
+                            target: {x: ad.translateX + 15, y: ad.translateY - 40}
                         });
                     } else {
                         // constant.lineView[action2StageLineViewId]
