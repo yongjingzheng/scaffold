@@ -13,15 +13,16 @@ export function dragDropSetPath(options){
 
 
     var  _path =  d3.select("svg>g").insert("path",":nth-child(2)").attr("class","drag-drop-line"),
-         _mainContentX = $("#content").offset().left,
-         _startX = $(window.event.target).offset().left - _mainContentX,
-         _startY = $(window.event.target).offset().top,
+         _offsetX = $("main").offset().left,
+         _offsetY = $("#designerMenubar").height(),
+         _startX = $(window.event.target).offset().left - _offsetX,
+         _startY = $(window.event.target).offset().top - _offsetY,
          _pageTitleHeight = $(".page-title").height();  
 
     document.onmousemove = function(e){
        
-        var diffX = e.pageX - _startX - _mainContentX,
-            diffY = e.pageY - _startY;
+        var diffX = e.pageX - _startX - _offsetX,
+            diffY = e.pageY - _startY - _offsetY;
 
         _path.attr("d", getPathData({x:_startX-60,y:_startY-(105+_pageTitleHeight)},{x:_startX + diffX -40,y:_startY + diffY -(130+_pageTitleHeight)}))
             .attr("fill", "none")
