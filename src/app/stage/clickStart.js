@@ -16,6 +16,9 @@ export function clickStart(sd, si) {
             initActionIO(sd);
 
             // pipeline type
+            $("#type-select").select2({
+               minimumResultsForSearch: Infinity
+             });
             pipelineType = $("#type-select").val();
             outputBaseOnType();
             $("#type-select").on('change',function(){

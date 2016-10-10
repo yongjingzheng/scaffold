@@ -115,7 +115,9 @@ function showPipelineList(){
         .text(function(d,i){
             return d.name;
         }); 
-
+     $("#pipeline-select").select2({
+       minimumResultsForSearch: Infinity
+     });   
     showVersionList();
 }
 
@@ -137,7 +139,10 @@ function showVersionList(){
         .text(function(d,i){
             return d.version;
         }); 
-
+    $("#version-select").select2({
+       minimumResultsForSearch: Infinity
+     });
+    
     versions_shown = versions;
 
     showPipeline(); 
@@ -150,6 +155,8 @@ function showPipeline(){
 
     pipelineData = [].concat(data);
 
+    $("#pipeline-info-edit").empty();
+    
     initPipeline();
     initAction();
 }
