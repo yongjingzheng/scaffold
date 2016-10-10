@@ -94,6 +94,7 @@ export function initPipeline() {
                         return "../../assets/svg/stage-mouseover.svg";
                     }
                 });
+
         })
         .on("mouseout", function (d, i) {
             d3.select("#" + d.id)

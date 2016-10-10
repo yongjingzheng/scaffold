@@ -91,7 +91,6 @@ gulp.task("dev:browserify",['dev:babel'],  () => {
 gulp.task('dev:scripts',['dev:babel', 'dev:browserify'], function(done) {
   let config = JSON.parse(fs.readFileSync("src/scripts.json",'utf8'));
   let src = config.scripts.concat(['dev/src/main.js']);
-  console.log(config);
   return gulp.src(src)
     .pipe(concat('main.js'))
     .pipe(gulp.dest('dev/src'))
