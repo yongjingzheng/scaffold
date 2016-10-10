@@ -45,6 +45,7 @@ function initView(importTree,outputTree,linePathData){
 
 		var _startX = $(event.target).offset().left,
 	        _startY = $(event.target).offset().top,
+	        startClass = $(event.target).parent().attr("class"),
 	    	fromPath = $(event.target).parent().attr("data-path").replace(/\-/g,'.');
 	    	fromPath = fromPath.substring(5);
 		
@@ -60,11 +61,16 @@ function initView(importTree,outputTree,linePathData){
         	
 	    	var endX = $(event.target).offset().left,
 	    		endY = $(event.target).offset().top,
+	    		endClass = $(event.target).parent().attr("class"),
 	    		toPath = $(event.target).parent().attr("data-path");
 	    		
 	    	
 	    	$("#bipatiteLineSvg .drag-drop-line").remove();
 
+	    	if(startClass != endClass){
+	    		alert("difference type");
+	    		return false;
+	    	}
 	    	if(toPath != undefined){
 	    		toPath = toPath.replace(/\-/g,'.').substring(5);
 	    		linePathData.relation = addRelation(linePathData.relation,true,fromPath,toPath,getVisibleInputStr(),getVisibleOutputStr());
