@@ -49,8 +49,6 @@ export function pipelineEdit(data,linkDom){
         $("#outputDiv").html("no data");
         outputJson = {};
     }
-    
-    console.log(constant.linePathAry[index]);
 
     bipatiteView(importJson,outputJson,constant.linePathAry[index]);
 
