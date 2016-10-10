@@ -45,25 +45,26 @@ export function initAction() {
                 .attr("height", function (ad, ai) {
                     return constant.svgActionHeight;
                 })
-                // .attr("translateX",actionStartX)
-                // .attr("translateY",function(ad, ai){
-                //     if (ai % 2 == 0) {
-                //         ad.translateY = actionStartY + constant.svgStageHeight - 25 + constant.ActionNodeSpaceSize * (ai / 2 + 1);
-                //     } else {
-                //         ad.translateY = actionStartY - constant.svgStageHeight + 5 - constant.ActionNodeSpaceSize * (ai / 2);
-                //     }
-                //     return ad.translateY;
-                // })
+                .attr("translateX",actionStartX)
+                .attr("translateY",function(ad, ai){
+                    if (i % 2 == 0) {
+                        // ad.translateY = actionStartY + constant.svgStageHeight - 25 + constant.ActionNodeSpaceSize * (ai / 2 + 1);
+                         ad.translateY = actionStartY + constant.svgStageHeight  - 55 + constant.ActionNodeSpaceSize * (ai + 1);
+                    } else {
+                        // ad.translateY = actionStartY - constant.svgStageHeight + 5 - constant.ActionNodeSpaceSize * (ai / 2);
+                        ad.translateY = actionStartY + constant.svgStageHeight - 10 + constant.ActionNodeSpaceSize * (ai + 1);
+                    }
+                    return ad.translateY;
+                })
                 .attr("transform", function (ad, ai) {
                     ad.width = constant.svgActionWidth;
                     ad.height = constant.svgActionHeight;
-                    console.log(i);
                     if (i % 2 == 0) {
                         ad.translateX = actionStartX;
-                        ad.translateY = actionStartY + constant.svgStageHeight  + constant.ActionNodeSpaceSize * (ai + 1);
+                        ad.translateY = actionStartY + constant.svgStageHeight  - 55 + constant.ActionNodeSpaceSize * (ai + 1);
                     } else {
                         ad.translateX = actionStartX;
-                        ad.translateY = actionStartY + constant.svgStageHeight + 25 + constant.ActionNodeSpaceSize * (ai + 1);
+                        ad.translateY = actionStartY + constant.svgStageHeight - 10 + constant.ActionNodeSpaceSize * (ai + 1);
                     }
 
                     return "translate(" + ad.translateX + "," + ad.translateY + ")";

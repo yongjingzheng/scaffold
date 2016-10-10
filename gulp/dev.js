@@ -11,10 +11,10 @@ let browserify = require('browserify');
 let source = require('vinyl-source-stream');
 let sass = require('gulp-sass');
 let imagemin = require('gulp-imagemin');
-var config = require('../src/scripts.json');
 let gutil = require('gulp-util');
 var replace = require('gulp-replace');
 var browserSync = require('browser-sync').create();
+var fs = require("fs");
 
 gulp.task('dev:clean', function(){
      return del(['./dev']);
@@ -89,7 +89,9 @@ gulp.task("dev:browserify",['dev:babel'],  () => {
  *  This will concat all scripts include configed in scripts.json to one file: main.js
  */
 gulp.task('dev:scripts',['dev:babel', 'dev:browserify'], function(done) {
-  var src = config.scripts.concat(['dev/src/main.js']);
+  let config = JSON.parse(fs.readFileSync("src/scripts.json",'utf8'));
+  let src = config.scripts.concat(['dev/src/main.js']);
+  console.log(config);
   return gulp.src(src)
     .pipe(concat('main.js'))
     .pipe(gulp.dest('dev/src'))
@@ -129,7 +131,7 @@ gulp.task('dev:reload-html', ['dev:css-replace','dev:script-replace'], function 
  */
 gulp.task("dev:watch",  () => {
    gulp.watch("./src/**/*.{scss,css}",['dev:styles']);
-   gulp.watch(["src/{app,vendor}/**/*.js","src/scripts.json"],['dev:reload-js']);
+   gulp.watch(["src/{app,vendor}/**/*.js","src/scripts.json"], ['dev:reload-js']);
    gulp.watch("src/**/*.html",['dev:reload-html']);
    gulp.watch("src/assets/fonts/*",['dev:fonts','dev:styles']);
    gulp.watch("src/assets/images/*",['dev:images','dev:styles']);
