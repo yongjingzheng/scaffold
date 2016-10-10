@@ -91,7 +91,7 @@
                                         <div class="form-group">
                                             <label for="hint-field" class="col-sm-3 control-label">Version</label>
                                             <div class="col-sm-6">
-                                                <input type="text" id="pp-version" name="pp-version" class="form-control" required>
+                                                <input type="text" id="pp-version" name="pp-version" class="form-control" placeholder="Pipeline Version Name" required>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +133,7 @@
                                         <div class="form-group">
                                             <label for="hint-field" class="col-sm-3 control-label">New Version</label>
                                             <div class="col-sm-6">
-                                                <input type="text" id="pp-newversion" name="pp-newversion" class="form-control" required>
+                                                <input type="text" id="pp-newversion" name="pp-newversion" class="form-control" placeholder="New Version Name" required>
                                             </div>
                                         </div>
                                     </div>
@@ -157,14 +157,14 @@
                 <div class="col-md-3 row">
                         <label class="col-md-3 control-label" for="pipeline-select">Pipeline</label>
                         <div class="col-md-9" style="margin-top:-8px">
-                            <select class="form-control" id="pipeline-select">
+                            <select id="pipeline-select" style="width:100%;">
                           </select>
                       </div>             
                   </div>
                   <div class="col-md-3 row">
                     <label class="col-md-3 control-label" for="version-select">Version</label>
                     <div class="col-md-9" style="margin-top:-8px">
-                        <select class="form-control" id="version-select">
+                        <select id="version-select" style="width:100%;">
                         </select>
                     </div> 
                 </div> 
@@ -174,7 +174,7 @@
                         <i class="glyphicon glyphicon-floppy-disk" style="font-size:16px"></i>&nbsp;&nbsp;Save New Version
                     </button>
                     <button type="button" class="btn btn-inverse">
-                        <i class="fa fa-history" style="font-size:16px"></i>&nbsp;&nbsp;Run History
+                        <i class="fa fa-history" style="font-size:16px"></i>&nbsp;&nbsp;Log History
                     </button>
                     <button type="button" class="btn btn-success newpipeline">
                         <i class="glyphicon glyphicon-plus" style="font-size:16px"></i>&nbsp;&nbsp;New PipeLine
