@@ -7,6 +7,7 @@ import {resizeWidget} from "../theme/widget";
 import {pipelineEdit} from "../relation/pipelineEdit";
 import {removeLinkArray} from "../relation/removeLinkArray";
 import {initActionIO,initTreeEdit,initFromEdit} from "./action.io";
+import {initK8sForm,saveActionData} from "./action.form";
 
 export function clickAction(sd, si) {
 
@@ -22,6 +23,13 @@ export function clickAction(sd, si) {
 
             initActionIO(sd);
             initTreeEdit();
+
+            $("#action-component-select").select2({
+               minimumResultsForSearch: Infinity
+             });
+            $("#k8s-service-protocol").select2({
+               minimumResultsForSearch: Infinity
+             });
 
             $.each(sd.setupData, function (name, value) {
                 console.log($("#" + name));
@@ -41,6 +49,8 @@ export function clickAction(sd, si) {
                 });
             })
 
+            // events binding
+
             // input output from edit
             $("#tree-edit-tab").on('click',function(){
                 initTreeEdit();
@@ -53,6 +63,37 @@ export function clickAction(sd, si) {
             $("#output-from-edit-tab").on('click',function(){
                 initFromEdit("output");
             });
+
+            // action form
+            $("#saveAction").on('click',function(){
+                saveActionData();
+            })
+
+            $("#k8s-service-advanced").on("click",function(){
+                $("#k8s-service-advanced").hide();
+                $("#close-k8s-service-advanced").show();
+                $("#service-advanced").parent().show();
+            })
+
+            $("#close-k8s-service-advanced").on("click",function(){
+                $("#k8s-service-advanced").show();
+                $("#close-k8s-service-advanced").hide();
+                $("#service-advanced").parent().hide();
+            })
+
+            $("#k8s-pod-advanced").on("click",function(){
+                $("#k8s-pod-advanced").hide();
+                $("#close-k8s-pod-advanced").show();
+                $("#pod-advanced").parent().show();
+            })
+
+            $("#close-k8s-pod-advanced").on("click",function(){
+                $("#k8s-pod-advanced").show();
+                $("#close-k8s-pod-advanced").hide();
+                $("#pod-advanced").parent().hide();
+            })
+
+            initK8sForm();
 
             resizeWidget(); 
         }

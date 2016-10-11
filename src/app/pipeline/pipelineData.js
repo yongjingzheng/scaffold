@@ -162,16 +162,11 @@ function showPipeline(){
 }
 
 export function addPipeline(){
+    if(!$('#newpp-form').parsley().validate()){
+        return;
+    }
     var name = $("#pp-name").val();
     var version = $("#pp-version").val();
-    if(name.trim().length == 0){
-        alert("name is required");
-        return;
-    }
-    if(version.trim().length == 0){
-        alert("version is required");
-        return;
-    }
     var pipeline = {
         "name" : name,
         "versions" : [
@@ -186,13 +181,11 @@ export function addPipeline(){
 }
 
 export function addPipelineVersion(){
-    var name = $("#pp-name-newversion").val();
-    var version = $("#pp-newversion").val();
-    if(version.trim().length == 0){
-        alert("version is required");
+    if(!$('#newpp-version-form').parsley().validate()){
         return;
     }
-
+    var name = $("#pp-name-newversion").val();
+    var version = $("#pp-newversion").val();
     var versions = _.find(allPipelines,function(item){
         return item.name == name;
     }).versions;
