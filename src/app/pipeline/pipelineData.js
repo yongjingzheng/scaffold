@@ -153,7 +153,8 @@ function showPipeline(){
         return item.version == $("#version-select").val();
     }).data;
 
-    pipelineData = [].concat(data);
+    // pipelineData = [].concat(data);
+     pipelineData = data;
 
     $("#pipeline-info-edit").empty();
     
