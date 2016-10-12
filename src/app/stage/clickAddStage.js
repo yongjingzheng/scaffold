@@ -1,5 +1,5 @@
 
-import {pipelineData} from "../pipeline/pipelineData";
+import {pipelineData} from "../pipeline/main";
 import * as constant from "../common/constant";
 
 export function clickAddStage(d, i) {

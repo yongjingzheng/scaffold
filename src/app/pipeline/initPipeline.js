@@ -2,7 +2,7 @@
 
 
 import * as constant from "../common/constant";
-import {pipelineData} from "../pipeline/pipelineData";
+import {pipelineData} from "./main";
 import {drag} from "../common/drag";
 import {clickStart} from "../stage/clickStart";
 import {clickAddStage} from "../stage/clickAddStage";
