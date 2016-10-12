@@ -3,7 +3,7 @@ import {bipatiteJson} from "./bipatiteJson";
 import {bipatiteLine} from "./bipatiteLine";
 import {bipatiteView} from "./bipatiteView";
 import {resizeWidget} from "../theme/widget";
-import {pipelineData} from "../pipeline/pipelineData";
+import {pipelineData} from "../pipeline/main";
 import * as constant from "../common/constant";
 
 export var importJson = {};

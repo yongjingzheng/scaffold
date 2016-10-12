@@ -1,9 +1,9 @@
-import {getPipeLine} from "./pipeline/pipelineData";
+import {initPipelinePage} from "./pipeline/main";
 // import {historyRecord} from "./historyRecord";
 
 // let $a = d3.select("#showHistory").on("click",historyRecord);
 
-getPipeLine();
+initPipelinePage();
 
 // initActionLinkView();
 
