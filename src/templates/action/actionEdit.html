@@ -97,7 +97,7 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">Protocol</label>
                                                             <div class="col-md-6">
-                                                                <select id="k8s-service-protocol" style="width:100%">
+                                                                <select id="k8s-service-protocol" name="k8s-service-protocol" style="width:100%" required>
                                                                     <option value="tcp">TCP</option>
                                                                     <option value="udp">UDP</option>
                                                                 </select>
@@ -192,11 +192,12 @@
                                             <br/>
                                             <div class="form-actions">
                                                 <div class="row">
-                                                    <div class="col-sm-offset-5 col-sm-7">
+                                                    <!-- <div class="col-sm-offset-5 col-sm-7"> -->
+                                                    <div style="float:right">
                                                         <input type="hidden" id="uuid" name="uuid" class="form-control">
                                                         <!-- <button type="button" class="btn btn-primary" onclick="saveData($('#action-form'),$('uuid'));">Save</button> -->
-                                                        <button id="saveAction" type="button" class="btn btn-primary">Save</button>
-                                                        <button type="button" class="btn btn-inverse">Cancel</button>
+                                                        <button id="saveAction" type="button" class="btn btn-danger" style="width:15em;height:3em;font-size:1.2em">Save Base Config</button>
+                                                        <!-- <button type="button" class="btn btn-inverse">Cancel</button> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -214,6 +215,9 @@
                                                 <li class="nav-item">
                                                     <a class="nav-link" id="output-from-edit-tab" data-toggle="tab" href="#output_from_edit" role="tab" aria-controls="output_from_edit" aria-expanded="true">Output From Edit</a>
                                                 </li> 
+                                                <div style="float:right">
+                                                        <button id="saveActionIO" type="button" class="btn btn-danger" style="width:12em;height:2.5em;font-size:1.1em">Save Action IO</button>
+                                                </div>
                                             </ul>
                                         </div>
                                         <div class="tab-content">

@@ -1,20 +1,17 @@
 import {jsonEditor} from "../../vendor/jquery.jsoneditor";
-
-export let actionData;
+import {getActionIOData,saveActionIOData} from "./action.io.data";
 
 var treeEdit_InputContainer,treeEdit_OutputContainer;
 var fromEdit_InputCodeContainer,fromEdit_InputTreeContainer,fromEdit_OutputCodeContainer,fromEdit_OutputTreeContainer;
 var fromEdit_OutputViewContainer;
 var fromEdit_CodeEditor,fromEdit_TreeEditor;
 
-export function initActionIO(data){
-    actionData = data;
-    if(actionData.inputJson == undefined){
-        actionData.inputJson = {};
-    }
-    if(actionData.outputJson == undefined){
-        actionData.outputJson = {};
-    }
+let actionIOData;
+
+export function initActionIO(action){
+    // should be promise here after real api invocation
+
+    actionIOData = getActionIOData(action);
 
     treeEdit_InputContainer = $('#inputTreeDiv');
     treeEdit_OutputContainer = $('#outputTreeDiv');
@@ -23,13 +20,32 @@ export function initActionIO(data){
     fromEdit_OutputCodeContainer = $("#outputCodeEditor")[0];
     fromEdit_OutputTreeContainer = $("#outputTreeEditor")[0];
     fromEdit_OutputViewContainer = $("#outputTreeViewer")[0];
+
+    // input output from edit
+    $("#tree-edit-tab").on('click',function(){
+        initTreeEdit();
+    })
+
+    $("#input-from-edit-tab").on('click',function(){
+        initFromEdit("input");
+    })
+
+    $("#output-from-edit-tab").on('click',function(){
+        initFromEdit("output");
+    });
+
+    initTreeEdit();
+
+    $("#saveActionIO").on('click',function(){
+        saveActionIOData(action,actionIOData);
+    })
 }
 
-export function initTreeEdit(){
+function initTreeEdit(){
     try{
-        jsonEditor(treeEdit_InputContainer,actionData.inputJson, {
+        jsonEditor(treeEdit_InputContainer,actionIOData.inputJson, {
             change:function(data){
-                actionData.inputJson = data;
+                actionIOData.inputJson = data;
             }
         });
     }catch(e){
@@ -37,9 +53,9 @@ export function initTreeEdit(){
     }
 
     try{
-        jsonEditor(treeEdit_OutputContainer,actionData.outputJson, {
+        jsonEditor(treeEdit_OutputContainer,actionIOData.outputJson, {
             change:function(data){
-                actionData.outputJson = data;
+                actionIOData.outputJson = data;
             }
         });
     }catch(e){
@@ -47,7 +63,7 @@ export function initTreeEdit(){
     }
 }
 
-export function initFromEdit(type){
+function initFromEdit(type){
     if(fromEdit_CodeEditor){
         fromEdit_CodeEditor.destroy();
     }
@@ -69,8 +85,8 @@ export function initFromEdit(type){
     if(type == "input"){
         fromEdit_CodeEditor = new JSONEditor(fromEdit_InputCodeContainer, codeOptions);
         fromEdit_TreeEditor = new JSONEditor(fromEdit_InputTreeContainer, treeOptions);
-        fromEdit_CodeEditor.set(actionData.inputJson);
-        fromEdit_TreeEditor.set(actionData.inputJson);
+        fromEdit_CodeEditor.set(actionIOData.inputJson);
+        fromEdit_TreeEditor.set(actionIOData.inputJson);
         $("#inputFromJson").on('click',function(){
             fromCodeToTree("input");
         })  
@@ -80,8 +96,8 @@ export function initFromEdit(type){
     }else if(type == "output"){
         fromEdit_CodeEditor = new JSONEditor(fromEdit_OutputCodeContainer, codeOptions);
         fromEdit_TreeEditor = new JSONEditor(fromEdit_OutputTreeContainer, treeOptions);
-        fromEdit_CodeEditor.set(actionData.outputJson);
-        fromEdit_TreeEditor.set(actionData.outputJson);
+        fromEdit_CodeEditor.set(actionIOData.outputJson);
+        fromEdit_TreeEditor.set(actionIOData.outputJson);
         $("#outputFromJson").on('click',function(){
             fromCodeToTree("output");
         })
@@ -96,15 +112,15 @@ export function initFromEdit(type){
 function fromCodeToTree(type){
     if(type == "input"){
         try{
-            actionData.inputJson = fromEdit_CodeEditor.get();
-            fromEdit_TreeEditor.set(actionData.inputJson);
+            actionIOData.inputJson = fromEdit_CodeEditor.get();
+            fromEdit_TreeEditor.set(actionIOData.inputJson);
         }catch(e){
             alert("Input Code Changes Error in parsing json.");
         }  
     }else if(type == "output"){
         try{
-            actionData.outputJson = fromEdit_CodeEditor.get();
-            fromEdit_TreeEditor.set(actionData.outputJson);
+            actionIOData.outputJson = fromEdit_CodeEditor.get();
+            fromEdit_TreeEditor.set(actionIOData.outputJson);
         }catch(e){
             alert("Output Code Changes Error in parsing json.");
         } 
@@ -116,22 +132,22 @@ function fromCodeToTree(type){
 function fromTreeToCode(type){
     if(type == "input"){
         try{
-            actionData.inputJson = fromEdit_TreeEditor.get();
-            fromEdit_CodeEditor.set(actionData.inputJson);
+            actionIOData.inputJson = fromEdit_TreeEditor.get();
+            fromEdit_CodeEditor.set(actionIOData.inputJson);
         }catch(e){
             alert("Input Tree Changes Error in parsing json.");
         }  
     }else if(type == "output"){
         try{
-            actionData.outputJson = fromEdit_TreeEditor.get();
-            fromEdit_CodeEditor.set(actionData.outputJson);
+            actionIOData.outputJson = fromEdit_TreeEditor.get();
+            fromEdit_CodeEditor.set(actionIOData.outputJson);
         }catch(e){
             alert("Output Tree Changes Error in parsing json.");
         } 
     }
 }
 
-export function initFromView(){
+function initFromView(){
     if(fromEdit_TreeEditor){
         fromEdit_TreeEditor.destroy();
     }
@@ -142,7 +158,7 @@ export function initFromView(){
     };
 
     fromEdit_TreeEditor = new JSONEditor(fromEdit_OutputViewContainer, treeOptions);
-    fromEdit_TreeEditor.set(actionData.outputJson);
+    fromEdit_TreeEditor.set(actionIOData.outputJson);
     
     fromEdit_TreeEditor.expandAll();
 }
