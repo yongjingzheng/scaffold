@@ -1,4 +1,5 @@
 import {initPipelinePage} from "./pipeline/main";
+import {initComponentPage} from "./component/main";
 // import {historyRecord} from "./historyRecord";
 
 // let $a = d3.select("#showHistory").on("click",historyRecord);
@@ -12,7 +13,7 @@ $(".menu-pipeline").on('click',function(event){
 })
 
 $(".menu-component").on('click',function(){
-    $("#main").html("")
+    initComponentPage();
     $(event.currentTarget).parent().parent().children().removeClass("active");
     $(event.currentTarget).parent().addClass("active");
 })

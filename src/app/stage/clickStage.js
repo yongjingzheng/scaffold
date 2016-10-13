@@ -5,11 +5,9 @@ import {initAction} from "../pipeline/initAction";
 import {pipelineData} from "../pipeline/main";
 import {resizeWidget} from "../theme/widget";
 import {removeLinkArray} from "../relation/removeLinkArray";
+import {initStageSetup} from "./stage.setup";
 
 export function clickStage(sd, si) {
-
-    // clickNodeData = sd;
-
     //show stage form
     $.ajax({
         url: "../../templates/stage/stageEdit.html",
@@ -18,9 +16,7 @@ export function clickStage(sd, si) {
         success: function (data) {
             $("#pipeline-info-edit").html($(data));
 
-            $.each(sd.setupData, function (name, value) {
-                $("#" + name).attr("value", value);
-            });
+            initStageSetup(sd);
 
             $("#uuid").attr("value", sd.id);
 

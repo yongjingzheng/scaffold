@@ -10,10 +10,7 @@ import {initActionIO} from "./action.io";
 import {initActionSetup} from "./action.setup";
 
 export function clickAction(sd, si) {
-
-    // clickNodeData = sd;
-
-    //show git form
+    //show action form
     $.ajax({
         url: "../../templates/action/actionEdit.html",
         type: "GET",
