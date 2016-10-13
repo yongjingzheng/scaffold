@@ -1,5 +1,4 @@
 import {jsonEditor} from "../../vendor/jquery.jsoneditor";
-import {getActionIOData,saveActionIOData} from "./action.io.data";
 
 var treeEdit_InputContainer,treeEdit_OutputContainer;
 var fromEdit_InputCodeContainer,fromEdit_InputTreeContainer,fromEdit_OutputCodeContainer,fromEdit_OutputTreeContainer;
@@ -7,12 +6,14 @@ var fromEdit_OutputViewContainer;
 var fromEdit_CodeEditor,fromEdit_TreeEditor;
 
 let actionIOData;
-
 export function initActionIO(action){
-    // should be promise here after real api invocation
-
-    actionIOData = getActionIOData(action);
-
+    actionIOData = action;
+    if(actionIOData.inputJson == undefined){
+        actionIOData.inputJson = {};
+    }
+    if(actionIOData.outputJson == undefined){
+        actionIOData.outputJson = {};
+    }
     treeEdit_InputContainer = $('#inputTreeDiv');
     treeEdit_OutputContainer = $('#outputTreeDiv');
     fromEdit_InputCodeContainer = $("#inputCodeEditor")[0];
@@ -36,9 +37,9 @@ export function initActionIO(action){
 
     initTreeEdit();
 
-    $("#saveActionIO").on('click',function(){
-        saveActionIOData(action,actionIOData);
-    })
+    // $("#saveActionIO").on('click',function(){
+    //     saveActionIOData(action,actionIOData);
+    // })
 }
 
 function initTreeEdit(){
@@ -147,7 +148,7 @@ function fromTreeToCode(type){
     }
 }
 
-function initFromView(){
+export function initFromView(){
     if(fromEdit_TreeEditor){
         fromEdit_TreeEditor.destroy();
     }

@@ -8,7 +8,7 @@
                             <a data-widgster="fullscreen" title="" href="#" data-original-title="Full Screen" style="display: inline;"><i class="glyphicon glyphicon-fullscreen"></i></a>
                             <a data-widgster="restore" title="" href="#" style="display: none;" data-original-title="Restore"><i class="glyphicon glyphicon-resize-small"></i></a>
                         </div>
-                        <div class="row col-md-8 form-horizontal" style="float:right">
+                        <div class="row col-md-offset-4 col-md-8 form-horizontal">
                             <label class="col-md-4 control-label" for="action-component-select">Select Component</label>
                             <div class="col-md-8">
                                 <select id="action-component-select" style="width:100%">
@@ -16,7 +16,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row mb-lg treeview">
+                        <div class="row mb-lg treeview col-md-12">
                             <div class="col-lg-12">
                                 <div class="clearfix">
                                     <ul class="nav nav-tabs pull-xs-left" id="actionTabs" role="tablist">
@@ -36,30 +36,30 @@
                                                 <h4>Action</h4>
                                                 <hr/>
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <!-- <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="normal-field" class="col-sm-5 control-label">Action ID</label>
                                                             <div class="col-sm-7">
                                                                 <input type="text" id="action-id" name="action-id" class="form-control" placeholder="Action ID" required>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-4">
+                                                    </div> -->
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="hint-field" class="col-sm-5 control-label">
+                                                            <label for="hint-field" class="col-sm-3 control-label">
                                                                 Action Name
                                                             </label>
-                                                            <div class="col-sm-7">
+                                                            <div class="col-sm-6">
                                                                 <input type="text" id="action-name" name="action-name" class="form-control" required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="hint-field" class="col-sm-5 control-label">
+                                                            <label for="hint-field" class="col-sm-3 control-label">
                                                                 Action Timeout
                                                             </label>
-                                                            <div class="col-sm-7">
+                                                            <div class="col-sm-6">
                                                                 <input type="text" id="action-timeout" name="action-timeout" class="form-control">
                                                             </div>
                                                         </div>
@@ -196,7 +196,7 @@
                                                     <div style="float:right">
                                                         <input type="hidden" id="uuid" name="uuid" class="form-control">
                                                         <!-- <button type="button" class="btn btn-primary" onclick="saveData($('#action-form'),$('uuid'));">Save</button> -->
-                                                        <button id="saveAction" type="button" class="btn btn-danger" style="width:15em;height:3em;font-size:1.2em">Save Base Config</button>
+                                                        <!-- <button id="saveAction" type="button" class="btn btn-danger" style="width:15em;height:3em;font-size:1.2em">Save Base Config</button> -->
                                                         <!-- <button type="button" class="btn btn-inverse">Cancel</button> -->
                                                     </div>
                                                 </div>
@@ -215,9 +215,9 @@
                                                 <li class="nav-item">
                                                     <a class="nav-link" id="output-from-edit-tab" data-toggle="tab" href="#output_from_edit" role="tab" aria-controls="output_from_edit" aria-expanded="true">Output From Edit</a>
                                                 </li> 
-                                                <div style="float:right">
+                                                <!-- <div style="float:right">
                                                         <button id="saveActionIO" type="button" class="btn btn-danger" style="width:12em;height:2.5em;font-size:1.1em">Save Action IO</button>
-                                                </div>
+                                                </div> -->
                                             </ul>
                                         </div>
                                         <div class="tab-content">

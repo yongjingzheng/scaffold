@@ -1,73 +1,77 @@
-import {getActionSetupData,saveActionSetupData} from "./action.setup.data";
+import * as actionSetupData from "./action.setup.data";
 
 let k8sServiceAdvancedEditor,k8sPodAdvancedEditor;
 let k8sServiceAdvancedContainer,k8sPodAdvancedContainer;
 
 let k8sSAD,k8sPAD;
 
-let actionSetupData;
-
 export function initActionSetup(action){
-    // should be promise here after real api invocation
-
-    actionSetupData = getActionSetupData(action);
+    actionSetupData.getActionSetupData(action);
 
     // action part
-    $("#action-id").val(actionSetupData.action.id);
-    $("#action-name").val(actionSetupData.action.name);
-    $("#action-timeout").val(actionSetupData.action.timeout);
+    $("#action-name").val(actionSetupData.data.action.name);
+    $("#action-name").on("blur",function(){
+        actionSetupData.setActionName();
+    });
+
+    $("#action-timeout").val(actionSetupData.data.action.timeout);
+    $("#action-timeout").on("blur",function(){
+        actionSetupData.setActionTimeout();
+    });
 
     // k8s service part
-    $("#k8s-service-name").val(actionSetupData.k8s_service.metadata.name);
-    $("#k8s-service-ip").val(actionSetupData.k8s_service.spec.clusterIP);
-    $("#k8s-service-protocol").val(actionSetupData.k8s_service.spec.ports[0].protocol);
-    $("#k8s-service-port").val(actionSetupData.k8s_service.spec.ports[0].port);
-    $("#k8s-service-targetport").val(actionSetupData.k8s_service.spec.ports[0].targetPort);
-    $("#k8s-service-nodeport").val(actionSetupData.k8s_service.spec.ports[0].nodePort);
+    $("#k8s-service-name").val(actionSetupData.data.k8s_service.metadata.name);
+    $("#k8s-service-name").on("blur",function(){
+        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+    });
 
-    k8sSAD = $.extend(true,{},actionSetupData.k8s_service);
+    $("#k8s-service-ip").val(actionSetupData.data.k8s_service.spec.clusterIP);
+    $("#k8s-service-ip").on("blur",function(){
+        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+    });
+
+    $("#k8s-service-protocol").val(actionSetupData.data.k8s_service.spec.ports[0].protocol);
+    $("#k8s-service-protocol").on("blur",function(){
+        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+    });
+
+    $("#k8s-service-port").val(actionSetupData.data.k8s_service.spec.ports[0].port);
+    $("#k8s-service-protocol").on("blur",function(){
+        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+    });
+
+    $("#k8s-service-targetport").val(actionSetupData.data.k8s_service.spec.ports[0].targetPort);
+    $("#k8s-service-targetport").on("blur",function(){
+        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+    });
+
+    $("#k8s-service-nodeport").val(actionSetupData.data.k8s_service.spec.ports[0].nodePort);
+    $("#k8s-service-nodeport").on("blur",function(){
+        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+    });
+
+    k8sSAD = $.extend(true,{},actionSetupData.data.k8s_service);
     delete k8sSAD.metadata.name;
     delete k8sSAD.spec.clusterIP;
     delete k8sSAD.spec.ports;
 
     // k8s pod part
-    $("#k8s-pod-name").val(actionSetupData.k8s_pod.metadata.name);
-    $("#k8s-pod-image").val(actionSetupData.k8s_pod.spec.containers[0].image);
+    $("#k8s-pod-name").val(actionSetupData.data.k8s_pod.metadata.name);
+    $("#k8s-pod-name").on("blur",function(){
+        actionSetupData.setK8sPod(k8sPodAdvancedEditor);
+    });
 
-    k8sPAD = $.extend(true,{},actionSetupData.k8s_pod);
+    $("#k8s-pod-image").val(actionSetupData.data.k8s_pod.spec.containers[0].image);
+    $("#k8s-pod-image").on("blur",function(){
+        actionSetupData.setK8sPod(k8sPodAdvancedEditor);
+    });
+
+    k8sPAD = $.extend(true,{},actionSetupData.data.k8s_pod);
     delete k8sPAD.metadata.name;
     delete k8sPAD.spec.containers[0].image;
 
     initK8sForm();
 
-    // action form
-    $("#saveAction").on('click',function(){
-        // action part
-        actionSetupData.action.id = $("#action-id").val();
-        actionSetupData.action.name = $("#action-name").val();
-        actionSetupData.action.timeout = $("#action-timeout").val();
-
-        // k8s service part
-        var k8s_service_ad = k8sServiceAdvancedEditor.get();
-        k8s_service_ad.metadata.name = $("#k8s-service-name").val();
-        k8s_service_ad.spec.clusterIP = $("#k8s-service-ip").val();
-        var ports = [{
-          "protocol": $("#k8s-service-protocol").val(),
-          "port": $("#k8s-service-port").val(),
-          "targetPort": $("#k8s-service-targetport").val(),
-          "nodePort": $("#k8s-service-nodeport").val()
-        }]
-        k8s_service_ad.spec.ports = ports; 
-        actionSetupData.k8s_service = k8s_service_ad;
-
-        // k8s pod part
-        var k8s_pod_ad = k8sPodAdvancedEditor.get();
-        k8s_pod_ad.metadata.name = $("#k8s-pod-name").val();
-        k8s_pod_ad.spec.containers[0].image = $("#k8s-pod-image").val();
-        actionSetupData.k8s_pod = k8s_pod_ad;
-
-        saveActionSetupData(action,actionSetupData);
-    })
 
     $("#k8s-service-advanced").on("click",function(){
         $("#k8s-service-advanced").hide();
@@ -108,7 +112,10 @@ function initK8sServiceAdvanced(){
 
     var treeOptions = {
         "mode": "tree",
-        "search": true
+        "search": true,
+        "onChange" : function(){
+            actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+        }
     };
 
     k8sServiceAdvancedEditor = new JSONEditor(k8sServiceAdvancedContainer, treeOptions);
@@ -124,7 +131,10 @@ function initK8sPodAdvanced(){
 
     var treeOptions = {
         "mode": "tree",
-        "search": true
+        "search": true,
+        "onChange" : function(){
+            actionSetupData.setK8sPod(k8sPodAdvancedEditor);
+        }
     };
 
     k8sPodAdvancedEditor = new JSONEditor(k8sPodAdvancedContainer, treeOptions);

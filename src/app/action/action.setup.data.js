@@ -1,34 +1,45 @@
-export function getActionSetupData(action){
-    // real api invocation here , get action setupdata by action.id
-    // return ajax promise
+export let data;
 
-    // to be removed below
-    var data;
+export function getActionSetupData(action){
     if(!_.isUndefined(action.setupData) && !_.isEmpty(action.setupData)){
       data = action.setupData;
     }else{
-      data = $.extend(true,{},actionSetupData_fakedata);
-    }  
-    return data;
+      data = $.extend(true,{},metadata);
+      action.setupData = data;
+    } 
 }
 
-export function saveActionSetupData(action,data){
-    if(!$('#action-form').parsley().validate()){
-        return;
-    }
-
-    // real api invocation here , set action setupdata by action.id
-    // send data as request body
-
-    // to be removed soon
-    action.setupData = data;
-    alert("Saved Action Setup Data.")
+export function setActionName(){
+    data.action.name = $("#action-name").val();
 }
 
-// fake data, to be removed
-export var actionSetupData_fakedata = {
+export function setActionTimeout(){
+    data.action.timeout = $("#action-timeout").val();
+}
+
+export function setK8sService(k8sServiceAdvancedEditor){
+    var k8s_service_ad = k8sServiceAdvancedEditor.get();
+    k8s_service_ad.metadata.name = $("#k8s-service-name").val();
+    k8s_service_ad.spec.clusterIP = $("#k8s-service-ip").val();
+    var ports = [{
+      "protocol": $("#k8s-service-protocol").val(),
+      "port": $("#k8s-service-port").val(),
+      "targetPort": $("#k8s-service-targetport").val(),
+      "nodePort": $("#k8s-service-nodeport").val()
+    }]
+    k8s_service_ad.spec.ports = ports; 
+    data.k8s_service = k8s_service_ad;
+}
+
+export function setK8sPod(k8sPodAdvancedEditor){
+    var k8s_pod_ad = k8sPodAdvancedEditor.get();
+    k8s_pod_ad.metadata.name = $("#k8s-pod-name").val();
+    k8s_pod_ad.spec.containers[0].image = $("#k8s-pod-image").val();        
+    data.k8s_pod = k8s_pod_ad;
+}
+
+var metadata = {
   "action" : {
-    "id" : "",
     "name" : "",
     "timeout" : ""
   },
