@@ -21,7 +21,7 @@ export function getPipeline(name,version){
 
 export function addPipeline(){
     if(!$('#newpp-form').parsley().validate()){
-        return;
+        return false;
     }
     var name = $("#pp-name").val();
     var version = $("#pp-version").val();
@@ -29,22 +29,34 @@ export function addPipeline(){
     // call api here, return promise
 
     // to be removed
-    var pipeline = {
-        "name" : name,
-        "versions" : [
-            {
-                "version" : version,
-                "data" : [].concat(newPipelineData)
-            }
-        ]
+    var pipeline = _.find(allPipelines,function(item){
+        return item.name == name;
+    })
+    if(!_.isUndefined(pipeline)){
+        var newversion = {
+            "version" : version,
+            "data" : [].concat(newPipelineData)
+        }
+        pipeline.versions.push(newversion);
+    }else{
+        pipeline = {
+            "name" : name,
+            "versions" : [
+                {
+                    "version" : version,
+                    "data" : [].concat(newPipelineData)
+                }
+            ]
+        }
+        allPipelines.push(pipeline);
     }
-    allPipelines.push(pipeline);
+    return true;
 }
 import {PIPELINE_START , PIPELINE_END, PIPELINE_ADD_STAGE, PIPELINE_ADD_ACTION,PIPELINE_STAGE,PIPELINE_ACTION} from "../common/constant";
 
 export function addPipelineVersion(oldversion){
     if(!$('#newpp-version-form').parsley().validate()){
-        return;
+        return false;
     }
     var name = $("#pp-name-newversion").val();
     var version = $("#pp-newversion").val();
@@ -65,6 +77,7 @@ export function addPipelineVersion(oldversion){
         "data" : [].concat(oldversion.data)
     }
     pipeline.versions.push(newversion);
+    return true;
 }
 
 export var newPipelineData = [

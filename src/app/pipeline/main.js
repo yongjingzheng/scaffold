@@ -2,7 +2,7 @@
 import {initDesigner} from "./initDesigner";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
-import {getAllPipelines,getPipeline,addPipeline} from "./pipeline.data";
+import {getAllPipelines,getPipeline,addPipeline,addPipelineVersion} from "./pipeline.data";
 
 export let allPipelines;
 
@@ -15,15 +15,64 @@ export function initPipelinePage(){
     // to be removed
     allPipelines = getAllPipelines();
     if(allPipelines.length>0){
-        // showPipelineList();
-        showPipelineDesigner();
+        showPipelineList();
     }else{
         showNoPipeline();
     }
 }
 
 function showPipelineList(){
+    $.ajax({
+        url: "../../templates/pipeline/pipelineList.html",
+        type: "GET",
+        cache: false,
+        success: function (data) {
+            $("#main").html($(data));    
+            $("#pipelinelist").show("slow");
 
+            $(".newpipeline").on('click',function(){
+                showNewPipeline();
+            }) 
+
+            $(".pipelinelist_body").empty();
+            _.each(allPipelines,function(item){
+                var pprow = '<tr style="height:50px"><td class="pptd">'
+                        +'<span class="glyphicon glyphicon-menu-down treeclose" data-name="'+item.name+'"></span>&nbsp;'
+                        +'<span class="glyphicon glyphicon-menu-right treeopen" data-name="'+item.name+'"></span>&nbsp;' 
+                        + item.name + '</td><td></td><td></td></tr>';
+                $(".pipelinelist_body").append(pprow);
+                _.each(item.versions,function(version){
+                    var vrow = '<tr data-pname="' + item.name + '" data-version="' + version.version + '" style="height:50px">'
+                            +'<td></td><td class="pptd">' + version.version + '</td>'
+                            +'<td><button type="button" class="btn btn-primary ppview">View</button></td></tr>';
+                    $(".pipelinelist_body").append(vrow);
+                })
+            }) ;
+
+            $(".treeclose").on("click",function(event){
+                var target = $(event.currentTarget);
+                target.hide();
+                target.next().show();
+                var name = target.data("name");
+                $('*[data-pname='+name+']').hide();
+            });
+
+            $(".treeopen").on("click",function(event){
+                var target = $(event.currentTarget);
+                target.hide();
+                target.prev().show();
+                var name = target.data("name");
+                $('*[data-pname='+name+']').show();
+            });
+
+            $(".ppview").on("click",function(event){
+                var target = $(event.currentTarget);
+                pipelineName = target.parent().parent().data("pname");
+                pipelineVersion = target.parent().parent().data("version");
+                showPipelineDesigner()
+            })
+        }
+    });
 }
 
 function showNoPipeline(){
@@ -51,9 +100,12 @@ function showNewPipeline(){
             $("#main").append($(data));    
             $("#newpipeline").show("slow");
             $("#newppBtn").on('click',function(){
-                addPipeline();
+                // addPipeline();
+
                 // to be removed below
-                initPipelinePage();
+                if(addPipeline()){
+                    initPipelinePage();
+                }  
             })
             $("#cancelNewppBtn").on('click',function(){
                 cancelNewPPPage();
@@ -71,19 +123,29 @@ function showPipelineDesigner(){
             $("#main").html($(data));    
             $("#pipelinedesign").show("slow"); 
 
-            // temp
-            pipelineName = allPipelines[0].name;
-            pipelineVersion = allPipelines[0].versions[0].version;
-            pipelineData = allPipelines[0].versions[0].data;
-            // temp end
-            $("#selected_pipeline_name").val(pipelineName); 
-            $("#selected_pipeline_version").val(pipelineVersion);
+            var selectedpp = _.find(allPipelines,function(pp){
+                return pp.name == pipelineName;
+            });
+            var selectedversion = _.find(selectedpp.versions,function(version){
+                return version.version == pipelineVersion;
+            });
+            pipelineData = selectedversion.data;
+
+            $("#selected_pipeline").text(pipelineName + " / " + pipelineVersion); 
 
             initDesigner();
             drawPipeline();
 
+            $(".backtolist").on('click',function(){
+                initPipelinePage();
+            });
+
             $(".newpipelineversion").on('click',function(){
                 showNewPipelineVersion();
+            })
+
+            $(".newpipeline").on('click',function(){
+                showNewPipeline();
             })
         }
     }); 
@@ -109,9 +171,12 @@ function showNewPipelineVersion(){
             $("#pp-name-newversion").val(pipelineName);
 
             $("#newppVersionBtn").on('click',function(){
-                addPipelineVersion(pipelineVersion);
+                // addPipelineVersion(pipelineVersion);
+
                 // to be removed below
-                initPipelinePage();
+                if(addPipelineVersion(pipelineVersion)){
+                    initPipelinePage();
+                } 
             })
             $("#cancelNewppVersionBtn").on('click',function(){
                 cancelNewPPVersionPage();
