@@ -5,6 +5,17 @@ import {initPipelinePage} from "./pipeline/main";
 
 initPipelinePage();
 
+$(".menu-pipeline").on('click',function(event){
+    initPipelinePage();
+    $(event.currentTarget).parent().parent().children().removeClass("active");
+    $(event.currentTarget).parent().addClass("active");
+})
+
+$(".menu-component").on('click',function(){
+    $("#main").html("")
+    $(event.currentTarget).parent().parent().children().removeClass("active");
+    $(event.currentTarget).parent().addClass("active");
+})
 // initActionLinkView();
 
 function initActionLinkView() {
