@@ -79,6 +79,18 @@ export function addComponentVersion(oldversion){
     return true;
 }
 
+export function saveComponent(componentName, componentVersion, componentData){
+    if(!$('#component-form').parsley().validate()){
+        alert("missed some required base config.")
+    }else if(_.isEmpty(componentData.inputJson)){
+        alert("component input json is empty.")
+    }else if(_.isEmpty(componentData.outputJson)){
+        alert("component output json is empty.")
+    }else{
+        alert("saved")
+    }  
+}
+
 export var newComponentData = {
     "setupData" : {},
     "inputJson" : {},
