@@ -42,7 +42,7 @@ export function initActionIO(action){
     // })
 }
 
-function initTreeEdit(){
+export function initTreeEdit(){
     try{
         jsonEditor(treeEdit_InputContainer,actionIOData.inputJson, {
             change:function(data){
@@ -64,7 +64,7 @@ function initTreeEdit(){
     }
 }
 
-function initFromEdit(type){
+export function initFromEdit(type){
     if(fromEdit_CodeEditor){
         fromEdit_CodeEditor.destroy();
     }

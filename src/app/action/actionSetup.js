@@ -1,4 +1,4 @@
-import * as actionSetupData from "./action.setup.data";
+import * as actionSetupData from "./actionSetupData";
 
 let k8sServiceAdvancedEditor,k8sPodAdvancedEditor;
 let k8sServiceAdvancedContainer,k8sPodAdvancedContainer;

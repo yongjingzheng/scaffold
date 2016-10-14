@@ -1,6 +1,6 @@
-import {getAllComponents,getComponent,addComponent,addComponentVersion,saveComponent} from "./component.data";
-import {initComponentIO} from "./component.io";
-import {initComponentSetup} from "./component.setup";
+import {getAllComponents,getComponent,addComponent,addComponentVersion,saveComponent} from "./componentData";
+import {initComponentIO} from "./componentIO";
+import {initComponentSetup} from "./componentSetup";
 
 export let allComponents;
 
