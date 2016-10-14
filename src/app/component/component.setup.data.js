@@ -1,11 +1,11 @@
 export let data;
 
-export function getActionSetupData(action){
-    if(!_.isUndefined(action.setupData) && !_.isEmpty(action.setupData)){
-      data = action.setupData;
+export function getComponentSetupData(component){
+    if(!_.isUndefined(component.setupData) && !_.isEmpty(component.setupData)){
+      data = component.setupData;
     }else{
       data = $.extend(true,{},metadata);
-      action.setupData = data;
+      component.setupData = data;
     } 
 }
 

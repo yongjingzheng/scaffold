@@ -1,4 +1,6 @@
-import {getAllComponents,getComponent,addComponent,addComponentVersion} from "./component.data";
+import {getAllComponents,getComponent,addComponent,addComponentVersion,saveComponent} from "./component.data";
+import {initComponentIO} from "./component.io";
+import {initComponentSetup} from "./component.setup";
 
 export let allComponents;
 
@@ -110,7 +112,7 @@ function showNewComponent(){
     });
 }
 
-function showComponentDesigner(){ 
+function showComponentDesigner(){  
     $.ajax({
         url: "../../templates/component/componentDesign.html",
         type: "GET",
@@ -129,21 +131,48 @@ function showComponentDesigner(){
 
             $("#selected_component").text(componentName + " / " + componentVersion); 
 
-            // initDesigner();
-
             $(".backtolist").on('click',function(){
                 initComponentPage();
             });
 
+            $(".savecomponent").on('click',function(){
+                saveComponent(componentName, componentVersion, componentData);
+            });
+
             $(".newcomponentversion").on('click',function(){
                 showNewComponentVersion();
-            })
+            });
 
             $(".newcomponent").on('click',function(){
                 showNewComponent();
-            })
+            });
+
+            initComponentEdit();
         }
     }); 
+}
+
+function initComponentEdit(){
+    $.ajax({
+        url: "../../templates/component/componentEdit.html",
+        type: "GET",
+        cache: false,
+        success: function (data) {
+            $("#componentDesigner").html($(data));
+
+            initComponentSetup(componentData);
+
+            initComponentIO(componentData);
+
+            // view select init
+            $("#action-component-select").select2({
+               minimumResultsForSearch: Infinity
+             });
+            $("#k8s-service-protocol").select2({
+               minimumResultsForSearch: Infinity
+            });      
+        }
+    });
 }
 
 function showNewComponentVersion(){

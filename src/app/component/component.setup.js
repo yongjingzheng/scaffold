@@ -1,77 +1,77 @@
-import * as actionSetupData from "./action.setup.data";
+import * as componentSetupData from "./component.setup.data";
 
 let k8sServiceAdvancedEditor,k8sPodAdvancedEditor;
 let k8sServiceAdvancedContainer,k8sPodAdvancedContainer;
 
 let k8sSAD,k8sPAD;
 
-export function initActionSetup(action){
-    actionSetupData.getActionSetupData(action);
+export function initComponentSetup(component){
+    componentSetupData.getComponentSetupData(component);
 
     // action part
-    $("#action-component-select").val(actionSetupData.data.action.type);
+    $("#action-component-select").val(componentSetupData.data.action.type);
     $("#action-component-select").on('change',function(){
-        actionSetupData.setActionType();    
+        componentSetupData.setActionType();    
     });
 
-    $("#action-name").val(actionSetupData.data.action.name);
+    $("#action-name").val(componentSetupData.data.action.name);
     $("#action-name").on("blur",function(){
-        actionSetupData.setActionName();
+        componentSetupData.setActionName();
     });
 
-    $("#action-timeout").val(actionSetupData.data.action.timeout);
+    $("#action-timeout").val(componentSetupData.data.action.timeout);
     $("#action-timeout").on("blur",function(){
-        actionSetupData.setActionTimeout();
+        componentSetupData.setActionTimeout();
     });
 
     // k8s service part
-    $("#k8s-service-name").val(actionSetupData.data.k8s_service.metadata.name);
+    $("#k8s-service-name").val(componentSetupData.data.k8s_service.metadata.name);
     $("#k8s-service-name").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+        componentSetupData.setK8sService(k8sServiceAdvancedEditor);
     });
 
-    $("#k8s-service-ip").val(actionSetupData.data.k8s_service.spec.clusterIP);
+    $("#k8s-service-ip").val(componentSetupData.data.k8s_service.spec.clusterIP);
     $("#k8s-service-ip").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+        componentSetupData.setK8sService(k8sServiceAdvancedEditor);
     });
 
-    $("#k8s-service-protocol").val(actionSetupData.data.k8s_service.spec.ports[0].protocol);
+    $("#k8s-service-protocol").val(componentSetupData.data.k8s_service.spec.ports[0].protocol);
     $("#k8s-service-protocol").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+        componentSetupData.setK8sService(k8sServiceAdvancedEditor);
     });
 
-    $("#k8s-service-port").val(actionSetupData.data.k8s_service.spec.ports[0].port);
+    $("#k8s-service-port").val(componentSetupData.data.k8s_service.spec.ports[0].port);
     $("#k8s-service-protocol").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+        componentSetupData.setK8sService(k8sServiceAdvancedEditor);
     });
 
-    $("#k8s-service-targetport").val(actionSetupData.data.k8s_service.spec.ports[0].targetPort);
+    $("#k8s-service-targetport").val(componentSetupData.data.k8s_service.spec.ports[0].targetPort);
     $("#k8s-service-targetport").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+        componentSetupData.setK8sService(k8sServiceAdvancedEditor);
     });
 
-    $("#k8s-service-nodeport").val(actionSetupData.data.k8s_service.spec.ports[0].nodePort);
+    $("#k8s-service-nodeport").val(componentSetupData.data.k8s_service.spec.ports[0].nodePort);
     $("#k8s-service-nodeport").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+        componentSetupData.setK8sService(k8sServiceAdvancedEditor);
     });
 
-    k8sSAD = $.extend(true,{},actionSetupData.data.k8s_service);
+    k8sSAD = $.extend(true,{},componentSetupData.data.k8s_service);
     delete k8sSAD.metadata.name;
     delete k8sSAD.spec.clusterIP;
     delete k8sSAD.spec.ports;
 
     // k8s pod part
-    $("#k8s-pod-name").val(actionSetupData.data.k8s_pod.metadata.name);
+    $("#k8s-pod-name").val(componentSetupData.data.k8s_pod.metadata.name);
     $("#k8s-pod-name").on("blur",function(){
-        actionSetupData.setK8sPod(k8sPodAdvancedEditor);
+        componentSetupData.setK8sPod(k8sPodAdvancedEditor);
     });
 
-    $("#k8s-pod-image").val(actionSetupData.data.k8s_pod.spec.containers[0].image);
+    $("#k8s-pod-image").val(componentSetupData.data.k8s_pod.spec.containers[0].image);
     $("#k8s-pod-image").on("blur",function(){
-        actionSetupData.setK8sPod(k8sPodAdvancedEditor);
+        componentSetupData.setK8sPod(k8sPodAdvancedEditor);
     });
 
-    k8sPAD = $.extend(true,{},actionSetupData.data.k8s_pod);
+    k8sPAD = $.extend(true,{},componentSetupData.data.k8s_pod);
     delete k8sPAD.metadata.name;
     delete k8sPAD.spec.containers[0].image;
 
@@ -119,7 +119,7 @@ function initK8sServiceAdvanced(){
         "mode": "tree",
         "search": true,
         "onChange" : function(){
-            actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+            componentSetupData.setK8sService(k8sServiceAdvancedEditor);
         }
     };
 
@@ -138,7 +138,7 @@ function initK8sPodAdvanced(){
         "mode": "tree",
         "search": true,
         "onChange" : function(){
-            actionSetupData.setK8sPod(k8sPodAdvancedEditor);
+            componentSetupData.setK8sPod(k8sPodAdvancedEditor);
         }
     };
 
