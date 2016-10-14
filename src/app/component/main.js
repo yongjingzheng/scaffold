@@ -121,13 +121,7 @@ function showComponentDesigner(){
             $("#main").html($(data));    
             $("#componentdesign").show("slow"); 
 
-            var selectedcomponent = _.find(allComponents,function(c){
-                return c.name == componentName;
-            });
-            var selectedversion = _.find(selectedcomponent.versions,function(version){
-                return version.version == componentVersion;
-            });
-            componentData = selectedversion.data;
+            componentData = getComponent(componentName,componentVersion);
 
             $("#selected_component").text(componentName + " / " + componentVersion); 
 
