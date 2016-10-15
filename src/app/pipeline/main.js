@@ -2,7 +2,7 @@
 import {initDesigner} from "./initDesigner";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
-import {getAllPipelines,getPipeline,addPipeline,addPipelineVersion} from "./pipeline.data";
+import {getAllPipelines,getPipeline,addPipeline,addPipelineVersion} from "./pipelineData";
 
 export let allPipelines;
 

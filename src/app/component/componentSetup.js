@@ -1,4 +1,4 @@
-import * as componentSetupData from "./component.setup.data";
+import * as componentSetupData from "./componentSetupData";
 
 let k8sServiceAdvancedEditor,k8sPodAdvancedEditor;
 let k8sServiceAdvancedContainer,k8sPodAdvancedContainer;

@@ -1,4 +1,4 @@
-import * as stageSetupData from "./stage.setup.data";
+import * as stageSetupData from "./stageSetupData";
 
 export function initStageSetup(stage){
     stageSetupData.getStageSetupData(stage);

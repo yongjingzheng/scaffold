@@ -6,9 +6,9 @@ import {pipelineData} from "../pipeline/main";
 import {resizeWidget} from "../theme/widget";
 import {pipelineEdit} from "../relation/pipelineEdit";
 import {removeLinkArray} from "../relation/removeLinkArray";
-import {initActionIO} from "./action.io";
-import {initActionSetup} from "./action.setup";
-import {getAllComponents,getComponent} from "../component/component.data";
+import {initActionIO} from "./actionIO";
+import {initActionSetup} from "./actionSetup";
+import {getAllComponents,getComponent} from "../component/componentData";
 
 export function clickAction(sd, si) {
     $.ajax({
