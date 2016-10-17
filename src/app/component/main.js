@@ -88,7 +88,7 @@ function showNoComponent(){
     });
 }
 
-function showNewComponent(){
+export function showNewComponent(fromPipeline){
     $.ajax({
         url: "../../templates/component/newComponent.html",
         type: "GET",
@@ -106,6 +106,10 @@ function showNewComponent(){
                 }  
             })
             $("#cancelNewComponentBtn").on('click',function(){
+                if(fromPipeline){
+                    $(".menu-component").parent().removeClass("active");
+                    $(".menu-pipeline").parent().addClass("active");
+                }
                 cancelNewComponentPage();
             })
         }

@@ -13,13 +13,13 @@ export function initStageSetup(stage){
         stageSetupData.setStageTimeout();
     });
 
-    $("#stage-env").val(stageSetupData.data.env);
-    $("#stage-env").on("blur",function(){
-        stageSetupData.setStageEnv();
-    });
+    // $("#stage-env").val(stageSetupData.data.env);
+    // $("#stage-env").on("blur",function(){
+    //     stageSetupData.setStageEnv();
+    // });
 
-    $("#stage-callback-url").val(stageSetupData.data.callbackurl);
-    $("#stage-callback-url").on("blur",function(){
-        stageSetupData.setStageCallbackUrl();
-    });
+    // $("#stage-callback-url").val(stageSetupData.data.callbackurl);
+    // $("#stage-callback-url").on("blur",function(){
+    //     stageSetupData.setStageCallbackUrl();
+    // });
 }
