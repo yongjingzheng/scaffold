@@ -9,6 +9,7 @@ import {removeLinkArray} from "../relation/removeLinkArray";
 import {initActionIO} from "./actionIO";
 import {initActionSetup} from "./actionSetup";
 import {getAllComponents,getComponent} from "../component/componentData";
+import {showNewComponent} from "../component/main";
 
 export function clickAction(sd, si) {
     $.ajax({
@@ -173,6 +174,12 @@ function getComponents(action){
             cache: false,
             success: function (data) {
                 $("#actionMain").html($(data));    
+
+                $(".newcomponent").on('click',function(){
+                    $(".menu-component").parent().addClass("active");
+                    $(".menu-pipeline").parent().removeClass("active");
+                    showNewComponent(true);
+                })
 
                 $(".componentlist_body").empty();
                 _.each(allComponents,function(item){

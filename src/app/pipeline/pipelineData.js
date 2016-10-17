@@ -1,14 +1,14 @@
 let allPipelines = [];
 
 export function getAllPipelines(){
-    // call api, return ajax promise
+    // return pipelineApi.list();
 
     // to be removed below
     return allPipelines;
 }
 
 export function getPipeline(name,version){
-    // call api, return ajax promise
+    // return pipelineApi.data();
 
     // to be removed below
     var pipeline = _.find(allPipelines,function(item){
@@ -78,6 +78,10 @@ export function addPipelineVersion(oldversion){
     }
     pipeline.versions.push(newversion);
     return true;
+}
+
+export function getEnvs(){
+    return [];
 }
 
 export var newPipelineData = [

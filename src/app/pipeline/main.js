@@ -2,15 +2,27 @@
 import {initDesigner} from "./initDesigner";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
-import {getAllPipelines,getPipeline,addPipeline,addPipelineVersion} from "./pipelineData";
+import {getAllPipelines,getPipeline,addPipeline,addPipelineVersion,getEnvs} from "./pipelineData";
 
 export let allPipelines;
 
 export let pipelineData;
 let pipelineName, pipelineVersion;
+let pipelineEnvs;
 
 export function initPipelinePage(){
-    // handle promise
+    // var promise = getAllPipelines();
+    // promise.done(function(data){
+    //     allPipelines = data;
+    //     if(allPipelines.length>0){
+    //         showPipelineList();
+    //     }else{
+    //         showNoPipeline();
+    //     }
+    // });
+    // promise.fail(function(xhr,status,error){
+    //     alert(error);
+    // });
 
     // to be removed
     allPipelines = getAllPipelines();
@@ -69,8 +81,8 @@ function showPipelineList(){
                 var target = $(event.currentTarget);
                 pipelineName = target.parent().parent().data("pname");
                 pipelineVersion = target.parent().parent().data("version");
-                showPipelineDesigner()
-            })
+                showPipelineDesigner();
+            });
         }
     });
 }
@@ -147,6 +159,10 @@ function showPipelineDesigner(){
             $(".newpipeline").on('click',function(){
                 showNewPipeline();
             })
+
+            $(".envsetting").on("click",function(event){
+                showPipelineEnv();
+            });
         }
     }); 
 }
@@ -200,6 +216,89 @@ function cancelNewPPVersionPage(){
     $("#main").children().show("slow");
 }
 
+
+function showPipelineEnv(){
+    if($("#env-setting").hasClass("env-setting-closed")){
+        $("#env-setting").removeClass("env-setting-closed");
+        $("#env-setting").addClass("env-setting-opened");
+
+        $.ajax({
+            url: "../../templates/pipeline/envSetting.html",
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $("#env-setting").html($(data));
+              
+                $(".new-kv").on('click',function(){
+                    pipelineEnvs.push({
+                        "key" : "",
+                        "value" : ""
+                    });
+                    showEnvKVs();
+                });
+
+                $(".close-env").on('click',function(){
+                    hidePipelineEnv();
+                });
+
+                $(".save-env").on('click',function(){
+                    savePipelineEnvs();
+                });   
+                
+                getEnvList();
+            }   
+        }); 
+        
+    }else{
+        $("#env-setting").removeClass("env-setting-opened");
+        $("#env-setting").addClass("env-setting-closed");
+    }
+}
+
+function hidePipelineEnv(){
+    $("#env-setting").removeClass("env-setting-opened");
+    $("#env-setting").addClass("env-setting-closed");
+}
+
+function getEnvList(){
+    pipelineEnvs = getEnvs();
+    showEnvKVs();   
+}
+
+function showEnvKVs(){
+    $("#envs").empty();
+    _.each(pipelineEnvs,function(item,index){
+        var row = '<tr data-index="'+index+'"><td>'
+                    +'<input type="text" class="form-control col-md-5 env-key" value="'+item.key+'">'
+                    + '</td><td>'
+                    +'<input type="text" class="form-control col-md-5 env-value" value="'+item.value+'">'
+                    + '</td><td>'
+                    +'<span class="glyphicon glyphicon-minus rm-kv"></span>'
+                    +'</td></tr>';
+        $("#envs").append(row);
+    });
+
+    $(".env-key").on('input',function(event){
+        var key = $(event.currentTarget).val();
+        $(event.currentTarget).val(key.toUpperCase());
+    });
+
+    $(".env-key").on('blur',function(event){
+        var index = $(event.currentTarget).parent().parent().data("index");
+        pipelineEnvs[index].key = $(event.currentTarget).val();
+    });
+
+    $(".env-value").on('blur',function(event){
+        var index = $(event.currentTarget).parent().parent().data("index");
+        pipelineEnvs[index].value = $(event.currentTarget).val();
+    });
+
+    $(".rm-kv").on('click',function(event){
+        var index = $(event.currentTarget).parent().parent().data("index");
+        pipelineEnvs.splice(index,1);
+        showEnvKVs();
+    });
+}
 // $("#pipeline-select").on('change',function(){
 //     showVersionList();
 // })

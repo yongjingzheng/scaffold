@@ -1308,3 +1308,44 @@ div.jsoneditor-contextmenu ul li ul {
 .hidden-div{
   display: none;
 }
+
+/* env setting */
+.env-setting-closed{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: -600px;
+    width: 600px;
+    background-color: #232323;
+    -webkit-transition: right 0.3s ease-in-out;
+    -o-transition: right 0.3s ease-in-out;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    padding:20px 20px;
+    color:white;
+}
+
+.env-setting-opened{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0px;
+    width: 600px;
+    background-color: #232323;
+    -webkit-transition: right 0.3s ease-in-out;
+    -o-transition: right 0.3s ease-in-out;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    padding:20px 20px;
+    color:white;
+}
+
+.new-kv , .rm-kv, .close-env{
+   cursor: pointer;
+   margin-top:10px
+}
+
+.table-responsive{
+  height:500px;
+  overflow: auto;
+}
