@@ -16,7 +16,7 @@ export function dragDropSetPath(options){
          _offsetX = $("main").offset().left,
          _offsetY = $("#designerMenubar").height(),
          _startX = $(window.event.target).offset().left - _offsetX,
-         _startY = $(window.event.target).offset().top - _offsetY,
+         _startY = $(window.event.target).offset().top - _offsetY - 12,
          _pageTitleHeight = $(".page-title").height();  
 
     document.onmousemove = function(e){
@@ -77,10 +77,9 @@ export function dragDropSetPath(options){
                 toParentIndex : toParentIndex,
                 toIndex: toIndex,
                 index: linePathAry.length
-            });
-
-           
+            });           
         } 
+        console.log(linePathAry);
         
     }
 }

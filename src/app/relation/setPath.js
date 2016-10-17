@@ -15,8 +15,13 @@ export function setPath(options){
     var toParentIndex = $("#"+options.endData.id).attr("data-parent");
     var toIndex = $("#"+options.endData.id).attr("data-index");
 
-    var startPoint = {x:fromDom.translateX,y:fromDom.translateY},
-        endPoint = {x:toDom.translateX,y:toDom.translateY}
+    var startPoint = {}, endPoint = {};
+    if(fromDom.type == constant.PIPELINE_START){
+        startPoint = { x:fromDom.translateX - 1, y:fromDom.translateY + 42 };
+    }else if(fromDom.type == constant.PIPELINE_ACTION){
+        startPoint = { x:fromDom.translateX + 12, y:fromDom.translateY };
+    }
+        endPoint = {x:toDom.translateX - 12, y:toDom.translateY};
    
     constant.lineView[options.pipelineLineViewId]
         .append("path")

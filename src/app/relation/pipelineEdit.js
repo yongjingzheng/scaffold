@@ -51,6 +51,7 @@ export function pipelineEdit(data,linkDom){
     }
 
     bipatiteView(importJson,outputJson,constant.linePathAry[index]);
-
+    // console.log("line")
+    // console.log(constant.linePathAry[index]);
     resizeWidget();
 }
