@@ -1,9 +1,8 @@
 import * as actionSetupData from "./actionSetupData";
 
-let k8sServiceAdvancedEditor,k8sPodAdvancedEditor;
-let k8sServiceAdvancedContainer,k8sPodAdvancedContainer;
+let k8sAdvancedEditor,k8sAdvancedContainer;
 
-let k8sSAD,k8sPAD;
+let k8sAD;
 
 export function initActionSetup(action){
     actionSetupData.getActionSetupData(action);
@@ -24,126 +23,83 @@ export function initActionSetup(action){
         actionSetupData.setActionTimeout();
     });
 
-    // k8s service part
-    $("#k8s-service-name").val(actionSetupData.data.k8s_service.metadata.name);
-    $("#k8s-service-name").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
-    });
-
-    $("#k8s-service-ip").val(actionSetupData.data.k8s_service.spec.clusterIP);
-    $("#k8s-service-ip").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
-    });
-
-    $("#k8s-service-protocol").val(actionSetupData.data.k8s_service.spec.ports[0].protocol);
-    $("#k8s-service-protocol").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
-    });
-
-    $("#k8s-service-port").val(actionSetupData.data.k8s_service.spec.ports[0].port);
-    $("#k8s-service-protocol").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
-    });
-
-    $("#k8s-service-targetport").val(actionSetupData.data.k8s_service.spec.ports[0].targetPort);
-    $("#k8s-service-targetport").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
-    });
-
-    $("#k8s-service-nodeport").val(actionSetupData.data.k8s_service.spec.ports[0].nodePort);
-    $("#k8s-service-nodeport").on("blur",function(){
-        actionSetupData.setK8sService(k8sServiceAdvancedEditor);
-    });
-
-    k8sSAD = $.extend(true,{},actionSetupData.data.k8s_service);
-    delete k8sSAD.metadata.name;
-    delete k8sSAD.spec.clusterIP;
-    delete k8sSAD.spec.ports;
-
-    // k8s pod part
-    $("#k8s-pod-name").val(actionSetupData.data.k8s_pod.metadata.name);
-    $("#k8s-pod-name").on("blur",function(){
-        actionSetupData.setK8sPod(k8sPodAdvancedEditor);
-    });
-
-    $("#k8s-pod-image").val(actionSetupData.data.k8s_pod.spec.containers[0].image);
+    $("#k8s-pod-image").val(actionSetupData.data.pod.spec.containers[0].image);
     $("#k8s-pod-image").on("blur",function(){
-        actionSetupData.setK8sPod(k8sPodAdvancedEditor);
+        actionSetupData.setK8s(k8sAdvancedEditor);
     });
 
-    k8sPAD = $.extend(true,{},actionSetupData.data.k8s_pod);
-    delete k8sPAD.metadata.name;
-    delete k8sPAD.spec.containers[0].image;
+    $("#k8s-ip").val(actionSetupData.data.action.ip);
+    $("#k8s-ip").on("blur",function(){
+        actionSetupData.setActionIP();
+    });
+
+    $("#k8s-service-port").val(actionSetupData.data.service.spec.ports[0].port);
+    $("#k8s-service-port").on("blur",function(){
+        actionSetupData.setK8s(k8sAdvancedEditor);
+    });
+
+    $("#k8s-cpu-limits").val(actionSetupData.data.pod.spec.containers[0].resources.limits[0].cpu);
+    $("#k8s-cpu-limits").on("blur",function(){
+        actionSetupData.setK8s(k8sAdvancedEditor);
+    });
+
+    $("#k8s-cpu-requests").val(actionSetupData.data.pod.spec.containers[0].resources.requests[0].cpu);
+    $("#k8s-cpu-requests").on("blur",function(){
+        actionSetupData.setK8s(k8sAdvancedEditor);
+    });
+
+    $("#k8s-memory-limits").val(actionSetupData.data.pod.spec.containers[0].resources.limits[0].memory);
+    $("#k8s-memory-limits").on("blur",function(){
+        actionSetupData.setK8s(k8sAdvancedEditor);
+    });
+
+    $("#k8s-memory-requests").val(actionSetupData.data.pod.spec.containers[0].resources.requests[0].memory);
+    $("#k8s-memory-requests").on("blur",function(){
+        actionSetupData.setK8s(k8sAdvancedEditor);
+    });
+
+    k8sAD = $.extend(true,{},actionSetupData.data);
+    delete k8sAD.action;
+    delete k8sAD.service.spec.ports[0].port;
+    delete k8sAD.pod.spec.containers[0].resources;
+    delete k8sAD.pod.spec.containers[0].image;
 
     initK8sForm();
 
 
-    $("#k8s-service-advanced").on("click",function(){
-        $("#k8s-service-advanced").hide();
-        $("#close-k8s-service-advanced").show();
-        $("#service-advanced").parent().show();
+    $("#k8s-advanced").on("click",function(){
+        $("#k8s-advanced").hide();
+        $("#close-k8s-advanced").show();
+        $("#advanced").parent().show();
     })
 
-    $("#close-k8s-service-advanced").on("click",function(){
-        $("#k8s-service-advanced").show();
-        $("#close-k8s-service-advanced").hide();
-        $("#service-advanced").parent().hide();
-    })
-
-    $("#k8s-pod-advanced").on("click",function(){
-        $("#k8s-pod-advanced").hide();
-        $("#close-k8s-pod-advanced").show();
-        $("#pod-advanced").parent().show();
-    })
-
-    $("#close-k8s-pod-advanced").on("click",function(){
-        $("#k8s-pod-advanced").show();
-        $("#close-k8s-pod-advanced").hide();
-        $("#pod-advanced").parent().hide();
+    $("#close-k8s-advanced").on("click",function(){
+        $("#k8s-advanced").show();
+        $("#close-k8s-advanced").hide();
+        $("#advanced").parent().hide();
     })
 }
 
 function initK8sForm(){
-    k8sServiceAdvancedContainer = $("#service-advanced")[0];
-    k8sPodAdvancedContainer = $("#pod-advanced")[0];
-    initK8sServiceAdvanced();
-    initK8sPodAdvanced();
+    k8sAdvancedContainer = $("#advanced")[0];
+    initK8sAdvanced();
 }
 
-function initK8sServiceAdvanced(){
-    if(k8sServiceAdvancedEditor){
-        k8sServiceAdvancedEditor.destroy();
+function initK8sAdvanced(){
+    if(k8sAdvancedEditor){
+        k8sAdvancedEditor.destroy();
     }
 
     var treeOptions = {
         "mode": "tree",
         "search": true,
         "onChange" : function(){
-            actionSetupData.setK8sService(k8sServiceAdvancedEditor);
+            actionSetupData.setK8s(k8sAdvancedEditor);
         }
     };
 
-    k8sServiceAdvancedEditor = new JSONEditor(k8sServiceAdvancedContainer, treeOptions);
-    k8sServiceAdvancedEditor.set(k8sSAD);
+    k8sAdvancedEditor = new JSONEditor(k8sAdvancedContainer, treeOptions);
+    k8sAdvancedEditor.set(k8sAD);
     
-    k8sServiceAdvancedEditor.expandAll();
-}
-
-function initK8sPodAdvanced(){
-    if(k8sPodAdvancedEditor){
-        k8sPodAdvancedEditor.destroy();
-    }
-
-    var treeOptions = {
-        "mode": "tree",
-        "search": true,
-        "onChange" : function(){
-            actionSetupData.setK8sPod(k8sPodAdvancedEditor);
-        }
-    };
-
-    k8sPodAdvancedEditor = new JSONEditor(k8sPodAdvancedContainer, treeOptions);
-    k8sPodAdvancedEditor.set(k8sPAD);
-    
-    k8sPodAdvancedEditor.expandAll();
+    k8sAdvancedEditor.expandAll();
 }
