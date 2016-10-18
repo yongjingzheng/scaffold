@@ -4,6 +4,10 @@ import {initComponentPage} from "./component/main";
 
 // let $a = d3.select("#showHistory").on("click",historyRecord);
 
+$._messengerDefaults = {
+    extraClasses: 'messenger-fixed messenger-theme-future messenger-on-top'
+}
+
 initPipelinePage();
 
 $(".menu-pipeline").on('click',function(event){
