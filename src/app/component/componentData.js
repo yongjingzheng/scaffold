@@ -1,3 +1,5 @@
+import {notify} from "../common/notify";
+
 let allComponents = [];
 
 export function getAllComponents(){
@@ -81,13 +83,13 @@ export function addComponentVersion(oldversion){
 
 export function saveComponent(componentName, componentVersion, componentData){
     if(!$('#component-form').parsley().validate()){
-        alert("missed some required base config.")
+        notify("missed some required base config.","error");
     }else if(_.isEmpty(componentData.inputJson)){
-        alert("component input json is empty.")
+        notify("component input json is empty.","error");
     }else if(_.isEmpty(componentData.outputJson)){
-        alert("component output json is empty.")
+        notify("component output json is empty.","error");
     }else{
-        alert("saved")
+        notify("component saved.","success");
     }  
 }
 

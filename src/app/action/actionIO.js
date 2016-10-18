@@ -1,4 +1,5 @@
 import {jsonEditor} from "../../vendor/jquery.jsoneditor";
+import {notify} from "../common/notify";
 
 var treeEdit_InputContainer,treeEdit_OutputContainer;
 var fromEdit_InputCodeContainer,fromEdit_InputTreeContainer,fromEdit_OutputCodeContainer,fromEdit_OutputTreeContainer;
@@ -50,7 +51,7 @@ export function initTreeEdit(){
             }
         });
     }catch(e){
-        alert("Input Error in parsing json.");
+        notify("Input Error in parsing json.","error");
     }
 
     try{
@@ -60,7 +61,7 @@ export function initTreeEdit(){
             }
         });
     }catch(e){
-        alert("Output Error in parsing json.");
+        notify("Output Error in parsing json.","error");
     }
 }
 
@@ -116,14 +117,14 @@ function fromCodeToTree(type){
             actionIOData.inputJson = fromEdit_CodeEditor.get();
             fromEdit_TreeEditor.set(actionIOData.inputJson);
         }catch(e){
-            alert("Input Code Changes Error in parsing json.");
+            notify("Input Code Changes Error in parsing json.","error");
         }  
     }else if(type == "output"){
         try{
             actionIOData.outputJson = fromEdit_CodeEditor.get();
             fromEdit_TreeEditor.set(actionIOData.outputJson);
         }catch(e){
-            alert("Output Code Changes Error in parsing json.");
+            notify("Output Code Changes Error in parsing json.","error");
         } 
     }
     
@@ -136,14 +137,14 @@ function fromTreeToCode(type){
             actionIOData.inputJson = fromEdit_TreeEditor.get();
             fromEdit_CodeEditor.set(actionIOData.inputJson);
         }catch(e){
-            alert("Input Tree Changes Error in parsing json.");
+            notify("Input Tree Changes Error in parsing json.","error");
         }  
     }else if(type == "output"){
         try{
             actionIOData.outputJson = fromEdit_TreeEditor.get();
             fromEdit_CodeEditor.set(actionIOData.outputJson);
         }catch(e){
-            alert("Output Tree Changes Error in parsing json.");
+            notify("Output Tree Changes Error in parsing json.","error");
         } 
     }
 }

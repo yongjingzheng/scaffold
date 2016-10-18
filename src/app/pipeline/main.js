@@ -3,6 +3,7 @@ import {initDesigner} from "./initDesigner";
 import {initPipeline} from "./initPipeline";
 import {initAction} from "./initAction";
 import {getAllPipelines,getPipeline,addPipeline,addPipelineVersion,getEnvs} from "./pipelineData";
+import {notify} from "../common/notify";
 
 export let allPipelines;
 
@@ -11,26 +12,18 @@ let pipelineName, pipelineVersion;
 let pipelineEnvs;
 
 export function initPipelinePage(){
-    // var promise = getAllPipelines();
-    // promise.done(function(data){
-    //     allPipelines = data;
-    //     if(allPipelines.length>0){
-    //         showPipelineList();
-    //     }else{
-    //         showNoPipeline();
-    //     }
-    // });
-    // promise.fail(function(xhr,status,error){
-    //     alert(error);
-    // });
-
-    // to be removed
-    allPipelines = getAllPipelines();
-    if(allPipelines.length>0){
-        showPipelineList();
-    }else{
-        showNoPipeline();
-    }
+    var promise = getAllPipelines();
+    promise.done(function(data){
+        allPipelines = data.list;
+        if(allPipelines.length>0){
+            showPipelineList();
+        }else{
+            showNoPipeline();
+        }
+    });
+    promise.fail(function(xhr,status,error){
+        notify(xhr.responseJSON.errMsg,"error");
+    });
 }
 
 function showPipelineList(){
@@ -53,8 +46,8 @@ function showPipelineList(){
                         +'<span class="glyphicon glyphicon-menu-right treeopen" data-name="'+item.name+'"></span>&nbsp;' 
                         + item.name + '</td><td></td><td></td></tr>';
                 $(".pipelinelist_body").append(pprow);
-                _.each(item.versions,function(version){
-                    var vrow = '<tr data-pname="' + item.name + '" data-version="' + version.version + '" style="height:50px">'
+                _.each(item.version,function(version){
+                    var vrow = '<tr data-pname="' + item.name + '" data-version="' + version.id + '" style="height:50px">'
                             +'<td></td><td class="pptd">' + version.version + '</td>'
                             +'<td><button type="button" class="btn btn-primary ppview">View</button></td></tr>';
                     $(".pipelinelist_body").append(vrow);
@@ -112,12 +105,16 @@ function showNewPipeline(){
             $("#main").append($(data));    
             $("#newpipeline").show("slow");
             $("#newppBtn").on('click',function(){
-                // addPipeline();
-
-                // to be removed below
-                if(addPipeline()){
-                    initPipelinePage();
-                }  
+                var promise = addPipeline();
+                if(promise){
+                    promise.done(function(data){
+                        notify(data.msg,"success");
+                        initPipelinePage();
+                    });
+                    promise.fail(function(xhr,status,error){
+                        notify(xhr.responseJSON.errMsg,"error");
+                    });
+                }
             })
             $("#cancelNewppBtn").on('click',function(){
                 cancelNewPPPage();
@@ -135,13 +132,13 @@ function showPipelineDesigner(){
             $("#main").html($(data));    
             $("#pipelinedesign").show("slow"); 
 
-            var selectedpp = _.find(allPipelines,function(pp){
-                return pp.name == pipelineName;
-            });
-            var selectedversion = _.find(selectedpp.versions,function(version){
-                return version.version == pipelineVersion;
-            });
-            pipelineData = selectedversion.data;
+            // var selectedpp = _.find(allPipelines,function(pp){
+            //     return pp.name == pipelineName;
+            // });
+            // var selectedversion = _.find(selectedpp.versions,function(version){
+            //     return version.version == pipelineVersion;
+            // });
+            pipelineData = getPipeline();
 
             $("#selected_pipeline").text(pipelineName + " / " + pipelineVersion); 
 

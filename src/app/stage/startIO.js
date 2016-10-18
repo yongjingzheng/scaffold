@@ -1,4 +1,5 @@
 import {jsonEditor} from "../../vendor/jquery.jsoneditor";
+import {notify} from "../common/notify";
 
 var treeEdit_OutputContainer;
 var fromEdit_OutputCodeContainer,fromEdit_OutputTreeContainer;
@@ -38,7 +39,7 @@ export function initTreeEdit(){
             }
         });
     }catch(e){
-        alert("Output Error in parsing json.");
+        notify("Output Error in parsing json.","error");
     }
 }
 
@@ -83,7 +84,7 @@ function fromCodeToTree(type){
             startIOData.outputJson = fromEdit_CodeEditor.get();
             fromEdit_TreeEditor.set(startIOData.outputJson);
         }catch(e){
-            alert("Output Code Changes Error in parsing json.");
+            notify("Output Code Changes Error in parsing json.","error");
         } 
     }
     
@@ -96,7 +97,7 @@ function fromTreeToCode(type){
             startIOData.outputJson = fromEdit_TreeEditor.get();
             fromEdit_CodeEditor.set(startIOData.outputJson);
         }catch(e){
-            alert("Output Tree Changes Error in parsing json.");
+            notify("Output Tree Changes Error in parsing json.","error");
         } 
     }
 }

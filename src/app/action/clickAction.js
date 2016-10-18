@@ -10,6 +10,7 @@ import {initActionIO} from "./actionIO";
 import {initActionSetup} from "./actionSetup";
 import {getAllComponents,getComponent} from "../component/componentData";
 import {showNewComponent} from "../component/main";
+import {notify} from "../common/notify";
 
 export function clickAction(sd, si) {
     $.ajax({
@@ -117,7 +118,7 @@ function getComponents(action){
             }
         });      
     }else{
-        alert("You have no components to reuse, please go to 'Component' to create one.");
+        notify("You have no components to reuse, please go to 'Component' to create one.","warning");
         showActionEditor(action);
     }
     

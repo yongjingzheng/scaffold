@@ -8,7 +8,8 @@
     "slimScroll": "1.3.7",
     "widgster": "0.0.2",
     "bootstrap": "4.0.0-alpha.2",
-    "parsleyjs": "2.2.0-rc1"
+    "parsleyjs": "2.2.0-rc1",
+    "messenger": "1.4.2"
   },
   "private": true,
   "devDependencies": {
