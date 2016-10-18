@@ -21,34 +21,38 @@ export function setActionTimeout(){
     data.action.timeout = $("#action-timeout").val();
 }
 
-export function setK8sService(k8sServiceAdvancedEditor){
-    var k8s_service_ad = k8sServiceAdvancedEditor.get();
-    k8s_service_ad.metadata.name = $("#k8s-service-name").val();
-    k8s_service_ad.spec.clusterIP = $("#k8s-service-ip").val();
-    var ports = [{
-      "protocol": $("#k8s-service-protocol").val(),
-      "port": $("#k8s-service-port").val(),
-      "targetPort": $("#k8s-service-targetport").val(),
-      "nodePort": $("#k8s-service-nodeport").val()
-    }]
-    k8s_service_ad.spec.ports = ports; 
-    data.k8s_service = k8s_service_ad;
+export function setActionIP(){
+    data.action.ip = $("#k8s-ip").val();
 }
 
-export function setK8sPod(k8sPodAdvancedEditor){
-    var k8s_pod_ad = k8sPodAdvancedEditor.get();
-    k8s_pod_ad.metadata.name = $("#k8s-pod-name").val();
-    k8s_pod_ad.spec.containers[0].image = $("#k8s-pod-image").val();        
-    data.k8s_pod = k8s_pod_ad;
+export function setK8s(k8sAdvancedEditor){
+    var k8s_ad = k8sAdvancedEditor.get();
+    k8s_ad.service.spec.ports[0].port = $("#k8s-service-port").val();
+    k8s_ad.pod.spec.containers[0].image = $("#k8s-pod-image").val();
+    var resources = {
+      "limits":[{
+        "cpu": $("#k8s-cpu-limits").val(), 
+        "memory": $("#k8s-memory-limits").val()
+      }],
+      "requests":[{
+        "cpu": $("#k8s-cpu-requests").val(), 
+        "memory": $("#k8s-memory-requests").val()
+      }]
+    }
+    k8s_ad.pod.spec.containers[0].resources = resources;
+
+    data.service = k8s_ad.service;
+    data.pod = k8s_ad.pod;
 }
 
 var metadata = {
   "action" : {
     "type" : "Kubernetes",
     "name" : "",
-    "timeout" : ""
+    "timeout" : "",
+    "ip" : ""
   },
-  "k8s_service" : {
+  "service" : {
     "metadata": {
       "name": "",
       "deletionTimestamp": "",
@@ -58,9 +62,9 @@ var metadata = {
       "ports": [
         {
           "protocol": "tcp",
-          "port": 0,
+          "port": "",
           "targetPort": "",
-          "nodePort": 0
+          "nodePort": ""
         }
       ],
       "clusterIP": "",
@@ -69,7 +73,7 @@ var metadata = {
       "loadBalancerIP": ""
     }
   },
-  "k8s_pod" : {
+  "pod" : {
     "metadata": {
       "name" : "",
       "deletionTimestamp": "",
@@ -100,7 +104,7 @@ var metadata = {
           ],
           "resources": {
             "limits":[ {"cpu": 4.0, "memory": "99Mi"} ],
-            "requests ":[ {"cpu": 4.0, "memory": "99Mi"} ]
+            "requests":[ {"cpu": 4.0, "memory": "99Mi"} ]
           },
           "livenessProbe": {
             "exec": {

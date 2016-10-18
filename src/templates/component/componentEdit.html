@@ -29,8 +29,6 @@
                                     <div role="tabpanel" class="tab-pane clearfix active" id="base" aria-labelledby="base-tab" aria-expanded="true">
                                         <form id="component-form" class="form-horizontal" data-parsley-priority-enabled="false" novalidate="novalidate">
                                             <fieldset>
-                                                <h4>Action</h4>
-                                                <hr/>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
@@ -44,38 +42,11 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="hint-field" class="col-sm-4 control-label">
+                                                            <label for="hint-field" class="col-sm-3 control-label">
                                                                 Action Timeout
                                                             </label>
                                                             <div class="col-sm-6">
-                                                                <input type="text" id="action-timeout" name="action-timeout" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                            <fieldset>
-                                                <hr/>
-                                                <h4>k8s Service</h4>
-                                                <hr/>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="hint-field" class="col-sm-3 control-label">
-                                                                Name
-                                                            </label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" id="k8s-service-name" name="k8s-service-name" class="form-control" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="normal-field" class="col-sm-3 control-label">
-                                                                Cluster IP
-                                                            </label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" id="k8s-service-ip" name="k8s-service-ip" class="form-control" required pattern="/((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))/">
+                                                                <input type="text" id="action-timeout" name="action-timeout" class="form-control" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -83,19 +54,30 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">Protocol</label>
-                                                            <div class="col-md-6">
-                                                                <select id="k8s-service-protocol" name="k8s-service-protocol" style="width:100%" required>
-                                                                    <option value="tcp">TCP</option>
-                                                                    <option value="udp">UDP</option>
-                                                                </select>
+                                                            <label for="normal-field" class="col-sm-3 control-label">
+                                                                Image
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="k8s-pod-image" name="k8s-pod-image" class="form-control" required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="normal-field" class="col-sm-3 control-label">
-                                                                Port
+                                                                Kubernetes IP
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="k8s-ip" name="k8s-ip" class="form-control" required pattern="/((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))/">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="normal-field" class="col-sm-3 control-label">
+                                                                Service Port
                                                             </label>
                                                             <div class="col-sm-6">
                                                                 <input type="text" id="k8s-service-port" name="k8s-service-port" class="form-control" required pattern="/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/">
@@ -107,38 +89,62 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="normal-field" class="col-sm-3 control-label">
-                                                                Target Port
+                                                                CPU Limits
                                                             </label>
                                                             <div class="col-sm-6">
-                                                                <input type="text" id="k8s-service-targetport" name="k8s-service-targetport" class="form-control" required pattern="/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/">
+                                                                <input type="text" id="k8s-cpu-limits" name="k8s-cpu-limits" class="form-control" required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="normal-field" class="col-sm-3 control-label">
-                                                                Node Port
+                                                                CPU Requests
                                                             </label>
                                                             <div class="col-sm-6">
-                                                                <input type="text" id="k8s-service-nodeport" name="k8s-service-nodeport" class="form-control" required pattern="/^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/">
+                                                                <input type="text" id="k8s-cpu-requests" name="k8s-cpu-requests" class="form-control" required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <button type="button" class="btn btn-primary" id="k8s-service-advanced">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="normal-field" class="col-sm-3 control-label">
+                                                                Memory Limits
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="k8s-memory-limits" name="k8s-memory-limits" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="normal-field" class="col-sm-3 control-label">
+                                                                Memory Requests
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" id="k8s-memory-requests" name="k8s-memory-requests" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                               <div class="row">
+                                                    <button type="button" class="btn btn-primary" id="k8s-advanced">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>&nbsp;&nbsp;Advanced Settings
                                                     </button>
-                                                    <button type="button" class="btn btn-primary" style="display:none" id="close-k8s-service-advanced">
+                                                    <button type="button" class="btn btn-primary" style="display:none" id="close-k8s-advanced">
                                                         <i class="glyphicon glyphicon-chevron-up"></i>&nbsp;&nbsp;Close Advanced Settings
                                                     </button>
                                                 </div>
                                                 <br/>
                                                 <div class="row" style="display:none">
-                                                    <div id="service-advanced" style="width: 100%;height:300px"></div>
+                                                    <div id="advanced" style="width: 100%;height:500px"></div>
                                                 </div>
                                             </fieldset>
-                                            <fieldset>
+                                            <!-- <fieldset>
                                                 <hr/>
                                                 <h4>k8s Pod</h4>
                                                 <hr/>
@@ -176,19 +182,9 @@
                                                 <div class="row" style="display:none">
                                                     <div id="pod-advanced" style="width: 100%;height:300px"></div>
                                                 </div>
-                                            </fieldset>
-                                            <br/>
-                                            <div class="form-actions">
-                                                <div class="row">
-                                                    <!-- <div class="col-sm-offset-5 col-sm-7"> -->
-                                                    <div style="float:right">
-                                                        <input type="hidden" id="uuid" name="uuid" class="form-control">
-                                                        <!-- <button type="button" class="btn btn-primary" onclick="saveData($('#action-form'),$('uuid'));">Save</button> -->
-                                                        <!-- <button id="saveAction" type="button" class="btn btn-danger" style="width:15em;height:3em;font-size:1.2em">Save Base Config</button> -->
-                                                        <!-- <button type="button" class="btn btn-inverse">Cancel</button> -->
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            </fieldset> -->
+                
+                                            
                                         </form>
                                     </div>
                                     <div class="tab-pane" id="input_output" role="tabpanel" aria-labelledby="input_output-tab" aria-expanded="false">
