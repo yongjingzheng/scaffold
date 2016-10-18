@@ -1,14 +1,12 @@
-
-import {pipelineData} from "../pipeline/main";
+import { pipelineData } from "../pipeline/main";
 import * as constant from "../common/constant";
+import * as util from "../common/util";
 
-export function clickAddStage(d, i) {
-    //add stage data
+export function addStage(data, index) {
     pipelineData.splice(
         pipelineData.length - 2,
-        0,
-        {
-            id: constant.PIPELINE_ACTION + "-" + uuid.v1(),
+        0, {
+            id: constant.PIPELINE_STAGE + "-" + uuid.v1(),
             type: constant.PIPELINE_STAGE,
             class: constant.PIPELINE_STAGE,
             drawX: 0,
@@ -21,5 +19,11 @@ export function clickAddStage(d, i) {
             setupData: {}
         });
 
-   
+
+}
+
+export function deleteStage(data, index){
+     var relatedActions = util.findAllActionsOfStage(data.id)
+         util.removeRelatedLines(relatedActions);
+         pipelineData.splice(index, 1);
 }

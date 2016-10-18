@@ -45,7 +45,7 @@ export function disappearAnimation(args){
    }
    
 }
-export function transformAnimation(args){
+export function transformAnimation(args,type){
 	 _.each(args, function(item){
 	 	  d3.selectAll(item.selector)
 	        .filter(function(d,i){ return i > item.itemIndex})
@@ -53,9 +53,18 @@ export function transformAnimation(args){
 	        .delay(200)
 	        .duration(200)
 	        .attr("transform", function(d,i){
-	            var translateX = item.type == "siblings" ? d.translateX : 0;
-	            var translateY = item.type == "siblings" ? (d.translateY - constant.ActionNodeSpaceSize) : (0 - constant.ActionNodeSpaceSize);
-	            return "translate(" + translateX + "," + translateY + ")";
+	        	var translateX=0,translateY=0;
+	        	if(type == "action"){
+	        		  translateX = item.type == "siblings" ? d.translateX : 0;
+	           		  translateY = item.type == "siblings" ? (d.translateY - constant.ActionNodeSpaceSize) : (0 - constant.ActionNodeSpaceSize);
+	            	 
+	        	}else if(type == "stage"){
+                      translateX = item.type == "siblings" ? (d.translateX - constant.PipelineNodeSpaceSize) : (0 - constant.PipelineNodeSpaceSize);
+	           		  translateY = item.type == "siblings" ? d.translateY : 0 ;
+	           		 
+	        	}
+	        	return "translate(" + translateX + "," + translateY + ")";
+	            
 	        });
 	 })
 	
